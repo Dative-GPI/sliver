@@ -23,10 +23,8 @@ import DScatterPlotSerie from "./components/series/DScatterPlotSerie.vue";
 import DStackedColumnSerie from "./components/series/DStackedColumnSerie.vue";
 
 
-const DatCharts = {
+const Sliver = {
   install(vue: any, options: any) {
-    console.log("Registering dat-charts locally");
-
     vue.component("d-category-x-axis", DCategoryXAxis);
     vue.component("d-category-y-axis", DCategoryYAxis);
     vue.component("d-date-x-axis", DDateXAxis);
@@ -51,4 +49,4 @@ const DatCharts = {
   }
 };
  
- export default DatCharts;
+ export { Sliver };
