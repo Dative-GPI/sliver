@@ -11,7 +11,7 @@ npm install @dative/sliver
 
 ```
 
-```sh
+```
 
 import { Sliver } from "@dative-gpi/sliver";
 
