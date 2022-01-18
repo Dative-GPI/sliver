@@ -1,4 +1,4 @@
-# Shards
+# Sliver
 
 ## Installation
 
@@ -6,15 +6,20 @@
 
 vue create my-add
 cd my-app
-vue add vuetify
 
-npm install @dative/shards
+npm install @dative/sliver
+
+```
+
+```sh
+
+import { Sliver } from "@dative-gpi/sliver";
+
+Vue.use(Sliver);
 
 ```
 
 ## Development
-
-We can't use npm anymore to install the dependencies because it doesn't work anymore ... beautiful js
 
 ```sh
 
