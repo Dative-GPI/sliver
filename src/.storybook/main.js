@@ -7,7 +7,11 @@ module.exports = {
   ],
   "addons": [
     "@storybook/addon-links",
-    "@storybook/addon-essentials"
+    "@storybook/addon-essentials",
+    'storybook-addon-paddings',
+    '@storybook/addon-storysource',
+    '@storybook/addon-a11y',
+    'storybook-addon-designs',
   ],
   resolve: {
     // Add `.ts` as a resolvable extension.

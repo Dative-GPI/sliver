@@ -1,0 +1,34 @@
+name: Publish Package to npmjs
+on:
+  push:
+    tags: 
+      - "*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # Checking out repository
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+        with:
+          persist-credentials: false
+
+      # Setting .npmrc file up to publish to npm
+      - name: Setting things up 🔧
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+          # User or organization
+          scope: '@dative-gpi'
+
+      # Publishing with tag name as version
+      - name: Publishing to npmjs 🚀
+        run: |
+          cd src
+          yarn
+          yarn version --new-version ${{ github.ref_name }} --no-git-tag-version
+          yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
