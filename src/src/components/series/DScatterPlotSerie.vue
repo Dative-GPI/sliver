@@ -15,6 +15,8 @@ import { updateCategories, addSerie, removeSerie } from "../../helpers";
 
 @Component({})
 export default class DScatterPlotSerie extends Vue {
+  serieId: number = 0;
+
   @InjectReactive(AMROOT)
   root!: am5.Root;
 
@@ -158,16 +160,18 @@ export default class DScatterPlotSerie extends Vue {
   setData(): void {
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
-      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.xField));
+      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.xField, this.serieId));
     }
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
-      this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.yField));
+      this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.yField, this.serieId));
     }
     this.serie!.data.setAll(this.data);
   }
 
   mounted(): void {
+    this.serieId = Math.random();
+
     this.serie = this.chart.series.push(am5xy.LineSeries.new(this.root, {
       name: this.name,
       xAxis: this.xAxis,
@@ -187,16 +191,7 @@ export default class DScatterPlotSerie extends Vue {
     this.setShowTooltip();
     
     this.setBulletRadius();
-
-    if (this.xAxis instanceof am5xy.CategoryAxis) {
-      // Add to axis
-      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.xField));
-    }
-    if (this.yAxis instanceof am5xy.CategoryAxis) {
-      // Add to axis
-      this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.yField));
-    }
-
+    
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
@@ -220,6 +215,16 @@ export default class DScatterPlotSerie extends Vue {
     // Remove from legend
     if (this.legend) {
       this.legend.data.removeValue(this.serie);
+    }
+
+    if (this.xAxis instanceof am5xy.CategoryAxis) {
+      // Remove from axis
+      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.xField, this.serieId));
+    }
+
+    if (this.xAxis instanceof am5xy.CategoryAxis) {
+      // Remove from axis
+      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.yField, this.serieId));
     }
 
     // Remove from cursor

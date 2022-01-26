@@ -15,6 +15,8 @@ import { updateCategories, addSerie, removeSerie } from "../../helpers";
 
 @Component({})
 export default class DColumnSerie extends Vue {
+  serieId: number = 0;
+
   @InjectReactive(AMROOT)
   root!: am5.Root;
 
@@ -105,11 +107,14 @@ export default class DColumnSerie extends Vue {
   }
 
   setData(): void {
-    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.categoryXField));
+    // Add to axis
+    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.serieId));
     this.serie!.data.setAll(this.data);
   }
 
   mounted(): void {
+    this.serieId = Math.random();
+    
     // Add to chart
     this.serie = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
       xAxis: this.xAxis,
@@ -122,9 +127,6 @@ export default class DColumnSerie extends Vue {
     // Set updatable properties
     this.setName();
     this.setShowTooltip();
-
-    // Add to axis
-    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.categoryXField));
 
     // Add to legend
     if (this.legend != null) {
@@ -150,6 +152,9 @@ export default class DColumnSerie extends Vue {
     if (this.legend) {
       this.legend.data.removeValue(this.serie);
     }
+
+    // Remove from axis
+    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.categoryXField, this.serieId));
 
     // Remove from cursor
     if (this.cursor) {

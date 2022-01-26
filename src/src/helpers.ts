@@ -1,7 +1,15 @@
-export const updateCategories = (former: any[], data: any[], categoryField: string): any[] => {
+export const updateCategories = (former: any[], data: any[], categoryField: string, serieId: number): any[] => {
+  for (let i = 0; i < former.length; i++) {
+    former[i].series = former[i].series.filter((s: number) => s !== serieId);
+  }
+  former = former.filter(c => c.series.length > 0);
+
   for (let i = 0; i < data.length; i++) {
-    if (former.filter(c => c[categoryField] == data[i][categoryField]).length == 0) {
-      former.push({ [categoryField]: data[i][categoryField] });
+    if (former.filter(c => c[categoryField] == data[i][categoryField]).length === 0) {
+      former.push({ [categoryField]: data[i][categoryField], series: [serieId] });
+    }
+    else if (!former.filter(c => c[categoryField] == data[i][categoryField])[0].series.includes(serieId)) {
+      former.filter(c => c[categoryField] == data[i][categoryField])[0].series.push(serieId);
     }
   }
   return former;
