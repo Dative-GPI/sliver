@@ -153,7 +153,7 @@ export default class DPlanningSerie extends Vue {
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : "{" + this.categoryYField + "}");
+      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : this.name);
     }
   }
 

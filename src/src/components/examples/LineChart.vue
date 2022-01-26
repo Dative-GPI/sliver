@@ -24,6 +24,8 @@
             <d-line-serie
               v-for="(serie, index) in data.series"
               :key="index"
+              :bullet="seriesBullet"
+              :bulletRadius="seriesBulletRadius"
               :name="serie.serie"
               :data="serie.data"
             />
@@ -98,5 +100,11 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  lineSeriesBullet!: boolean;
+
+  @Prop({ required: true })
+  lineSeriesBulletRadius!: number;
 }
 </script>

@@ -124,12 +124,11 @@ export default class DValueTAxis extends Vue {
   upAndRunning = false;
 
   setMin(): void {
-    let min = (this.ranges && this.ranges.length > 0) ?
+    let min = (this.ranges != null && this.ranges.length > 0) ?
       this.ranges.reduce((acc, cur) => Math.min(acc, cur.lowBound), this.ranges[0].lowBound) :
       this.min;
 
     this.axis!.set("min", min);
-    this.axis!.axisRanges.setAll(this.axis!.axisRanges.values);
   }
 
   setMax(): void {
@@ -138,7 +137,6 @@ export default class DValueTAxis extends Vue {
       this.max;
 
     this.axis!.set("max", max);
-    this.axis!.axisRanges.setAll(this.axis!.axisRanges.values);
   }
 
   setMaxDeviation(): void {
@@ -195,13 +193,15 @@ export default class DValueTAxis extends Vue {
 
   setRanges(): void {
     // Remove all DataItems except ClockHands
-    this.axis!.axisRanges.values.forEach((range: any) => {
+    for (let i = 0; i < this.axis!.axisRanges.values.length; i++) {
+      let range = this.axis!.axisRanges.values[i];
       if (!range.get("bullet")) {
         this.axis!.axisRanges.removeValue(range!);
         range!.dispose();
+        i--;
       }
-    });
-
+    }
+    
     if (this.ranges && this.ranges!.length > 0) {
       am5.array.each(this.ranges!, (range : { lowBound: number; highBound: number; color: string; label: string; }) => {
         let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
@@ -233,8 +233,6 @@ export default class DValueTAxis extends Vue {
       renderer: am5radar.AxisRendererCircular.new(this.root, {})
     }));
 
-    this.setMin();
-    this.setMax();
     this.setMaxDeviation();
     this.setStrictMinMax();
 

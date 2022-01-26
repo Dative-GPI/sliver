@@ -93,6 +93,7 @@ export default class DDateXAxis extends Vue {
   mounted(): void {
     // Add to chart
     this.axis = this.chart.xAxes.push(am5xy.DateAxis.new(this.root, {
+      groupData: true,
       renderer: am5xy.AxisRendererX.new(this.root, {}),
       baseInterval: {
         timeUnit: "minute",

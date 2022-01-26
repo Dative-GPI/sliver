@@ -32,6 +32,8 @@ const Template = (args, { argTypes }) => ({
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisBisOpposite="yAxisBisOpposite"
       :yAxisBisShowTooltip="yAxisBisShowTooltip"
+      :lineSeriesBullet="lineSeriesBullet"
+      :lineSeriesBulletRadius="lineSeriesBulletRadius"
     />`,
 });
 
@@ -145,5 +147,7 @@ Default.args = {
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#",
   yAxisBisOpposite: true,
-  yAxisBisShowTooltip: true
+  yAxisBisShowTooltip: true,
+  lineSeriesBullet: false,
+  lineSeriesBulletRadius: 3
 };

@@ -63,11 +63,17 @@ export default class DLineSerie extends Vue {
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
 
+  @Prop({ required: false, default: false })
+  bullet!: boolean;
+
+  @Watch("bullet")
+  onBulletChange = this.setBullet;
+
   @Prop({ required: false, default: 3 })
   bulletRadius!: number;
 
   @Watch("bulletRadius")
-  onBulletRadiusChange = this.setBulletRadius;
+  onBulletRadiusChange = this.setBullet;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -110,16 +116,19 @@ export default class DLineSerie extends Vue {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
   }
 
-  setBulletRadius(): void {
+  setBullet(): void {
     this.serie!.bullets.clear();
-    this.serie!.bullets.push(() => {
-      return am5.Bullet.new(this.root, {
-        sprite: am5.Circle.new(this.root, {
-          radius: this.bulletRadius,
-          fill: this.serie!.get("fill"),
-        })
+
+    if (this.bullet) {
+      this.serie!.bullets.push(() => {
+        return am5.Bullet.new(this.root, {
+          sprite: am5.Circle.new(this.root, {
+            radius: this.bulletRadius,
+            fill: this.serie!.get("fill"),
+          })
+        });
       });
-    });
+    }
   }
 
   setData(): void {
@@ -138,7 +147,7 @@ export default class DLineSerie extends Vue {
 
     // Set updatable properties
     this.setName();
-    this.setBulletRadius();
+    this.setBullet();
     this.setShowTooltip();
 
     // Add to cursor

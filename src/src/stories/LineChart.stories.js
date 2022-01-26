@@ -28,6 +28,8 @@ const Template = (args, { argTypes }) => ({
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :lineSeriesBullet="lineSeriesBullet"
+      :lineSeriesBulletRadius="lineSeriesBulletRadius"
     />`,
 });
 
@@ -75,5 +77,7 @@ Default.args = {
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#"
+  yAxisTooltipNumberFormat: "#",
+  lineSeriesBullet: false,
+  lineSeriesBulletRadius: 3
 };
