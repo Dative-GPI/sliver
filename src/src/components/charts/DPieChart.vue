@@ -1,5 +1,5 @@
 <template>
-  <div ref="piechart" :id="'piechart'" style="width: 100%; height: 100%; min-height: 400px">
+  <div ref="piechart" :id="'piechart'" style="width: 100%; height: 100%;">
     <slot v-if="upAndRunning"> </slot>
   </div>
 </template>

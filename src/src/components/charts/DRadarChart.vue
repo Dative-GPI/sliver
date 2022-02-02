@@ -1,5 +1,5 @@
 <template>
-  <div ref="piechart" :id="'piechart'" style="width: 100%; height: 100%; min-height: 400px">
+  <div ref="radarchart" :id="'radarchart'" style="width: 100%; height: 100%;">
     <slot v-if="upAndRunning"> </slot>
   </div>
 </template>
@@ -75,7 +75,7 @@ export default class DRadarChart extends Vue {
 
   mounted(): void {
     // Create root
-    this.root = am5.Root.new((this.$refs.piechart as HTMLElement));
+    this.root = am5.Root.new((this.$refs.radarchart as HTMLElement));
     this.root.setThemes([ am5themes_Animated.new(this.root) ]);
 
     // Add chart to root

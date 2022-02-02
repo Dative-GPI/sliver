@@ -1,5 +1,5 @@
 <template>
-  <div ref="xychart" :id="'xychart'" style="width: 100%; height: 100%; min-height: 400px">
+  <div ref="xychart" :id="'xychart'" style="width: 100%; height: 100%;">
     <slot v-if="upAndRunning"> </slot>
   </div>
 </template>
