@@ -11,9 +11,13 @@ const Template = (args, { argTypes }) => ({
   template:
     `<stacked-bars-chart
       :data="data"
+      :minHeight="minHeight"
+      :vertical="vertical"
       :legend="legend"
       :legendX="legendX"
       :legendCenterX="legendCenterX"
+      :legendY="legendY"
+      :legendCenterY="legendCenterY"
       :cursor="cursor"
       :cursorBehavior="cursorBehavior"
       :cursorXVisible="cursorXVisible"
@@ -54,9 +58,13 @@ Default.args = {
       { ...makeColumnSerie("Pineapple", ["First farm", "Second farm", "Third farm"], 50 ) }
     ]
   },
+  minHeight: '400px',
+  vertical: true,
   legend: true,
   legendX: 50,
   legendCenterX: 50,
+  legendY: 50,
+  legendCenterY: 50,
   cursor: true,
   cursorBehavior: "zoomXY",
   cursorXVisible: true,

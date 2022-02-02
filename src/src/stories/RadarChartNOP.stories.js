@@ -10,6 +10,13 @@ const Template = (args, { argTypes }) => ({
   components: { RadarChart },
   template:
     `<radar-chart
+      :minHeight="minHeight"
+      :vertical="vertical"
+      :legend="legend"
+      :legendX="legendX"
+      :legendCenterX="legendCenterX"
+      :legendY="legendY"
+      :legendCenterY="legendCenterY"
       :panX="panX"
       :panY="panY"
       :startAngle="startAngle"
@@ -18,9 +25,6 @@ const Template = (args, { argTypes }) => ({
       :axisMin="axisMin"
       :axisMax="axisMax"
       :ranges="ranges"
-      :legend="legend"
-      :legendX="legendX"
-      :legendCenterX="legendCenterX"
       :firstClockHand="firstClockHand"
       :firstValue="firstValue"
       :secondClockHand="secondClockHand"
@@ -38,9 +42,13 @@ Default.args = {
   axisMin: 0,
   axisMax: 200,
   ranges: undefined,
+  minHeight: '400px',
+  vertical: true,
   legend: true,
   legendX: 50,
   legendCenterX: 50,
+  legendY: 50,
+  legendCenterY: 50,
   firstClockHand: { colorIndex: 0, name: "Value 1" },
   firstValue: 50,
   secondClockHand: undefined,

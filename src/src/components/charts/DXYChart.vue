@@ -1,5 +1,10 @@
 <template>
-  <div ref="xychart" :id="'xychart'" style="width: 100%; height: 100%;">
+  <div
+    ref="xychart"
+    :id="'xychart'"
+    :style="{ minHeight: minHeight }"
+    style="width: 100%; height: 100%;"
+  >
     <slot v-if="upAndRunning"> </slot>
   </div>
 </template>
@@ -20,6 +25,9 @@ export default class DXYChart extends Vue {
 
   @ProvideReactive(CHART)
   chart: am5xy.XYChart | null = null;
+
+  @Prop({ required: false, default: '400px' })
+  minHeight!: string;
 
   @Prop({ required: false, default: true })
   vertical!: boolean;
@@ -42,7 +50,7 @@ export default class DXYChart extends Vue {
   upAndRunning = false;
   
   setLayout(): void {
-    this.chart!.set("layout", this.vertical ? this.root.verticalLayout : this.root.horizontalLayout);
+    this.chart!.set("layout", this.vertical ? this.root!.verticalLayout : this.root!.horizontalLayout);
   }
 
   setWheelX(): void {

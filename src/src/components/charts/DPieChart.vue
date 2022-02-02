@@ -1,5 +1,10 @@
 <template>
-  <div ref="piechart" :id="'piechart'" style="width: 100%; height: 100%;">
+  <div
+    ref="piechart"
+    :id="'piechart'"
+    :style="{ minHeight: minHeight }"
+    style="width: 100%; height: 100%;"
+  >
     <slot v-if="upAndRunning"> </slot>
   </div>
 </template>
@@ -18,19 +23,22 @@ export default class DPieChart extends Vue {
   @ProvideReactive(AMROOT)
   root: am5.Root | null = null;
 
+  @ProvideReactive(CHART)
+  chart: am5percent.PieChart | null = null;
+
+  @Prop({ required: false, default: '400px' })
+  minHeight!: string;
+
   @Prop({ required: false, default: true })
   vertical!: boolean;
 
   @Watch("vertical")
   onVerticalChange = this.setLayout;
 
-  @ProvideReactive(CHART)
-  chart: am5percent.PieChart | null = null;
-
   upAndRunning = false;
 
   setLayout(): void {
-    this.chart!.set("layout", this.vertical ? this.root.verticalLayout : this.root.horizontalLayout);
+    this.chart!.set("layout", this.vertical ? this.root!.verticalLayout : this.root!.horizontalLayout);
   }
 
   mounted(): void {

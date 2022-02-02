@@ -1,5 +1,10 @@
 <template>
-  <div ref="radarchart" :id="'radarchart'" style="width: 100%; height: 100%;">
+  <div
+    ref="radarchart"
+    :id="'radarchart'"
+    :style="{ minHeight: minHeight }"
+    style="width: 100%; height: 100%;"
+  >
     <slot v-if="upAndRunning"> </slot>
   </div>
 </template>
@@ -18,14 +23,17 @@ export default class DRadarChart extends Vue {
   @ProvideReactive(AMROOT)
   root: am5.Root | null = null;
 
+  @ProvideReactive(CHART)
+  chart: am5radar.RadarChart | null = null;
+
+  @Prop({ required: false, default: '400px' })
+  minHeight!: string;
+
   @Prop({ required: false, default: true })
   vertical!: boolean;
 
   @Watch("vertical")
   onVerticalChange = this.setLayout;
-
-  @ProvideReactive(CHART)
-  chart: am5radar.RadarChart | null = null;
 
   @Prop({ required: false, default: false })
   panX!: boolean;
@@ -60,7 +68,7 @@ export default class DRadarChart extends Vue {
   upAndRunning = false;
 
   setLayout(): void {
-    this.chart!.set("layout", this.vertical ? this.root.verticalLayout : this.root.horizontalLayout);
+    this.chart!.set("layout", this.vertical ? this.root!.verticalLayout : this.root!.horizontalLayout);
   }
 
   setPanX(): void {

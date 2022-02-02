@@ -38,6 +38,12 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 @Component({})
 export default class RadarChart extends Vue {
   @Prop({ required: true })
+  minHeight!: string;
+
+  @Prop({ required: true })
+  vertical!: boolean;
+
+  @Prop({ required: true })
   panX!: boolean;
 
   @Prop({ required: true })
@@ -69,6 +75,12 @@ export default class RadarChart extends Vue {
 
   @Prop({ required: true })
   legendCenterX!: number;
+
+  @Prop({ required: true })
+  legendY!: number;
+
+  @Prop({ required: true })
+  legendCenterY!: number;
 
   @Prop({ required: true })
   firstClockHand!: { colorIndex: number; name: string; }

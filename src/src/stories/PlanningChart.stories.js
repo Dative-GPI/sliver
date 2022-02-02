@@ -11,9 +11,13 @@ const Template = (args, { argTypes }) => ({
   template:
     `<planning-chart
       :data="data"
+      :minHeight="minHeight"
+      :vertical="vertical"
       :legend="legend"
       :legendX="legendX"
       :legendCenterX="legendCenterX"
+      :legendY="legendY"
+      :legendCenterY="legendCenterY"
       :cursor="cursor"
       :cursorBehavior="cursorBehavior"
       :cursorXVisible="cursorXVisible"
@@ -58,9 +62,13 @@ Default.args = {
       { ...makePlanningSerie("Line 2", 1640815320000, 360, ["Production", "Idle", "Cooling", "Warming"], 50 ) }
     ]
   },
+  minHeight: '400px',
+  vertical: true,
   legend: true,
   legendX: 50,
   legendCenterX: 50,
+  legendY: 50,
+  legendCenterY: 50,
   cursor: true,
   cursorBehavior: "zoomXY",
   cursorXVisible: true,

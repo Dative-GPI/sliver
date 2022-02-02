@@ -42,6 +42,12 @@ export default class BarsChart extends Vue {
   data!: any;
 
   @Prop({ required: true })
+  minHeight!: string;
+
+  @Prop({ required: true })
+  vertical!: boolean;
+
+  @Prop({ required: true })
   legend!: boolean;
 
   @Prop({ required: true })
@@ -49,6 +55,12 @@ export default class BarsChart extends Vue {
 
   @Prop({ required: true })
   legendCenterX!: number;
+
+  @Prop({ required: true })
+  legendY!: number;
+
+  @Prop({ required: true })
+  legendCenterY!: number;
 
   @Prop({ required: true })
   cursor!: boolean;

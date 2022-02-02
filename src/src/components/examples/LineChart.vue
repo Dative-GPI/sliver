@@ -24,8 +24,8 @@
             <d-line-serie
               v-for="(serie, index) in data.series"
               :key="index"
-              :bullet="seriesBullet"
-              :bulletRadius="seriesBulletRadius"
+              :bullet="lineSeriesBullet"
+              :bulletRadius="lineSeriesBulletRadius"
               :name="serie.serie"
               :data="serie.data"
             />
@@ -51,6 +51,12 @@ export default class LineChart extends Vue {
   data!: any;
 
   @Prop({ required: true })
+  minHeight!: string;
+
+  @Prop({ required: true })
+  vertical!: boolean;
+
+  @Prop({ required: true })
   legend!: boolean;
 
   @Prop({ required: true })
@@ -58,6 +64,12 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   legendCenterX!: number;
+
+  @Prop({ required: true })
+  legendY!: number;
+
+  @Prop({ required: true })
+  legendCenterY!: number;
 
   @Prop({ required: true })
   cursor!: boolean;

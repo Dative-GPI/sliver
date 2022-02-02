@@ -16,11 +16,20 @@ export default class DLegendWrapper extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 
+  @Prop({ required: false, default: true })
+  vertical!: boolean;
+
   @Prop({ required: false, default: 50 })
   x!: number;
 
   @Prop({ required: false, default: 50 })
   centerX!: number;
+
+  @Prop({ required: false, default: 50 })
+  y!: number;
+
+  @Prop({ required: false, default: 50 })
+  centerY!: number;
 
   @Watch("enabled")
   onEnabledChange() {

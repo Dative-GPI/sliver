@@ -11,9 +11,13 @@ const Template = (args, { argTypes }) => ({
   template:
     `<scatter-plot-chart
       :data="data"
+      :minHeight="minHeight"
+      :vertical="vertical"
       :legend="legend"
       :legendX="legendX"
       :legendCenterX="legendCenterX"
+      :legendY="legendY"
+      :legendCenterY="legendCenterY"
       :cursor="cursor"
       :cursorBehavior="cursorBehavior"
       :cursorXVisible="cursorXVisible"
@@ -55,9 +59,13 @@ Default.args = {
       { ...makeScatterPlotSerie("Second furnace", ["Croissants", "Pains"], 10, 20, 10 ) },
     ]
   },
+  minHeight: '400px',
+  vertical: true,
   legend: true,
   legendX: 50,
   legendCenterX: 50,
+  legendY: 50,
+  legendCenterY: 50,
   cursor: true,
   cursorBehavior: "zoomXY",
   cursorXVisible: true,

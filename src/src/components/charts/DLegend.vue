@@ -61,14 +61,17 @@ export default class DLegend extends Vue {
   upAndRunning = false;
 
   setPosition(): void {
+    console.log(this.centerY + " " + this.y);
     if (this.enabled) {
       if (this.vertical) {
+        this.legend!.set("layout", this.root!.horizontalLayout);
         this.legend!.set("x", am5.percent(this.x));
         this.legend!.set("y", undefined);
         this.legend!.set("centerX", am5.percent(this.centerX));
         this.legend!.set("centerY", undefined);
       }
       else {
+        this.legend!.set("layout", this.root!.verticalLayout);
         this.legend!.set("x", undefined);
         this.legend!.set("y", am5.percent(this.y));
         this.legend!.set("centerX", undefined);
