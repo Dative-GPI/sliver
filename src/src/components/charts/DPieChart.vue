@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Component, ProvideReactive, Vue } from "vue-property-decorator";
+import { Component, Prop, ProvideReactive, Vue, Watch } from "vue-property-decorator";
 
 import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
@@ -18,10 +18,20 @@ export default class DPieChart extends Vue {
   @ProvideReactive(AMROOT)
   root: am5.Root | null = null;
 
+  @Prop({ required: false, default: true })
+  vertical!: boolean;
+
+  @Watch("vertical")
+  onVerticalChange = this.setLayout;
+
   @ProvideReactive(CHART)
   chart: am5percent.PieChart | null = null;
 
   upAndRunning = false;
+
+  setLayout(): void {
+    this.chart!.set("layout", this.vertical ? this.root.verticalLayout : this.root.horizontalLayout);
+  }
 
   mounted(): void {
     // Create root
@@ -29,9 +39,9 @@ export default class DPieChart extends Vue {
     this.root.setThemes([ am5themes_Animated.new(this.root) ]);
 
     // Add chart to root
-    this.chart = this.root.container.children.push(am5percent.PieChart.new(this.root, {
-      layout: this.root.verticalLayout
-    }));
+    this.chart = this.root.container.children.push(am5percent.PieChart.new(this.root, {}));
+
+    this.setLayout();
 
     this.upAndRunning = true;
   }

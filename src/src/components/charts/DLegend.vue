@@ -25,32 +25,55 @@ export default class DLegend extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 
+  @Prop({ required: false, default: true })
+  vertical!: boolean;
+
+  @Watch("vertical")
+  onVerticalChange = this.setPosition;
+
   @Prop({ required: false, default: 50 })
   x!: number;
 
   @Watch("x")
-  onXChange = this.setX;
+  onXChange = this.setPosition;
 
   @Prop({ required: false, default: 50 })
   centerX!: number;
 
   @Watch("centerX")
-  onCenterXChange = this.setCenterX;
+  onCenterXChange = this.setPosition;
+
+  @Prop({ required: false, default: 50 })
+  y!: number;
+
+  @Watch("y")
+  onYChange = this.setPosition;
+
+  @Prop({ required: false, default: 50 })
+  centerY!: number;
+
+  @Watch("centerY")
+  onCenterYChange = this.setPosition;
 
   @ProvideReactive(LEGEND)
   legend: am5.Legend | null = null;
 
   upAndRunning = false;
 
-  setX(): void {
+  setPosition(): void {
     if (this.enabled) {
-      this.legend!.set("x", am5.percent(this.x));
-    }
-  }
-
-  setCenterX(): void {
-    if (this.enabled) {
-      this.legend!.set("centerX", am5.percent(this.centerX));
+      if (this.vertical) {
+        this.legend!.set("x", am5.percent(this.x));
+        this.legend!.set("y", undefined);
+        this.legend!.set("centerX", am5.percent(this.centerX));
+        this.legend!.set("centerY", undefined);
+      }
+      else {
+        this.legend!.set("x", undefined);
+        this.legend!.set("y", am5.percent(this.y));
+        this.legend!.set("centerX", undefined);
+        this.legend!.set("centerY", am5.percent(this.centerY));
+      }
     }
   }
 
@@ -59,8 +82,7 @@ export default class DLegend extends Vue {
       // Add to chart
       this.legend = this.chart.children.push(am5.Legend.new(this.root, {}));
 
-      this.setX();
-      this.setCenterX();
+      this.setPosition();
     }
 
     this.upAndRunning = true;

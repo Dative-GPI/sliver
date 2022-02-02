@@ -21,6 +21,12 @@ export default class DXYChart extends Vue {
   @ProvideReactive(CHART)
   chart: am5xy.XYChart | null = null;
 
+  @Prop({ required: false, default: true })
+  vertical!: boolean;
+
+  @Watch("vertical")
+  onVerticalChange = this.setLayout;
+
   @Prop({ required: false, default: "panX" })
   wheelX!: "zoomX" | "zoomY" | "zoomXY" | "panX" | "panY" | "panXY" | undefined;
 
@@ -34,6 +40,10 @@ export default class DXYChart extends Vue {
   onWheelYChange = this.setWheelY;
 
   upAndRunning = false;
+  
+  setLayout(): void {
+    this.chart!.set("layout", this.vertical ? this.root.verticalLayout : this.root.horizontalLayout);
+  }
 
   setWheelX(): void {
     this.chart!.set("wheelX", this.wheelX);
@@ -49,10 +59,9 @@ export default class DXYChart extends Vue {
     this.root.setThemes([ am5themes_Animated.new(this.root) ]);
 
     // Add chart to root
-    this.chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {
-      layout: this.root.verticalLayout
-    }));
+    this.chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {}));
 
+    this.setLayout();
     this.setWheelX();
     this.setWheelY();
 

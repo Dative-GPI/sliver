@@ -18,6 +18,12 @@ export default class DRadarChart extends Vue {
   @ProvideReactive(AMROOT)
   root: am5.Root | null = null;
 
+  @Prop({ required: false, default: true })
+  vertical!: boolean;
+
+  @Watch("vertical")
+  onVerticalChange = this.setLayout;
+
   @ProvideReactive(CHART)
   chart: am5radar.RadarChart | null = null;
 
@@ -53,6 +59,10 @@ export default class DRadarChart extends Vue {
 
   upAndRunning = false;
 
+  setLayout(): void {
+    this.chart!.set("layout", this.vertical ? this.root.verticalLayout : this.root.horizontalLayout);
+  }
+
   setPanX(): void {
     this.chart!.set("panX", this.panX);
   }
@@ -79,10 +89,9 @@ export default class DRadarChart extends Vue {
     this.root.setThemes([ am5themes_Animated.new(this.root) ]);
 
     // Add chart to root
-    this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {
-      layout: this.root.verticalLayout
-    }));
+    this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {}));
 
+    this.setLayout();
     this.setPanX();
     this.setPanY();
     this.setStartAngle();
