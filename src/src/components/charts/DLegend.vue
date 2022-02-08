@@ -61,7 +61,6 @@ export default class DLegend extends Vue {
   upAndRunning = false;
 
   setPosition(): void {
-    console.log(this.centerY + " " + this.y);
     if (this.enabled) {
       if (this.vertical) {
         this.legend!.set("layout", this.root!.horizontalLayout);

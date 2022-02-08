@@ -10,6 +10,8 @@
         :key="index"
         :name="serie.serie"
         :data="serie.data"
+        :breakDownSlices="breakDownSlices"
+        :breakDownSlicesSubname="breakDownSlicesSubname"
       />
     </d-legend>
   </d-pie-chart>
@@ -43,5 +45,11 @@ export default class PieChart extends Vue {
 
   @Prop({ required: true })
   legendCenterY!: number;
+
+  @Prop({ required: true })
+  breakDownSlices!: boolean;
+
+  @Prop({ required: true })
+  breakDownSlicesSubname!: string;
 }
 </script>

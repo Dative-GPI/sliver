@@ -53,7 +53,7 @@ export default class DPieSerie extends Vue {
   @Watch("tooltipText")
   onTooltipTextChange = this.setTooltipText;
 
-  @Prop({ required: false, default: "" })
+  @Prop({ required: false, default: "{category}" })
   legendLabelText!: string;
 
   @Watch("legendLabelText")
@@ -77,14 +77,25 @@ export default class DPieSerie extends Vue {
   @Watch("textTypeLabels")
   onTextTypeLabelsChange = this.setTextTypeLabels;
 
+  @Prop({ required: false, default: false })
+  breakDownSlices!: boolean;
+
+  @Watch("breakDownSlices")
+  onBreakDownSlicesChange = this.setBreakDownSlices;
+
+  @Prop({ required: false, default: "subs" })
+  breakDownSlicesSubname!: string;
+
   @Prop({ required: true })
-  data!: unknown[];
+  data!: any[];
 
   @Watch("data")
   onDataChange = this.setData;
 
   serie: am5percent.PieSeries | null = null;
   tooltip: am5.Tooltip | null = null;
+
+  selected: any = null;
 
   upAndRunning = false;
 
@@ -134,8 +145,62 @@ export default class DPieSerie extends Vue {
     this.serie!.labels.template.set("textType", this.textTypeLabels);
   }
 
+  setBreakDownSlices(): void {
+    if (this.breakDownSlices) {
+      this.serie!.slices.template.events.on("click", this.handleBreakDownSlices);
+    }
+    else {
+      this.serie!.slices.template.events.off("click", this.handleBreakDownSlices);
+    }
+  }
+
+  handleBreakDownSlices(event: any) {
+    if (event.target.dataItem.dataContext.id != null) {
+      this.selected = event.target.dataItem.dataContext.id;
+    } else {
+      this.selected = undefined;
+    }
+    this.setData();
+  }
+
   setData(): void {
-    this.serie!.data.setAll(this.data);
+    // Remove from legend
+    if (this.legend) {
+      this.serie!.dataItems.forEach((dataItem: any) => {
+        this.legend!.data.removeValue(dataItem);
+      });
+    }
+    if (this.breakDownSlices) {
+      var chartData = [];
+      for (var i = 0; i < this.data.length; i++) {
+        if (this.selected === i) {
+          for (var x = 0; x < this.data[i][this.breakDownSlicesSubname].length; x++) {
+            chartData.push({
+              [this.categoryField]: this.data[i][this.breakDownSlicesSubname][x][this.categoryField],
+              [this.valueField]: this.data[i][this.breakDownSlicesSubname][x][this.valueField],
+              color: this.serie!.get("colors")!.getIndex(this.data.length + x)!,
+              sliceSettings: { active: true },
+              pulled: true
+            });
+          }
+        } else {
+          chartData.push({
+            [this.categoryField]: this.data[i][this.categoryField],
+            [this.valueField]: this.data[i][this.valueField],
+            color: this.serie!.get("colors")!.getIndex(i)!,
+            id: i
+          });
+        }
+      }
+      this.serie!.data.setAll(chartData);
+    }
+    else {
+      this.serie!.data.setAll(this.data);
+    }
+    // Add to legend
+    if (this.legend != null) {
+      this.legend.data.pushAll(this.serie!.dataItems);
+    }
   }
 
   mounted(): void {
@@ -143,8 +208,11 @@ export default class DPieSerie extends Vue {
     this.serie = this.chart.series.push(am5percent.PieSeries.new(this.root, {
       categoryField: this.categoryField,
       valueField: this.valueField,
+      fillField: "color",
       sequencedInterpolation: true,
     }));
+    
+    this.serie!.slices.template.set("templateField", "sliceSettings");
 
     this.setName();
     this.setShowTooltip();
@@ -154,15 +222,10 @@ export default class DPieSerie extends Vue {
     this.setTextLabels();
     this.setTextTypeLabels();
 
-    // Add to legend
-    if (this.legend != null) {
-      this.legend.data.push(this.serie);
-    }
+    this.setBreakDownSlices();
     
     // Set data
     this.setData();
-
-    console.log("PieSerie mounted");
 
     this.upAndRunning = true;
   }
@@ -171,9 +234,14 @@ export default class DPieSerie extends Vue {
     // Remove from chart
     this.chart.series.removeValue(this.serie!);
 
+    // Remove event handler
+    this.serie!.slices.template.events.off("click", this.handleBreakDownSlices);
+
     // Remove from legend
     if (this.legend) {
-      this.legend.data.removeValue(this.serie);
+      this.serie!.dataItems.forEach((dataItem: any) => {
+        this.legend!.data.removeValue(dataItem);
+      });
     }
 
     // Dispose

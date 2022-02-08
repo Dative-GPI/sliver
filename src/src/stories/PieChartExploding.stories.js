@@ -1,7 +1,7 @@
 import PieChart from '../components/examples/PieChart.vue';
 
 export default {
-  title: 'Example/PieChart',
+  title: 'Example/PieChart/Exploding',
   component: PieChart,
 };
 
@@ -23,13 +23,23 @@ const Template = (args, { argTypes }) => ({
     />`,
 });
 
-const makePieSerie = (name, categories, rangeValue) => {
+const makeExplodingPieSerie = (name, categories, subCategories, rangeValue) => {
   var data = [];
   for (let i = 0; i < categories.length; i++) {
-    data.push({
+    let parentCategory = {
       categoryX: categories[i],
-      valueY: Math.floor(Math.random() * rangeValue)
-    });
+      valueY: 0,
+      subs: []
+    };
+    for (let j = 0; j < subCategories.length; j++) {
+      parentCategory.subs.push({
+        categoryX: subCategories[j],
+        valueY: Math.floor(Math.random() * rangeValue)
+      });
+    }
+    parentCategory.valueY = parentCategory.subs.reduce((acc, cur) => acc + cur.valueY, 0);
+
+    data.push(parentCategory);
   }
 
   return {
@@ -42,7 +52,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePieSerie("Categories", ["Pineapple", "Orange", "Cherry", "Strawberry", "Watermelon"], 500 ) }
+      { ...makeExplodingPieSerie("Expenses", ["First company", "Second company"], ["Employees well-being", "Dividends", "Tax fraud"], 500 ) }
     ]
   },
   minHeight: '400px',
@@ -52,6 +62,6 @@ Default.args = {
   legendCenterX: 50,
   legendY: 50,
   legendCenterY: 50,
-  breakDownSlices: false,
+  breakDownSlices: true,
   breakDownSlicesSubname: "subs"
 };
