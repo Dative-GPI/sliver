@@ -53,7 +53,7 @@ export default class DStackedColumnSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "" })
+  @Prop({ required: false, default: "{name}: {valueY}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -98,7 +98,7 @@ export default class DStackedColumnSerie extends Vue {
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : "{" + this.valueYField + "}");
+      this.tooltip!.set("labelText", this.tooltipText);
     }
   }
 

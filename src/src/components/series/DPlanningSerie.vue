@@ -80,7 +80,7 @@ export default class DPlanningSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "" })
+  @Prop({ required: false, default: "{name}: {categoryY}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -155,7 +155,7 @@ export default class DPlanningSerie extends Vue {
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : this.name);
+      this.tooltip!.set("labelText", this.tooltipText);
     }
   }
 

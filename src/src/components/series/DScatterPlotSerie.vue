@@ -120,7 +120,7 @@ export default class DScatterPlotSerie extends Vue {
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : "{" + this.yField + "}");
+      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : `{name}`);
     }
   }
 

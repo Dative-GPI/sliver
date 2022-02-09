@@ -51,7 +51,7 @@ export default class DLineSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "" })
+  @Prop({ required: false, default: "{name}: {valueY}" })
   tooltipText!: string;
 
   @Watch("tooltipText")

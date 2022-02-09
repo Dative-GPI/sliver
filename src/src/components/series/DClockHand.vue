@@ -64,7 +64,7 @@ export default class DClockHand extends Vue {
   @Watch("clockHandRadius")
   onClockHandRadiusChange = this.setClockHandRadius;
 
-  @Prop({ required: false, default: "{value}" })
+  @Prop({ required: false, default: "{name}: {value}" })
   handTooltipText!: string;
 
   @Watch("handTooltipText")
