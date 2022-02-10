@@ -22,6 +22,7 @@ import DPlanningSerie from "./components/series/DPlanningSerie.vue";
 import DScatterPlotSerie from "./components/series/DScatterPlotSerie.vue";
 import DStackedColumnSerie from "./components/series/DStackedColumnSerie.vue";
 
+import { LayoutEnum, PositionEnum } from "./enums";
 
 const Sliver = {
   install(vue: any, options: any) {
@@ -49,4 +50,4 @@ const Sliver = {
   }
 };
  
- export { Sliver };
+ export { Sliver, LayoutEnum, PositionEnum };
