@@ -1,10 +1,10 @@
-export const enum LayoutEnum {
+export enum LayoutEnum {
   Grid = 0,
   Horizontal = 1,
   Vertical = 2
 }
 
-export const enum PositionEnum {
+export enum PositionEnum {
   Abscissa = 0,
   Ordinate = 1
 }
