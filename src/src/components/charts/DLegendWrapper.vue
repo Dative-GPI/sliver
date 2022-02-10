@@ -7,6 +7,8 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
+import { LayoutEnum, PositionEnum } from "../../enums";
+
 import WrappedLegend from "./DLegend.vue";
 
 @Component({
@@ -16,8 +18,11 @@ export default class DLegendWrapper extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 
-  @Prop({ required: false, default: true })
-  vertical!: boolean;
+  @Prop({ required: false, default: LayoutEnum.Grid })
+  layout!: LayoutEnum;
+
+  @Prop({ required: false, default: PositionEnum.Ordinate })
+  position!: PositionEnum;
 
   @Prop({ required: false, default: 50 })
   x!: number;

@@ -64,7 +64,7 @@ Default.args = {
   chartLayout: 2,
   legend: true,
   legendLayout: 0,
-  legendPosition: 0,
+  legendPosition: 1,
   legendX: 50,
   legendCenterX: 50,
   legendY: 50,

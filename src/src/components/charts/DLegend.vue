@@ -32,7 +32,7 @@ export default class DLegend extends Vue {
   @Watch("layout")
   onLayoutChange = this.setLayout;
 
-  @Prop({ required: false, default: PositionEnum.Abscissa })
+  @Prop({ required: false, default: PositionEnum.Ordinate })
   position!: PositionEnum;
 
   @Watch("position")
@@ -90,17 +90,17 @@ export default class DLegend extends Vue {
     if (this.enabled) {
       switch (this.position) {
         case PositionEnum.Abscissa: {
-          this.legend!.set("x", am5.percent(this.x));
-          this.legend!.set("y", undefined);
-          this.legend!.set("centerX", am5.percent(this.centerX));
-          this.legend!.set("centerY", undefined);
-          break;
-        }
-        case PositionEnum.Ordinate: {
           this.legend!.set("x", undefined);
           this.legend!.set("y", am5.percent(this.y));
           this.legend!.set("centerX", undefined);
           this.legend!.set("centerY", am5.percent(this.centerY));
+          break;
+        }
+        case PositionEnum.Ordinate: {
+          this.legend!.set("x", am5.percent(this.x));
+          this.legend!.set("y", undefined);
+          this.legend!.set("centerX", am5.percent(this.centerX));
+          this.legend!.set("centerY", undefined);
         }
       }
     }
