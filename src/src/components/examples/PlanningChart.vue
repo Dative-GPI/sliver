@@ -1,9 +1,16 @@
 <template>
-  <d-xy-chart>
+  <d-xy-chart
+    :min-height="minHeight"
+    :layout="chartLayout"
+  >
     <d-legend
       :enabled="legend"
+      :layout="legendLayout"
+      :position="legendPosition"
       :x="legendX"
       :centerX="legendCenterX"
+      :y="legendY"
+      :centerY="legendCenterY"
     >
       <d-xy-cursor
         :enabled="cursor"
@@ -42,6 +49,8 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 
+import { LayoutEnum, PositionEnum } from "../../enums";
+
 @Component({})
 export default class PlanningChart extends Vue {
   @Prop({ required: true })
@@ -51,10 +60,16 @@ export default class PlanningChart extends Vue {
   minHeight!: string;
 
   @Prop({ required: true })
-  vertical!: boolean;
+  chartLayout!: LayoutEnum;
 
   @Prop({ required: true })
   legend!: boolean;
+
+  @Prop({ required: true })
+  legendLayout!: LayoutEnum;
+
+  @Prop({ required: true })
+  legendPosition!: PositionEnum;
 
   @Prop({ required: true })
   legendX!: number;

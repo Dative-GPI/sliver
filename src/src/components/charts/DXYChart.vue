@@ -17,6 +17,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
 import { AMROOT, CHART } from "../../literals";
+import { LayoutEnum } from "../../enums";
 
 @Component({})
 export default class DXYChart extends Vue {
@@ -29,11 +30,11 @@ export default class DXYChart extends Vue {
   @Prop({ required: false, default: '400px' })
   minHeight!: string;
 
-  @Prop({ required: false, default: true })
-  vertical!: boolean;
+  @Prop({ required: false, default: LayoutEnum.Vertical })
+  layout!: LayoutEnum;
 
-  @Watch("vertical")
-  onVerticalChange = this.setLayout;
+  @Watch("layout")
+  onLayoutChange = this.setLayout;
 
   @Prop({ required: false, default: "panX" })
   wheelX!: "zoomX" | "zoomY" | "zoomXY" | "panX" | "panY" | "panXY" | undefined;
@@ -48,9 +49,22 @@ export default class DXYChart extends Vue {
   onWheelYChange = this.setWheelY;
 
   upAndRunning = false;
-  
+
   setLayout(): void {
-    this.chart!.set("layout", this.vertical ? this.root!.verticalLayout : this.root!.horizontalLayout);
+    switch(this.layout) {
+      case LayoutEnum.Grid: {
+        this.chart!.set("layout", this.root!.gridLayout);
+        break;
+      }
+      case LayoutEnum.Horizontal: {
+        this.chart!.set("layout", this.root!.horizontalLayout);
+        break;
+      }
+      case LayoutEnum.Vertical: {
+        this.chart!.set("layout", this.root!.verticalLayout);
+        break;
+      }
+    }
   }
 
   setWheelX(): void {

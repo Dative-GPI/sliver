@@ -1,11 +1,12 @@
 <template>
   <d-xy-chart
     :min-height="minHeight"
-    :vertical="vertical"
+    :layout="chartLayout"
   >
     <d-legend
       :enabled="legend"
-      :vertical="vertical"
+      :layout="legendLayout"
+      :position="legendPosition"
       :x="legendX"
       :centerX="legendCenterX"
       :y="legendY"
@@ -42,6 +43,8 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 
+import { LayoutEnum, PositionEnum } from "../../enums";
+
 @Component({})
 export default class BarsChart extends Vue {
   @Prop({ required: true })
@@ -51,10 +54,16 @@ export default class BarsChart extends Vue {
   minHeight!: string;
 
   @Prop({ required: true })
-  vertical!: boolean;
+  chartLayout!: LayoutEnum;
 
   @Prop({ required: true })
   legend!: boolean;
+
+  @Prop({ required: true })
+  legendLayout!: LayoutEnum;
+
+  @Prop({ required: true })
+  legendPosition!: PositionEnum;
 
   @Prop({ required: true })
   legendX!: number;

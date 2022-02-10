@@ -1,9 +1,16 @@
 <template>
-  <d-pie-chart>
+  <d-pie-chart
+    :min-height="minHeight"
+    :layout="chartLayout"
+  >
     <d-legend
       :enabled="legend"
+      :layout="legendLayout"
+      :position="legendPosition"
       :x="legendX"
       :centerX="legendCenterX"
+      :y="legendY"
+      :centerY="legendCenterY"
     >
       <d-pie-serie
         v-for="(serie, index) in data.series"
@@ -20,6 +27,8 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 
+import { LayoutEnum, PositionEnum } from "../../enums";
+
 @Component({})
 export default class PieChart extends Vue {
   @Prop({ required: true })
@@ -29,10 +38,16 @@ export default class PieChart extends Vue {
   minHeight!: string;
 
   @Prop({ required: true })
-  vertical!: boolean;
+  chartLayout!: LayoutEnum;
 
   @Prop({ required: true })
   legend!: boolean;
+
+  @Prop({ required: true })
+  legendLayout!: LayoutEnum;
+
+  @Prop({ required: true })
+  legendPosition!: PositionEnum;
 
   @Prop({ required: true })
   legendX!: number;

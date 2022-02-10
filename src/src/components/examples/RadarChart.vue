@@ -1,15 +1,16 @@
 <template>
   <d-radar-chart
-    :panX="panX"
-    :panY="panY"
-    :startAngle="startAngle"
-    :endAngle="endAngle"
-    :radius="radius"
+    :min-height="minHeight"
+    :layout="chartLayout"
   >
     <d-legend
       :enabled="legend"
+      :layout="legendLayout"
+      :position="legendPosition"
       :x="legendX"
       :centerX="legendCenterX"
+      :y="legendY"
+      :centerY="legendCenterY"
     >
       <d-value-t-axis
         :min="axisMin"
@@ -35,13 +36,12 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 
+import { LayoutEnum, PositionEnum } from "../../enums";
+
 @Component({})
 export default class RadarChart extends Vue {
   @Prop({ required: true })
   minHeight!: string;
-
-  @Prop({ required: true })
-  vertical!: boolean;
 
   @Prop({ required: true })
   panX!: boolean;
@@ -68,7 +68,16 @@ export default class RadarChart extends Vue {
   ranges!: { lowBound: number; highBound: number; color: string; label: string; }[] | undefined;
 
   @Prop({ required: true })
+  chartLayout!: LayoutEnum;
+
+  @Prop({ required: true })
   legend!: boolean;
+
+  @Prop({ required: true })
+  legendLayout!: LayoutEnum;
+
+  @Prop({ required: true })
+  legendPosition!: PositionEnum;
 
   @Prop({ required: true })
   legendX!: number;

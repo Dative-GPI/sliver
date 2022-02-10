@@ -12,8 +12,10 @@ const Template = (args, { argTypes }) => ({
     `<pie-chart
       :data="data"
       :minHeight="minHeight"
-      :vertical="vertical"
+      :chartLayout="chartLayout"
       :legend="legend"
+      :legendLayout="legendLayout"
+      :legendPosition="legendPosition"
       :legendX="legendX"
       :legendCenterX="legendCenterX"
       :legendY="legendY"
@@ -52,12 +54,19 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeExplodingPieSerie("Expenses", ["First company", "Second company"], ["Employees well-being", "Dividends", "Tax fraud"], 500 ) }
+      { ...makeExplodingPieSerie(
+        "Expenses",
+        ["First company", "Second company"],
+        ["Employees well-being", "Dividends", "Salaries & compensations", "Raw materials", "Wrongful terminations suing costs", "Public relations & marketing", "Miscellaneous"],
+        500
+      )}
     ]
   },
   minHeight: '400px',
-  vertical: true,
+  chartLayout: 2,
   legend: true,
+  legendLayout: 0,
+  legendPosition: 0,
   legendX: 50,
   legendCenterX: 50,
   legendY: 50,
