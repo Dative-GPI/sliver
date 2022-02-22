@@ -212,8 +212,7 @@ export default class DPlanningSerie extends Vue {
 
   setData(): void {
     // Add to axis
-    this.yAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.categoryYField, this.serieId));
-
+    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId));
     this.serie!.data.setAll(this.data);
   }
 
