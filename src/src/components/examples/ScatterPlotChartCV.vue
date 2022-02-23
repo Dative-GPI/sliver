@@ -21,6 +21,9 @@
         <d-category-x-axis
           :opposite="xAxisOpposite"
           :showTooltip="xAxisShowTooltip"
+          :labelsOversizedBehavior="xAxisLabelsOversizedBehavior"
+          :labelsMaxWidth="xAxisLabelsMaxWidth"
+          :labelsTooltipText="xAxisLabelsTooltipText"
         >
           <d-value-y-axis
             :opposite="yAxisOpposite"
@@ -113,6 +116,15 @@ export default class ScatterPlotChart extends Vue {
 
   @Prop({ required: true })
   xAxisShowTooltip!: boolean;
+
+  @Prop({ required: true })
+  xAxisLabelsOversizedBehavior!: "none" | "hide" | "fit" | "wrap" | "truncate";
+
+  @Prop({ required: true })
+  xAxisLabelsMaxWidth!: number;
+
+  @Prop({ required: true })
+  xAxisLabelsTooltipText!: string;
 
   @Prop({ required: true })
   yAxisOpposite!: boolean;

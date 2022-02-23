@@ -38,6 +38,24 @@ export default class DCategoryXAxis extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
+  @Prop({ required: false, default: "truncate" })
+  labelsOversizedBehavior!: "none" | "hide" | "fit" | "wrap" | "truncate";
+
+  @Watch("labelsOversizedBehavior")
+  onLabelsOversizedBehaviorChange = this.setLabelsOversizedBehavior;
+
+  @Prop({ required: false, default: 100 })
+  labelsMaxWidth!: number;
+
+  @Watch("labelsMaxWidth")
+  onLabelsMaxWidthChange = this.setLabelsMaxWidth;
+
+  @Prop({ required: false, default: "{categoryX}" })
+  labelsTooltipText!: string;
+
+  @Watch("labelsTooltipText")
+  onLabelsToolTipTextChange = this.setLabelsTooltipText;
+
   @ProvideReactive(XAXIS)
   axis: any = null;
 
@@ -83,6 +101,30 @@ export default class DCategoryXAxis extends Vue {
     }
   }
 
+  setLabelsOversizedBehavior(): void {
+    this.axis!.get("renderer").labels.template.set("oversizedBehavior", this.labelsOversizedBehavior);
+
+    if (this.labelsOversizedBehavior === "truncate") {
+      this.axis!.get("renderer").labels.template.setup = (target: any): void => {
+        target.set("background", am5.Rectangle.new(this.root!, {
+          fill: am5.color(0x000000),
+          fillOpacity: 0
+        }));
+      };
+    }
+    else {
+      this.axis!.get("renderer").labels.template.setup = (): void => {};
+    }
+  }
+
+  setLabelsMaxWidth(): void {
+    this.axis!.get("renderer").labels.template.set("maxWidth", this.labelsMaxWidth);
+  }
+
+  setLabelsTooltipText(): void {
+    this.axis!.get("renderer").labels.template.set("tooltipText", this.labelsTooltipText);
+  }
+
   mounted(): void {
     // Add to chart
     this.axis = this.chart.xAxes.push(am5xy.CategoryAxis.new(this.root, {
@@ -97,6 +139,10 @@ export default class DCategoryXAxis extends Vue {
 
     this.setOpposite();
     this.setShowTooltip();
+
+    this.setLabelsOversizedBehavior();
+    this.setLabelsMaxWidth();
+    this.setLabelsTooltipText();
 
     this.upAndRunning = true;
   }

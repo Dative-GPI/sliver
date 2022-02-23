@@ -30,6 +30,9 @@ const Template = (args, { argTypes }) => ({
       :scrollbarEndGripVisible="scrollbarEndGripVisible"
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
+      :xAxisLabelsOversizedBehavior="xAxisLabelsOversizedBehavior"
+      :xAxisLabelsMaxWidth="xAxisLabelsMaxWidth"
+      :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
@@ -55,8 +58,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeColumnSerie("Line 1", ["Pineapple", "Grapefruit", "Coconut", "Passion fruit", "Banana"], 50 ) },
-      { ...makeColumnSerie("Line 2", ["Pineapple", "Grapefruit", "Apple", "Peach", "Pear"], 100 ) }
+      { ...makeColumnSerie("Line 1", ["Pineapple like I mean huge pinneapple you know", "Grapefruit", "Coconut", "Passion fruit with a really long name", "Banana"], 50 ) },
+      { ...makeColumnSerie("Line 2", ["Pineapple like I mean huge pinneapple you know", "Grapefruit", "Apple", "Peach", "Pear"], 100 ) }
     ]
   },
   minHeight: '400px',
@@ -78,6 +81,9 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
+  xAxisLabelsOversizedBehavior: "truncate",
+  xAxisLabelsMaxWidth: 100,
+  xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#"

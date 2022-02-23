@@ -30,6 +30,10 @@ const Template = (args, { argTypes }) => ({
       :scrollbarEndGripVisible="scrollbarEndGripVisible"
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
+      :xAxisTooltipNumberFormat="xAxisTooltipNumberFormat"
+      :xAxisLabelsOversizedBehavior="xAxisLabelsOversizedBehavior"
+      :xAxisLabelsMaxWidth="xAxisLabelsMaxWidth"
+      :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
     />`,
@@ -81,6 +85,9 @@ Default.args = {
   xAxisOpposite: false,
   xAxisShowTooltip: true,
   xAxisTooltipNumberFormat: "#",
+  xAxisLabelsOversizedBehavior: "truncate",
+  xAxisLabelsMaxWidth: 100,
+  xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#"
