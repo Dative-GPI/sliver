@@ -16,7 +16,7 @@ export default class DXYCursorWrapper extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 
-  @Prop({ required: false, default: "zoomXY" })
+  @Prop({ required: false, default: "zoomX" })
   behavior!: "zoomXY" | "zoomX" | "zoomY" | "selectX" | "selectY" | "selectXY" | undefined;
 
   @Prop({ required: false, default: true })

@@ -26,6 +26,8 @@
           <d-category-y-axis
             :opposite="yAxisOpposite"
             :showTooltip="yAxisShowTooltip"
+            :cellStartLocation="yAxisCellStartLocation"
+            :cellEndLocation="yAxisCellEndLocation"
           >
             <d-planning-serie
               v-for="(serie, index) in data.series"
@@ -121,5 +123,11 @@ export default class PlanningChart extends Vue {
 
   @Prop({ required: true })
   yAxisShowTooltip!: boolean;
+
+  @Prop({ required: true })
+  yAxisCellStartLocation!: number;
+
+  @Prop({ required: true })
+  yAxisCellEndLocation!: number;
 }
 </script>

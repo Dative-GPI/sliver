@@ -44,6 +44,18 @@ export default class DCategoryYAxis extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
+  @Prop({ required: false, default: 0 })
+  cellStartLocation!: number;
+
+  @Watch("cellStartLocation")
+  onCellStartLocationChange = this.setCellStartLocation;
+
+  @Prop({ required: false, default: 1 })
+  cellEndLocation!: number;
+
+  @Watch("cellEndLocation")
+  onCellEndLocationChange = this.setCellEndLocation;
+
   @ProvideReactive(YAXIS)
   axis: any = null;
 
@@ -93,6 +105,14 @@ export default class DCategoryYAxis extends Vue {
     }
   }
 
+  setCellStartLocation(): void {
+    this.axis!.get("renderer").set("cellStartLocation", this.cellStartLocation);
+  }
+
+  setCellEndLocation(): void {
+    this.axis!.get("renderer").set("cellEndLocation", this.cellEndLocation);
+  }
+
   mounted(): void {
     // Add to chart
     this.axis = this.chart.yAxes.push(am5xy.CategoryAxis.new(this.root, {
@@ -108,6 +128,8 @@ export default class DCategoryYAxis extends Vue {
     this.setOpposite();
     this.setLabelsVisible();
     this.setShowTooltip();
+    this.setCellStartLocation();
+    this.setCellEndLocation();
 
     this.upAndRunning = true;
   }

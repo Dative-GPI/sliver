@@ -33,6 +33,8 @@ const Template = (args, { argTypes }) => ({
       :xAxisTooltipDateFormat="xAxisTooltipDateFormat"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
+      :yAxisCellStartLocation="yAxisCellStartLocation"
+      :yAxisCellEndLocation="yAxisCellEndLocation"
     />`,
 });
 
@@ -71,7 +73,7 @@ Default.args = {
   legendY: 50,
   legendCenterY: 50,
   cursor: true,
-  cursorBehavior: "zoomXY",
+  cursorBehavior: "zoomX",
   cursorXVisible: true,
   cursorYVisible: true,
   scrollbar: true,
@@ -82,5 +84,7 @@ Default.args = {
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm",
   yAxisOpposite: false,
-  yAxisShowTooltip: true
+  yAxisShowTooltip: true,
+  yAxisCellStartLocation: 0.5,
+  yAxisCellEndLocation: 0.5
 };

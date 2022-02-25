@@ -36,6 +36,8 @@ const Template = (args, { argTypes }) => ({
       :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
+      :yAxisCellStartLocation="yAxisCellStartLocation"
+      :yAxisCellEndLocation="yAxisCellEndLocation"
     />`,
 });
 
@@ -75,7 +77,7 @@ Default.args = {
   legendY: 50,
   legendCenterY: 50,
   cursor: true,
-  cursorBehavior: "zoomXY",
+  cursorBehavior: "zoomX",
   cursorXVisible: true,
   cursorYVisible: true,
   scrollbar: true,
@@ -90,5 +92,7 @@ Default.args = {
   xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#"
+  yAxisTooltipNumberFormat: "#",
+  yAxisCellStartLocation: 0.5,
+  yAxisCellEndLocation: 0.5
 };

@@ -28,6 +28,8 @@
           <d-category-y-axis
             :opposite="yAxisOpposite"
             :showTooltip="yAxisShowTooltip"
+            :cellStartLocation="yAxisCellStartLocation"
+            :cellEndLocation="yAxisCellEndLocation"
           >
             <d-scatter-plot-serie
               v-for="(serie, index) in data.series"
@@ -134,5 +136,11 @@ export default class ScatterPlotChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  yAxisCellStartLocation!: number;
+
+  @Prop({ required: true })
+  yAxisCellEndLocation!: number;
 }
 </script>

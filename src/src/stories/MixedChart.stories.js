@@ -38,6 +38,8 @@ const Template = (args, { argTypes }) => ({
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisBisOpposite="yAxisBisOpposite"
       :yAxisBisShowTooltip="yAxisBisShowTooltip"
+      :yAxisBisCellStartLocation="yAxisBisCellStartLocation"
+      :yAxisBisCellEndLocation="yAxisBisCellEndLocation"
       :lineSeriesBullet="lineSeriesBullet"
       :lineSeriesBulletRadius="lineSeriesBulletRadius"
     />`,
@@ -145,7 +147,7 @@ Default.args = {
   legendY: 50,
   legendCenterY: 50,
   cursor: true,
-  cursorBehavior: "zoomXY",
+  cursorBehavior: "zoomX",
   cursorXVisible: true,
   cursorYVisible: false,
   scrollbar: true,
@@ -160,6 +162,8 @@ Default.args = {
   yAxisTooltipNumberFormat: "#",
   yAxisBisOpposite: true,
   yAxisBisShowTooltip: true,
+  yAxisBisCellStartLocation: 0.5,
+  yAxisBisCellEndLocation: 0.5,
   lineSeriesBullet: false,
   lineSeriesBulletRadius: 3
 };

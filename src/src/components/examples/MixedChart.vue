@@ -40,6 +40,8 @@
           <d-category-y-axis
             :opposite="yAxisBisOpposite"
             :showTooltip="yAxisBisShowTooltip"
+            :cellStartLocation="yAxisBisCellStartLocation"
+            :cellEndLocation="yAxisBisCellEndLocation"
           >
             <d-planning-serie
               v-for="(serie, index) in dataBis.series"
@@ -57,6 +59,8 @@
             :opposite="yAxisBisOpposite"
             :labelsVisible="false"
             :showTooltip="false"
+            :cellStartLocation="yAxisBisCellStartLocation"
+            :cellEndLocation="yAxisBisCellEndLocation"
           >
             <d-planning-serie
               v-for="(serie, index) in dataTiers.series"
@@ -168,6 +172,12 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   yAxisBisShowTooltip!: boolean;
+
+  @Prop({ required: true })
+  yAxisBisCellStartLocation!: number;
+
+  @Prop({ required: true })
+  yAxisBisCellEndLocation!: number;
 
   @Prop({ required: true })
   lineSeriesBullet!: boolean;

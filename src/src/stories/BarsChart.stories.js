@@ -72,7 +72,7 @@ Default.args = {
   legendY: 50,
   legendCenterY: 50,
   cursor: true,
-  cursorBehavior: "zoomXY",
+  cursorBehavior: "zoomX",
   cursorXVisible: true,
   cursorYVisible: true,
   scrollbar: true,
