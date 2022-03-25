@@ -16,6 +16,8 @@ import DYScrollbar from "./components/charts/DYScrollbar.vue";
 
 import DClockHand from "./components/series/DClockHand.vue";
 import DColumnSerie from "./components/series/DColumnSerie.vue";
+import DHeatmapSerie from "./components/series/DHeatmapSerie.vue";
+import DHistogramSerie from "./components/series/DHistogramSerie.vue";
 import DLineSerie from "./components/series/DLineSerie.vue";
 import DPieSerie from "./components/series/DPieSerie.vue";
 import DPlanningSerie from "./components/series/DPlanningSerie.vue";
@@ -42,6 +44,8 @@ const Sliver = {
     vue.component("d-y-scrollbar", DYScrollbar);
     vue.component("d-clock-hand", DClockHand);
     vue.component("d-column-serie", DColumnSerie);
+    vue.component("d-heatmap-serie", DHeatmapSerie);
+    vue.component("d-histogram-serie", DHistogramSerie);
     vue.component("d-line-serie", DLineSerie);
     vue.component("d-pie-serie", DPieSerie);
     vue.component("d-planning-serie", DPlanningSerie);
