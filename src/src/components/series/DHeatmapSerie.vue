@@ -44,6 +44,9 @@ export default class DHeatmapSerie extends Vue {
   @Prop({ required: false, default: "categoryX" })
   xField!: string;
 
+  @Prop({ required: false, default: "closeTimestamp"})
+  closeXField!: string;
+
   @Prop({ required: false, default: "categoryY" })
   yField!: string;
 
@@ -143,7 +146,7 @@ export default class DHeatmapSerie extends Vue {
       xAxis: this.xAxis,
       yAxis: this.yAxis,
       openValueXField: this.xField,
-      valueXField: "closeTimestampX",
+      valueXField: this.closeXField,
       categoryXField: this.xField,
       categoryYField: this.yField,
       valueField: this.sizeField

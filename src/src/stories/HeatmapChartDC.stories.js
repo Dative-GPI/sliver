@@ -45,7 +45,7 @@ const makeHeatmapSerie = (name, tZero, elapsedTime, categoriesY, rangeValue, val
     for (let j = 0; j < categoriesY.length; j++) {
       data.push({
         timestampX: tZero,
-        closeTimestampX: tZero + elapsedTime,
+        closeTimestamp: tZero + elapsedTime,
         categoryY: categoriesY[j],
         valueZ: Math.floor(Math.random() * rangeValue)
       });
