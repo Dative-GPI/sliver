@@ -12,6 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { addSerie, removeSerie } from "../../helpers";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DLineSerie extends Vue {
@@ -39,6 +40,9 @@ export default class DLineSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
+  @Prop({ required: false, default: false })
+  snapToSeries!: boolean;
+
   @Prop({ required: false, default: "timestampX" })
   dateXField!: string;
 
@@ -57,13 +61,19 @@ export default class DLineSerie extends Vue {
   @Watch("tooltipText")
   onTooltipTextChange = this.setTooltipText;
 
+  @Prop({ required: false, default: true })
+  snapTooltip!: boolean;
+
+  @Watch("snapTooltip")
+  onSnapTooltipChange = this.setSnapTooltip;
+
   @Prop({ required: false, default: "" })
   legendLabelText!: string;
 
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
 
-  @Prop({ required: false, default: false })
+  @Prop({ required: false, default: true })
   bullet!: boolean;
 
   @Watch("bullet")
@@ -88,7 +98,7 @@ export default class DLineSerie extends Vue {
 
   setName(): void {
     this.serie!.set("name", this.name);
-    this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+    this.setLegendLabelText();
   }
 
   setShowTooltip(): void {
@@ -112,22 +122,37 @@ export default class DLineSerie extends Vue {
     }
   }
 
+  setSnapTooltip(): void {
+    this.serie!.set("snapTooltip", this.snapTooltip);
+  }
+
   setLegendLabelText(): void {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+  }
+
+  getBulletTemplate(): am5.Template<am5.Circle> {
+    return am5.Template.new({
+    });
   }
 
   setBullet(): void {
     this.serie!.bullets.clear();
 
     if (this.bullet) {
-      this.serie!.bullets.push(() => {
-        return am5.Bullet.new(this.root, {
-          sprite: am5.Circle.new(this.root, {
-            radius: this.bulletRadius,
-            fill: this.serie!.get("fill"),
-          })
-        });
+      this.serie!.set("userData", {
+        ...this.serie!.get("userData"),
+        bulletRadius: this.bulletRadius
       });
+
+      this.serie!.bullets.push(() => 
+        am5.Bullet.new(this.root, {
+          sprite: am5.Circle.new(this.root, {
+            opacity: this.serie!.get("opacity"),
+            fill: this.serie!.get("fill"),
+            radius: this.bulletRadius
+          })
+        })
+      );
     }
   }
 
@@ -142,16 +167,23 @@ export default class DLineSerie extends Vue {
       yAxis: this.yAxis,
       valueXField: this.dateXField,
       valueYField: this.valueYField,
-      sequencedInterpolation: true
+      sequencedInterpolation: true,
+      userData: { serie: SerieEnum.LineSerie }
     }));
+
+    this.serie.set("userData", {
+      ...this.serie.get("userData"),
+      series: "LineSerie"
+    });
 
     // Set updatable properties
     this.setName();
     this.setBullet();
     this.setShowTooltip();
+    this.setSnapTooltip();
 
     // Add to cursor
-    if (this.cursor != null) {
+    if (this.cursor != null && this.snapToSeries) {
       this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
 

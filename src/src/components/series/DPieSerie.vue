@@ -11,6 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 
 import { AMROOT, CHART, LEGEND } from "../../literals";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DPieSerie extends Vue {
@@ -210,6 +211,7 @@ export default class DPieSerie extends Vue {
       valueField: this.valueField,
       fillField: "color",
       sequencedInterpolation: true,
+      userData: { serie: SerieEnum.PieSerie }
     }));
     
     this.serie!.slices.template.set("templateField", "sliceSettings");

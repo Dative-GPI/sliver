@@ -30,6 +30,12 @@ export default class DValueYAxis extends Vue {
   onOppositeChange = this.setOpposite;
 
   @Prop({ required: false, default: true })
+  logarithmic!: boolean;
+
+  @Watch("logarithmic")
+  onLogarithmicChange = this.setLogarithmic;
+
+  @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
   @Watch("showTooltip")
@@ -50,6 +56,13 @@ export default class DValueYAxis extends Vue {
 
   setOpposite(): void {
     this.axis!.get("renderer").set("opposite", this.opposite);
+  }
+
+  setLogarithmic(): void {
+    this.axis!.set("logarithmic", this.logarithmic);
+    if (this.logarithmic) {
+      this.axis!.set("treatZeroAs", 0.0000001);
+    }
   }
 
   setShowTooltip(): void {
@@ -93,7 +106,22 @@ export default class DValueYAxis extends Vue {
   mounted(): void {
     // Add to chart
     this.axis = this.chart.yAxes.push(am5xy.ValueAxis.new(this.root, {
-      renderer: am5xy.AxisRendererY.new(this.root, {})
+      renderer: am5xy.AxisRendererY.new(this.root, {}),
+      numberFormat: "#a",
+      numberFormatter:  am5.NumberFormatter.new(this.root, {
+        bigNumberPrefixes: [
+          { "number": 1e+3, "suffix": "k" },
+          { "number": 1e+6, "suffix": "M" },
+          { "number": 1e+9, "suffix": "G" },
+          { "number": 1e+12, "suffix": "T" },
+          { "number": 1e+15, "suffix": "P" }
+        ],
+        smallNumberPrefixes: [
+          { "number": 1e-9, "suffix": "n" },
+          { "number": 1e-6, "suffix": "µ" },
+          { "number": 1e-3, "suffix": "m" }
+        ]
+      })
     }));
 
     // Add to cursor
@@ -102,6 +130,7 @@ export default class DValueYAxis extends Vue {
     }
 
     this.setOpposite();
+    this.setLogarithmic();
     this.setShowTooltip();
     this.setTooltipNumberFormat();
 

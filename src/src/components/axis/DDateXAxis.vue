@@ -35,7 +35,7 @@ export default class DDateXAxis extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "yyyy-MM-dd HH:mm" })
+  @Prop({ required: false, default: "yyyy-MM-dd HH:mm:ss" })
   tooltipDateFormat!: string;
 
   @Watch("tooltipDateFormat")
@@ -93,22 +93,28 @@ export default class DDateXAxis extends Vue {
   mounted(): void {
     // Add to chart
     this.axis = this.chart.xAxes.push(am5xy.DateAxis.new(this.root, {
-      groupData: true,
-      renderer: am5xy.AxisRendererX.new(this.root, {}),
-      baseInterval: {
-        timeUnit: "minute",
-        count: 1
-      },
+      renderer: am5xy.AxisRendererX.new(this.root, {
+        cellStartLocation: 0.1,
+        cellEndLocation: 0.9
+      }),
+      baseInterval: { timeUnit: "second", count: 1 },
       gridIntervals: [
+        { timeUnit: "second", count: 1 },
+        { timeUnit: "second", count: 2 },
+        { timeUnit: "second", count: 15 },
+        { timeUnit: "second", count: 30 },
         { timeUnit: "minute", count: 1 },
-        { timeUnit: "minute", count: 10 },
+        { timeUnit: "minute", count: 2 },
+        { timeUnit: "minute", count: 15 },
+        { timeUnit: "minute", count: 30 },
         { timeUnit: "hour", count: 1 },
-        { timeUnit: "hour", count: 2 },
         { timeUnit: "hour", count: 4 },
+        { timeUnit: "hour", count: 12 },
         { timeUnit: "day", count: 1 },
         { timeUnit: "day", count: 7 },
         { timeUnit: "month", count: 1 },
-      ]
+      ],
+      
     }));
 
     // Add to cursor

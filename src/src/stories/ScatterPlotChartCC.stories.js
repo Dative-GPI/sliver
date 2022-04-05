@@ -36,6 +36,7 @@ const Template = (args, { argTypes }) => ({
       :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
+      :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisCellStartLocation="yAxisCellStartLocation"
       :yAxisCellEndLocation="yAxisCellEndLocation"
     />`,

@@ -12,6 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DColumnSerie extends Vue {
@@ -41,6 +42,9 @@ export default class DColumnSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
+  @Prop({ required: false, default: true })
+  snapToSeries!: boolean;
+
   @Prop({ required: false, default: "categoryX" })
   categoryXField!: string;
 
@@ -57,7 +61,7 @@ export default class DColumnSerie extends Vue {
   tooltipText!: string;
 
   @Watch("tooltipText")
-  onTooltipTextChange = this.setTooltipText;
+  onTooltipTextChange = this.setShowTooltip;
 
   @Prop({ required: false, default: "" })
   legendLabelText!: string;
@@ -78,27 +82,20 @@ export default class DColumnSerie extends Vue {
 
   setName(): void {
     this.serie!.set("name", this.name);
-    this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+    this.setLegendLabelText();
   }
 
   setShowTooltip(): void {
-    if (!this.showTooltip) {
-      if (this.tooltip != null) {
-        this.tooltip!.dispose();
-        this.serie!.set("tooltip", undefined);
-        this.tooltip = null;
-      }
+    if (this.showTooltip) {
+      this.serie!.columns.template.setAll({
+        tooltipY: am5.percent(0),
+        tooltipText: this.tooltipText
+      });
     }
     else {
-      this.tooltip = am5.Tooltip.new(this.root, {});
-      this.serie!.set("tooltip", this.tooltip);
-      this.setTooltipText();
-    }
-  }
-
-  setTooltipText(): void {
-    if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText);
+      this.serie!.columns.template.setAll({
+        tooltipText: undefined
+      });      
     }
   }
 
@@ -121,7 +118,8 @@ export default class DColumnSerie extends Vue {
       yAxis: this.yAxis,
       categoryXField: this.categoryXField,
       valueYField: this.valueYField,
-      sequencedInterpolation: true
+      sequencedInterpolation: true,
+      userData: { serie: SerieEnum.ColumnSerie }
     }));
 
     // Set updatable properties
@@ -134,7 +132,7 @@ export default class DColumnSerie extends Vue {
     }
 
     // Add to cursor
-    if (this.cursor != null) {
+    if (this.cursor != null && this.snapToSeries) {
       this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     

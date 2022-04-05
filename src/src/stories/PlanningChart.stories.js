@@ -42,13 +42,12 @@ const makePlanningSerie = (name, tZero, timeRange, categories, values) => {
   var data = [];
   for (let i = 0; i < values; i++) {
     let categoryRandom = Math.floor(Math.random() * categories.length);
-    let timeOffset = Math.floor(Math.random() * (timeRange + 60)) * 1000
+    let timeOffset = (Math.floor(Math.random() * (timeRange)) + 60) * 1000
     data.push({
       timestampX: tZero,
-      closeTimestamp: tZero + timeOffset,
+      closeTimestampX: tZero + timeOffset,
       categoryY: categories[categoryRandom]
     });
-
     tZero += timeOffset;
   }
 
@@ -62,8 +61,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePlanningSerie("Line 1", 1640815320000, 360, ["Production", "Idle", "Cooling", "Warming"], 50 ) },
-      { ...makePlanningSerie("Line 2", 1640815320000, 360, ["Production", "Idle", "Cooling", "Warming"], 50 ) }
+      { ...makePlanningSerie("Line 1", 1577836800000, 540, ["Production", "Idle", "Cooling", "Warming"], 10 ) }
     ]
   },
   minHeight: '400px',
@@ -85,7 +83,7 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm",
+  xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisCellStartLocation: 0.5,

@@ -12,6 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { addSerie, removeSerie } from "../../helpers";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DHistogramSerie extends Vue {
@@ -41,8 +42,14 @@ export default class DHistogramSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
+  @Prop({ required: false, default: false })
+  snapToSeries!: boolean;
+
   @Prop({ required: false, default: "timestampX" })
-  dateXField!: string;
+  openDateXField!: string;
+
+  @Prop({ required: false, default: "closeTimestampX" })
+  closeDateXField!: string;
 
   @Prop({ required: false, default: "valueY" })
   valueYField!: string;
@@ -57,13 +64,19 @@ export default class DHistogramSerie extends Vue {
   tooltipText!: string;
 
   @Watch("tooltipText")
-  onTooltipTextChange = this.setTooltipText;
+  onTooltipTextChange = this.setShowTooltip;
 
   @Prop({ required: false, default: "" })
   legendLabelText!: string;
 
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
+
+  @Prop({ required: false, default: 1 })
+  fillOpacity!: number;
+
+  @Watch("fillOpacity")
+  onFillOpacityChange = this.setFillOpacity;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -78,32 +91,30 @@ export default class DHistogramSerie extends Vue {
 
   setName(): void {
     this.serie!.set("name", this.name);
-    this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+    this.setLegendLabelText();
   }
 
   setShowTooltip(): void {
-    if (!this.showTooltip) {
-      if (this.tooltip != null) {
-        this.tooltip!.dispose();
-        this.serie!.set("tooltip", undefined);
-        this.tooltip = null;
-      }
+    if (this.showTooltip) {
+      this.serie!.columns.template.setAll({
+        tooltipY: am5.percent(0),
+        tooltipX: am5.percent(50),
+        tooltipText: this.tooltipText
+      });
     }
     else {
-      this.tooltip = am5.Tooltip.new(this.root, {});
-      this.serie!.set("tooltip", this.tooltip);
-      this.setTooltipText();
-    }
-  }
-
-  setTooltipText(): void {
-    if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText);
+      this.serie!.columns.template.setAll({
+        tooltipText: undefined
+      });      
     }
   }
 
   setLegendLabelText(): void {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+  }
+
+  setFillOpacity(): void {
+    this.serie!.columns.template.set("fillOpacity", this.fillOpacity);
   }
 
   setData(): void {
@@ -117,14 +128,17 @@ export default class DHistogramSerie extends Vue {
     this.serie = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
       xAxis: this.xAxis,
       yAxis: this.yAxis,
-      valueXField: this.dateXField,
+      openValueXField: this.openDateXField,
+      valueXField: this.closeDateXField,
       valueYField: this.valueYField,
-      sequencedInterpolation: true
+      sequencedInterpolation: true,
+      userData: { serie: SerieEnum.HistogramSerie }
     }));
 
     // Set updatable properties
     this.setName();
     this.setShowTooltip();
+    this.setFillOpacity();
 
     // Add to legend
     if (this.legend != null) {
@@ -132,7 +146,7 @@ export default class DHistogramSerie extends Vue {
     }
 
     // Add to cursor
-    if (this.cursor != null) {
+    if (this.cursor != null && this.snapToSeries) {
       this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     

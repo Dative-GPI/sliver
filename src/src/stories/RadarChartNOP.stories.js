@@ -27,9 +27,22 @@ const Template = (args, { argTypes }) => ({
       :axisMin="axisMin"
       :axisMax="axisMax"
       :ranges="ranges"
-      :firstClockHand="firstClockHand"
+      :firstName="firstName"
+      :firstColorIndex="firstColorIndex"
+      :firstPinRadius="firstPinRadius"
+      :firstBottomWidth="firstBottomWidth"
+      :firstClockHandRadius="firstClockHandRadius"
+      :firstHandTooltipText="firstHandTooltipText"
+      :firstHandTooltipX="firstHandTooltipX"
       :firstValue="firstValue"
       :secondClockHand="secondClockHand"
+      :secondName="secondName"
+      :secondColorIndex="secondColorIndex"
+      :secondPinRadius="secondPinRadius"
+      :secondBottomWidth="secondBottomWidth"
+      :secondClockHandRadius="secondClockHandRadius"
+      :secondHandTooltipText="secondHandTooltipText"
+      :secondHandTooltipX="secondHandTooltipX"
       :secondValue="secondValue"
     />`,
 });
@@ -53,8 +66,21 @@ Default.args = {
   legendCenterX: 50,
   legendY: 50,
   legendCenterY: 50,
-  firstClockHand: { colorIndex: 0, name: "Value 1" },
+  firstName: "Value 1",
+  firstColorIndex: 0,
+  firstPinRadius: 5,
+  firstBottomWidth: 10,
+  firstClockHandRadius: 95,
+  firstHandTooltipText: "{name}: {value}",
+  firstHandTooltipX: 95,
   firstValue: 50,
-  secondClockHand: undefined,
+  secondClockHand: false,
+  secondName: "Value 2",
+  secondColorIndex: 1,
+  secondPinRadius: 5,
+  secondBottomWidth: 10,
+  secondClockHandRadius: 95,
+  secondHandTooltipText: "{name}: {value}",
+  secondHandTooltipX: 95,
   secondValue: 0
 };

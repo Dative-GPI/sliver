@@ -71,12 +71,12 @@ const makePlanningSerie = (name, tZero, elapsedTime, categories, values) => {
     let categoryRandom = categories[Math.floor(Math.random() * categories.length)];
 
     if (i > 0 && categoryRandom == data[data.length - 1].categoryY) {
-      data[data.length - 1].closeTimestamp += elapsedTime;
+      data[data.length - 1].closeTimestampX += elapsedTime;
     }
     else {
       data.push({
         timestampX: tZero,
-        closeTimestamp: tZero + elapsedTime,
+        closeTimestampX: tZero + elapsedTime,
         categoryY: categoryRandom
       });
     }
@@ -98,14 +98,14 @@ const makeEventSerie = (name, tZero, elapsedTime, categories, values) => {
     if (i === 0) {
       data.push({
         timestampX: tZero,
-        closeTimestamp: tZero,
+        closeTimestampX: tZero,
         categoryY: categoryRandom
       });
     }
     else if (categoryRandom != data[data.length - 1].categoryY) {
       data.push({
         timestampX: tZero,
-        closeTimestamp: tZero,
+        closeTimestampX: tZero,
         categoryY: categoryRandom
       });
     }

@@ -12,6 +12,7 @@ import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, XAXIS } from "../../literals";
+import { SerieEnum } from "../../enums";
 
 
 @Component({})
@@ -146,7 +147,9 @@ export default class DClockHand extends Vue {
   mounted(): void {
     this.colorSet = am5.ColorSet.new(this.root, {});
 
-    this.clockHand = am5radar.ClockHand.new(this.root, {});
+    this.clockHand = am5radar.ClockHand.new(this.root, {
+      userData: { serie: SerieEnum.ClockHand }
+    });
 
     // Add to axis
     this.axisDataItem = this.xAxis.makeDataItem({
@@ -180,8 +183,9 @@ export default class DClockHand extends Vue {
     this.xAxis.axisRanges.removeValue(this.axisDataItem!);
 
     // Dispose
-    this.clockHand!.dispose();
     this.xAxis!.disposeDataItem(this.axisDataItem!);
+    this.clockHand!.dispose();
+    this.colorSet!.dispose();
   }
 }
 </script>

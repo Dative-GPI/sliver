@@ -12,6 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DStackedColumnSerie extends Vue {
@@ -40,6 +41,9 @@ export default class DStackedColumnSerie extends Vue {
 
   @Watch("name")
   onNameChange = this.setName;
+
+  @Prop({ required: false, default: true })
+  snapToSeries!: boolean;
 
   @Prop({ required: false, default: "categoryX" })
   categoryXField!: string;
@@ -121,7 +125,8 @@ export default class DStackedColumnSerie extends Vue {
       stacked: true,
       categoryXField: this.categoryXField,
       valueYField: this.valueYField,
-      sequencedInterpolation: true
+      sequencedInterpolation: true,
+      userData: { serie: SerieEnum.StackedColumnSerie }
     }));
 
     // Set updatable properties
@@ -134,7 +139,7 @@ export default class DStackedColumnSerie extends Vue {
     }
 
     // Add to cursor
-    if (this.cursor != null) {
+    if (this.cursor != null && this.snapToSeries) {
       this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     

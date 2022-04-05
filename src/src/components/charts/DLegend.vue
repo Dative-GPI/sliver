@@ -13,7 +13,8 @@ import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND } from "../../literals";
-import { LayoutEnum, PositionEnum } from "../../enums";
+import { LayoutEnum, PositionEnum, SerieEnum } from "../../enums";
+import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 @Component({})
 export default class DLegend extends Vue {
@@ -110,6 +111,102 @@ export default class DLegend extends Vue {
     if (this.enabled) {
       // Add to chart
       this.legend = this.chart.children.push(am5.Legend.new(this.root, {}));
+
+      this.legend.itemContainers.template.events.on("pointerover", (event: ISpritePointerEvent) => {
+        var itemContainer = event!.target;
+        var eventSerie = itemContainer!.dataItem!.dataContext;
+        if (this.chart! instanceof am5xy.XYChart) {
+          this.chart!.series.each((serie: am5.Series) => {
+            if (serie != eventSerie) {
+              serie.set("opacity", 0.15);
+            }
+            if (serie instanceof am5xy.LineSeries) {
+              if (serie == eventSerie) {
+                serie.strokes.template.set("strokeWidth", 2);
+              }
+              else {
+                if (serie.bullets.values.length) {
+                  switch (serie.get("userData").serie) {
+                    case SerieEnum.LineSerie: {
+                      serie.bullets.clear();
+                      serie.bullets.push(() => {
+                        return am5.Bullet.new(this.root, {
+                          sprite: am5.Circle.new(this.root, {
+                            opacity: serie.get("opacity"),
+                            fill: serie.get("fill"),
+                            radius: serie.get("userData").bulletRadius
+                          })
+                        })
+                      });
+                      break;
+                    }
+                    case SerieEnum.ScatterPlotSerie: {
+                      serie.bullets.clear();
+                      serie.bullets.push(() => {
+                        return am5.Bullet.new(this.root, {
+                          sprite: am5.Circle.new(this.root, {
+                            opacity: serie.get("opacity"),
+                              fill: serie.get("fill")
+                            },
+                            serie.get("userData").circleTemplate)
+                        });
+                      });
+                      break;
+                    }
+                    default: {
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
+
+      this.legend.itemContainers.template.events.on("pointerout", () => {
+        if (!(this.chart! instanceof am5radar.RadarChart)) {
+          this.chart!.series.each((serie: any) => {
+            serie.set("opacity", 1);
+            if (serie instanceof am5xy.LineSeries) {
+              serie.strokes.template.set("strokeWidth", 1);
+              if (serie.bullets.values.length) {
+                switch (serie.get("userData").serie) {
+                  case SerieEnum.LineSerie: {
+                    serie.bullets.clear();
+                    serie.bullets.push(() => {
+                      return am5.Bullet.new(this.root, {
+                        sprite: am5.Circle.new(this.root, {
+                          opacity: serie.get("opacity"),
+                          fill: serie.get("fill"),
+                          radius: serie.get("userData").bulletRadius
+                        })
+                      })
+                    });
+                    break;
+                  }
+                  case SerieEnum.ScatterPlotSerie: {
+                    serie.bullets.clear();
+                    serie.bullets.push(() => {
+                      return am5.Bullet.new(this.root, {
+                        sprite: am5.Circle.new(this.root, {
+                          opacity: serie.get("opacity"),
+                            fill: serie.get("fill")
+                          },
+                          serie.get("userData").circleTemplate)
+                      });
+                    });
+                    break;
+                  }
+                  default: {
+                    break;
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
 
       this.setLayout();
       this.setPosition();

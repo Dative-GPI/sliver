@@ -90,6 +90,6 @@ Default.args = {
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#",
-  lineSeriesBullet: false,
+  lineSeriesBullet: true,
   lineSeriesBulletRadius: 3
 };

@@ -1,53 +1,61 @@
 <template>
-  <d-xy-chart
-    :min-height="minHeight"
-    :layout="chartLayout"
-  >
-    <d-legend
-      :enabled="legend"
-      :layout="legendLayout"
-      :position="legendPosition"
-      :x="legendX"
-      :centerX="legendCenterX"
-      :y="legendY"
-      :centerY="legendCenterY"
-    >
-      <d-xy-cursor
-        :enabled="cursor"
-        :behavior="cursorBehavior"
-        :xVisible="cursorXVisible"
-        :yVisible="cursorYVisible"
-      >
-        <d-category-x-axis
-          :opposite="xAxisOpposite"
-          :showTooltip="xAxisShowTooltip"
-          :labelsOversizedBehavior="xAxisLabelsOversizedBehavior"
-          :labelsMaxWidth="xAxisLabelsMaxWidth"
-          :labelsTooltipText="xAxisLabelsTooltipText"
-        >
-          <d-value-y-axis
-            :opposite="yAxisOpposite"
-            :showTooltip="yAxisShowTooltip"
-            :tooltipNumberFormat="yAxisTooltipNumberFormat"
-          >
-            <d-scatter-plot-serie
-              v-for="(serie, index) in data.series"
-              :key="index"
-              :name="serie.serie"
-              :data="serie.data"
-              :xField="'categoryX'"
-            />
-          </d-value-y-axis>
-        </d-category-x-axis>
-      </d-xy-cursor>
-    </d-legend>
-    <d-x-scrollbar
-      v-if="scrollbar"
-      :height="scrollbarHeight"
-      :startGripVisible="scrollbarStartGripVisible"
-      :endGripVisible="scrollbarEndGripVisible"
+  <div>
+    <spinner
+      :min-height="minHeight"
+      :style="{ display: ready ? 'none': 'flex' }"
     />
-  </d-xy-chart>
+    <d-xy-chart
+      :min-height="minHeight"
+      :layout="chartLayout"
+      @ready="ready = true"
+      :style="{ display: ready ? 'flex': 'none' }"
+    >
+      <d-legend
+        :enabled="legend"
+        :layout="legendLayout"
+        :position="legendPosition"
+        :x="legendX"
+        :centerX="legendCenterX"
+        :y="legendY"
+        :centerY="legendCenterY"
+      >
+        <d-xy-cursor
+          :enabled="cursor"
+          :behavior="cursorBehavior"
+          :xVisible="cursorXVisible"
+          :yVisible="cursorYVisible"
+        >
+          <d-category-x-axis
+            :opposite="xAxisOpposite"
+            :showTooltip="xAxisShowTooltip"
+            :labelsOversizedBehavior="xAxisLabelsOversizedBehavior"
+            :labelsMaxWidth="xAxisLabelsMaxWidth"
+            :labelsTooltipText="xAxisLabelsTooltipText"
+          >
+            <d-value-y-axis
+              :opposite="yAxisOpposite"
+              :showTooltip="yAxisShowTooltip"
+              :tooltipNumberFormat="yAxisTooltipNumberFormat"
+            >
+              <d-scatter-plot-serie
+                v-for="(serie, index) in data.series"
+                :key="index"
+                :name="serie.serie"
+                :data="serie.data"
+                :xField="'categoryX'"
+              />
+            </d-value-y-axis>
+          </d-category-x-axis>
+        </d-xy-cursor>
+      </d-legend>
+      <d-x-scrollbar
+        v-if="scrollbar"
+        :height="scrollbarHeight"
+        :startGripVisible="scrollbarStartGripVisible"
+        :endGripVisible="scrollbarEndGripVisible"
+      />
+    </d-xy-chart>
+  </div>
 </template>
 
 <script lang="ts">
@@ -55,7 +63,9 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
 
-@Component({})
+import Spinner from "./Spinner.vue";
+
+@Component({ components: { Spinner } })
 export default class ScatterPlotChart extends Vue {
   @Prop({ required: true })
   data!: any;
@@ -134,5 +144,7 @@ export default class ScatterPlotChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  ready: boolean = false;
 }
 </script>

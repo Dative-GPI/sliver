@@ -1,27 +1,35 @@
 <template>
-  <d-pie-chart
-    :min-height="minHeight"
-    :layout="chartLayout"
-  >
-    <d-legend
-      :enabled="legend"
-      :layout="legendLayout"
-      :position="legendPosition"
-      :x="legendX"
-      :centerX="legendCenterX"
-      :y="legendY"
-      :centerY="legendCenterY"
+  <div>
+    <spinner
+      :min-height="minHeight"
+      :style="{ display: ready ? 'none': 'flex' }"
+    />
+    <d-pie-chart
+      :min-height="minHeight"
+      :layout="chartLayout"
+      @ready="ready = true"
+      :style="{ display: ready ? 'flex': 'none' }"
     >
-      <d-pie-serie
-        v-for="(serie, index) in data.series"
-        :key="index"
-        :name="serie.serie"
-        :data="serie.data"
-        :breakDownSlices="breakDownSlices"
-        :breakDownSlicesSubname="breakDownSlicesSubname"
-      />
-    </d-legend>
-  </d-pie-chart>
+      <d-legend
+        :enabled="legend"
+        :layout="legendLayout"
+        :position="legendPosition"
+        :x="legendX"
+        :centerX="legendCenterX"
+        :y="legendY"
+        :centerY="legendCenterY"
+      >
+        <d-pie-serie
+          v-for="(serie, index) in data.series"
+          :key="index"
+          :name="serie.serie"
+          :data="serie.data"
+          :breakDownSlices="breakDownSlices"
+          :breakDownSlicesSubname="breakDownSlicesSubname"
+        />
+      </d-legend>
+    </d-pie-chart>
+  </div>
 </template>
 
 <script lang="ts">
@@ -29,7 +37,9 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
 
-@Component({})
+import Spinner from "./Spinner.vue";
+
+@Component({ components: { Spinner } })
 export default class PieChart extends Vue {
   @Prop({ required: true })
   data!: any;
@@ -66,5 +76,7 @@ export default class PieChart extends Vue {
 
   @Prop({ required: true })
   breakDownSlicesSubname!: string;
+
+  ready: boolean = false;
 }
 </script>

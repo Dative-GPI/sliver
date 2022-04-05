@@ -1,15 +1,15 @@
-import HistogramChart from '../components/examples/HistogramChart.vue';
+import LineChart from '../components/examples/LineChart.vue';
 
 export default {
-  title: 'Example/HistogramChart',
-  component: HistogramChart,
+  title: 'Example/LineChart/Logarithmic',
+  component: LineChart,
 };
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { HistogramChart },
+  components: { LineChart },
   template:
-    `<histogram-chart
+    `<line-chart
       :data="data"
       :minHeight="minHeight"
       :chartLayout="chartLayout"
@@ -34,22 +34,22 @@ const Template = (args, { argTypes }) => ({
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :lineSeriesBullet="lineSeriesBullet"
+      :lineSeriesBulletRadius="lineSeriesBulletRadius"
     />`,
 });
 
-const makeHistogramSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
+const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, multiplicator, values) => {
   var data = [];
   for (let i = 0; i < values; i++) {
     data.push({
       timestampX: tZero,
-      closeTimestampX: tZero + elapsedTime,
       valueY: vZero
     });
 
-    let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-
     tZero += elapsedTime;
-    vZero += (Math.floor(Math.random() * rangeValue) * plusOrMinus)
+    vZero += (Math.floor(Math.random() * rangeValue));
+    vZero = vZero * multiplicator;
   }
 
   return {
@@ -62,8 +62,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeHistogramSerie("Line 1", 1640815320000, 50, 120000, 5, 50 ) },
-      { ...makeHistogramSerie("Line 2", 1640815320000, 50, 120000, 5, 50 ) }
+      { ...makeLineSerie("Line 1", 1640815320000, 2, 120000, 5, 5, 15 ) },
+      { ...makeLineSerie("Line 2", 1640815320000, 2, 120000, 5, 2, 15 ) }
     ]
   },
   minHeight: '400px',
@@ -87,6 +87,9 @@ Default.args = {
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm",
   yAxisOpposite: false,
+  yAxisLogarithmic: true,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#"
+  yAxisTooltipNumberFormat: "#",
+  lineSeriesBullet: true,
+  lineSeriesBulletRadius: 3
 };

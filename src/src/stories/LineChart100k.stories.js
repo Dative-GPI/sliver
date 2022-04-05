@@ -1,15 +1,15 @@
-import HistogramChart from '../components/examples/HistogramChart.vue';
+import LineChart from '../components/examples/LineChart.vue';
 
 export default {
-  title: 'Example/HistogramChart',
-  component: HistogramChart,
+  title: 'Example/LineChart/100k values',
+  component: LineChart,
 };
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { HistogramChart },
+  components: { LineChart },
   template:
-    `<histogram-chart
+    `<line-chart
       :data="data"
       :minHeight="minHeight"
       :chartLayout="chartLayout"
@@ -34,15 +34,16 @@ const Template = (args, { argTypes }) => ({
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :lineSeriesBullet="lineSeriesBullet"
+      :lineSeriesBulletRadius="lineSeriesBulletRadius"
     />`,
 });
 
-const makeHistogramSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
+const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
   var data = [];
   for (let i = 0; i < values; i++) {
     data.push({
       timestampX: tZero,
-      closeTimestampX: tZero + elapsedTime,
       valueY: vZero
     });
 
@@ -62,8 +63,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeHistogramSerie("Line 1", 1640815320000, 50, 120000, 5, 50 ) },
-      { ...makeHistogramSerie("Line 2", 1640815320000, 50, 120000, 5, 50 ) }
+      { ...makeLineSerie("Line 1", 1640995200000, 50, 60000, 5, 50400 ) },
+      { ...makeLineSerie("Line 2", 1640995200000, 50, 60000, 5, 50400 ) }
     ]
   },
   minHeight: '400px',
@@ -88,5 +89,7 @@ Default.args = {
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#"
+  yAxisTooltipNumberFormat: "#",
+  lineSeriesBullet: false,
+  lineSeriesBulletRadius: 3
 };

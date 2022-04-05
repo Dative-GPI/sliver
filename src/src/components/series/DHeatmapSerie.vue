@@ -12,6 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DHeatmapSerie extends Vue {
@@ -41,10 +42,13 @@ export default class DHeatmapSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
+  @Prop({ required: false, default: false })
+  snapToSeries!: boolean;
+
   @Prop({ required: false, default: "categoryX" })
   xField!: string;
 
-  @Prop({ required: false, default: "closeTimestamp"})
+  @Prop({ required: false, default: "closeTimestampX"})
   closeXField!: string;
 
   @Prop({ required: false, default: "categoryY" })
@@ -63,7 +67,7 @@ export default class DHeatmapSerie extends Vue {
   tooltipText!: string;
 
   @Watch("tooltipText")
-  onTooltipTextChange = this.setTooltipText;
+  onTooltipTextChange = this.setShowTooltip;
 
   @Prop({ required: false, default: "" })
   legendLabelText!: string;
@@ -85,27 +89,21 @@ export default class DHeatmapSerie extends Vue {
 
   setName(): void {
     this.serie!.set("name", this.name);
-    this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+    this.setLegendLabelText();
   }
 
   setShowTooltip(): void {
-    if (!this.showTooltip) {
-      if (this.tooltip != null) {
-        this.tooltip!.dispose();
-        this.serie!.set("tooltip", undefined);
-        this.tooltip = null;
-      }
+    if (this.showTooltip) {
+      this.serie!.columns.template.setAll({
+        tooltipY: am5.percent(50),
+        tooltipX: am5.percent(50),
+        tooltipText: this.tooltipText
+      });
     }
     else {
-      this.tooltip = am5.Tooltip.new(this.root, {});
-      this.serie!.set("tooltip", this.tooltip);
-      this.setTooltipText();
-    }
-  }
-
-  setTooltipText(): void {
-    if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : `{name}`);
+      this.serie!.columns.template.setAll({
+        tooltipText: undefined
+      });      
     }
   }
 
@@ -149,7 +147,8 @@ export default class DHeatmapSerie extends Vue {
       valueXField: this.closeXField,
       categoryXField: this.xField,
       categoryYField: this.yField,
-      valueField: this.sizeField
+      valueField: this.sizeField,
+      userData: { serie: SerieEnum.HeatmapSerie }
     }));
 
     this.serie.columns.template.setAll({
@@ -161,8 +160,8 @@ export default class DHeatmapSerie extends Vue {
 
     // Set updatable properties
     this.setName();
-    this.setShowTooltip();
     this.setHeatRules();
+    this.setShowTooltip();
     
     // Add to legend
     if (this.legend != null) {
@@ -170,13 +169,12 @@ export default class DHeatmapSerie extends Vue {
     }
 
     // Add to cursor
-    if (this.cursor != null) {
+    if (this.cursor != null && this.snapToSeries) {
       this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     
     // Set data
     this.setData();
-    // this.serie.dataItems.template.locations.dateX = 1;
     
     this.upAndRunning = true;
   }

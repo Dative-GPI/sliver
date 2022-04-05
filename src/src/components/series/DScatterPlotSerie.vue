@@ -12,6 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DScatterPlotSerie extends Vue {
@@ -40,6 +41,9 @@ export default class DScatterPlotSerie extends Vue {
 
   @Watch("name")
   onNameChange = this.setName;
+
+  @Prop({ required: false, default: true })
+  snapToSeries!: boolean;
 
   @Prop({ required: false, default: "valueX" })
   xField!: string;
@@ -94,13 +98,12 @@ export default class DScatterPlotSerie extends Vue {
 
   serie: am5xy.LineSeries | null = null;
   tooltip: am5.Tooltip | null = null;
-  circleTemplate: am5.Template<am5.Circle> | null = null;
 
   upAndRunning = false;
 
   setName(): void {
     this.serie!.set("name", this.name);
-    this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+    this.setLegendLabelText();
   }
 
   setShowTooltip(): void {
@@ -131,16 +134,14 @@ export default class DScatterPlotSerie extends Vue {
   setBulletRadius(): void {
     this.serie!.bullets.clear();
 
-    this.circleTemplate = am5.Template.new<am5.Circle>({
-      radius: this.bulletRadius
+    this.serie!.set("userData", {
+      ...this.serie!.get("userData"),
+      circleTemplate: am5.Template.new<am5.Circle>({ radius: this.bulletRadius })
     });
 
     this.serie!.bullets.push(() => {
-      let graphics = am5.Circle.new(this.root, {
-        fill: this.serie!.get("fill")
-      }, this.circleTemplate!);
       return am5.Bullet.new(this.root, {
-        sprite: graphics
+        sprite: am5.Circle.new(this.root, { fill: this.serie!.get("fill") }, this.serie!.get("userData").circleTemplate)
       });
     });
     
@@ -149,7 +150,7 @@ export default class DScatterPlotSerie extends Vue {
 
   setHeatRules(): void {
     this.serie!.set("heatRules", [{
-      target: this.circleTemplate!,
+      target: this.serie!.get("userData").circleTemplate,
       min: this.heatRulesMin,
       max: this.heatRulesMax,
       dataField: "value",
@@ -182,14 +183,14 @@ export default class DScatterPlotSerie extends Vue {
       valueYField: this.yField,
       valueField: this.sizeField,
       calculateAggregates: true,
-      sequencedInterpolation: true
+      sequencedInterpolation: true,
+      userData: { serie: SerieEnum.ScatterPlotSerie }
     }));
     this.serie.strokes.template.set("strokeOpacity", 0);
 
     // Set updatable properties
     this.setName();
     this.setShowTooltip();
-    
     this.setBulletRadius();
     
     // Add to legend
@@ -198,7 +199,7 @@ export default class DScatterPlotSerie extends Vue {
     }
 
     // Add to cursor
-    if (this.cursor != null) {
+    if (this.cursor != null && this.snapToSeries) {
       this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     

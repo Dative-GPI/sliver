@@ -1,3 +1,5 @@
+import * as am5 from "@amcharts/amcharts5";
+
 export const updateCategories = (former: any[], data: any[], categoryField: string, serieId: number): any[] => {
   for (let i = 0; i < former.length; i++) {
     former[i].series = former[i].series.filter((s: number) => s !== serieId);
@@ -25,7 +27,7 @@ export const removeSerie = (former: any[], serie: any): any[] => {
   return former;
 }
 
-export const textColor = (backgroundHexColor: string): string => {
+export const textColor = (backgroundHexColor: string): am5.Color => {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(backgroundHexColor);
   if (result != null) {
     let r = parseInt(result[1], 16);
@@ -33,14 +35,14 @@ export const textColor = (backgroundHexColor: string): string => {
     let b = parseInt(result[3], 16);
 
     if (Math.max(r, g, b) < 127) {
-      return "#ffffff";
+      return am5.color(0xffffff);
     }
     else if (Math.max(r, g) < 127) {
-      return "#ffffff";
+      return am5.color(0xffffff);
     }
     else if (Math.max(g, b) < 127) {
-      return "#ffffff";
+      return am5.color(0xffffff);
     }
   }
-  return "#000000";
+  return am5.color(0x000000);
 }

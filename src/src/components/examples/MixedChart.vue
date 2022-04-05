@@ -1,85 +1,78 @@
 <template>
-  <d-xy-chart
-    :min-height="minHeight"
-    :layout="chartLayout"
-  >
-    <d-legend
-      :enabled="legend"
-      :layout="legendLayout"
-      :position="legendPosition"
-      :x="legendX"
-      :centerX="legendCenterX"
-      :y="legendY"
-      :centerY="legendCenterY"
-    >
-      <d-xy-cursor
-        :enabled="cursor"
-        :behavior="cursorBehavior"
-        :xVisible="cursorXVisible"
-        :yVisible="cursorYVisible"
-      >
-        <d-date-x-axis
-          :opposite="xAxisOpposite"
-          :showTooltip="xAxisShowTooltip"
-          :tooltipDateFormat="xAxisTooltipDateFormat"
-        >
-          <d-value-y-axis
-            :opposite="yAxisOpposite"
-            :showTooltip="yAxisShowTooltip"
-            :tooltipNumberFormat="yAxisTooltipNumberFormat"
-          >
-            <d-line-serie
-              v-for="(serie, index) in data.series"
-              :key="index"
-              :bullet="lineSeriesBullet"
-              :bulletRadius="lineSeriesBulletRadius"
-              :name="serie.serie"
-              :data="serie.data"
-            />
-          </d-value-y-axis>
-          <d-category-y-axis
-            :opposite="yAxisBisOpposite"
-            :showTooltip="yAxisBisShowTooltip"
-            :cellStartLocation="yAxisBisCellStartLocation"
-            :cellEndLocation="yAxisBisCellEndLocation"
-          >
-            <d-planning-serie
-              v-for="(serie, index) in dataBis.series"
-              :key="index"
-              :name="serie.serie"
-              :data="serie.data"
-              :bulletRadius="0"
-              :columnsHeight="20"
-              :columnsOpacity="0.6"
-              :showTooltip="false"
-              :showLabel="true"
-            />
-          </d-category-y-axis>
-          <d-category-y-axis
-            :opposite="yAxisBisOpposite"
-            :labelsVisible="false"
-            :showTooltip="false"
-            :cellStartLocation="yAxisBisCellStartLocation"
-            :cellEndLocation="yAxisBisCellEndLocation"
-          >
-            <d-planning-serie
-              v-for="(serie, index) in dataTiers.series"
-              :key="index"
-              :name="serie.serie"
-              :data="serie.data"
-              :bulletRadius="7"
-            />
-          </d-category-y-axis>
-        </d-date-x-axis>
-      </d-xy-cursor>
-    </d-legend>
-    <d-x-scrollbar
-      v-if="scrollbar"
-      :height="scrollbarHeight"
-      :startGripVisible="scrollbarStartGripVisible"
-      :endGripVisible="scrollbarEndGripVisible"
+  <div>
+    <spinner
+      :min-height="minHeight"
+      :style="{ display: ready ? 'none': 'flex' }"
     />
-  </d-xy-chart>
+    <d-xy-chart
+      :min-height="minHeight"
+      :layout="chartLayout"
+      @ready="ready = true"
+      :style="{ display: ready ? 'flex': 'none' }"
+    >
+      <d-legend
+        :enabled="legend"
+        :layout="legendLayout"
+        :position="legendPosition"
+        :x="legendX"
+        :centerX="legendCenterX"
+        :y="legendY"
+        :centerY="legendCenterY"
+      >
+        <d-xy-cursor
+          :enabled="cursor"
+          :behavior="cursorBehavior"
+          :xVisible="cursorXVisible"
+          :yVisible="cursorYVisible"
+        >
+          <d-date-x-axis
+            :opposite="xAxisOpposite"
+            :showTooltip="xAxisShowTooltip"
+            :tooltipDateFormat="xAxisTooltipDateFormat"
+          >
+            <d-value-y-axis
+              :opposite="yAxisOpposite"
+              :showTooltip="yAxisShowTooltip"
+              :tooltipNumberFormat="yAxisTooltipNumberFormat"
+            >
+              <d-line-serie
+                v-for="(serie, index) in data.series"
+                :key="index"
+                :bullet="lineSeriesBullet"
+                :bulletRadius="lineSeriesBulletRadius"
+                :name="serie.serie"
+                :data="serie.data"
+              />
+            </d-value-y-axis>
+            <d-category-y-axis
+              :opposite="yAxisBisOpposite"
+              :showTooltip="yAxisBisShowTooltip"
+              :cellStartLocation="yAxisBisCellStartLocation"
+              :cellEndLocation="yAxisBisCellEndLocation"
+            >
+              <d-planning-serie
+                v-for="(serie, index) in dataBis.series"
+                :key="index"
+                :name="serie.serie"
+                :data="serie.data"
+                :bulletRadius="0"
+                :columnsHeight="20"
+                :columnsOpacity="0.6"
+                :showTooltip="false"
+                :showLabel="true"
+              />
+            </d-category-y-axis>
+          </d-date-x-axis>
+        </d-xy-cursor>
+      </d-legend>
+      <d-x-scrollbar
+        v-if="scrollbar"
+        :height="scrollbarHeight"
+        :startGripVisible="scrollbarStartGripVisible"
+        :endGripVisible="scrollbarEndGripVisible"
+      />
+    </d-xy-chart>
+  </div>
 </template>
 
 <script lang="ts">
@@ -87,16 +80,15 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
 
-@Component({})
+import Spinner from "./Spinner.vue";
+
+@Component({ components: { Spinner } })
 export default class LineChart extends Vue {
   @Prop({ required: true })
   data!: any;
 
   @Prop({ required: true })
   dataBis!: any;
-
-  @Prop({ required: true })
-  dataTiers!: any;
 
   @Prop({ required: true })
   minHeight!: string;
@@ -184,5 +176,7 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   lineSeriesBulletRadius!: number;
+
+  ready: boolean = false;
 }
 </script>

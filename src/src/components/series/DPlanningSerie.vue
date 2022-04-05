@@ -12,6 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DPlanningSerie extends Vue {
@@ -41,16 +42,19 @@ export default class DPlanningSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
-  @Prop({ required: false, default: "timestampX" })
+  @Prop({ required: false, default: false })
+  snapToSeries!: boolean;
+
+  @Prop({ required: false, default: "closeTimestampX" })
   openDateXField!: string;
 
-  @Prop({ required: false, default: "closeTimestamp" })
+  @Prop({ required: false, default: "timestampX" })
   closeDateXField!: string;
 
   @Prop({ required: false, default: "categoryY" })
   categoryYField!: string;
 
-  @Prop({ required: false, default: 2 })
+  @Prop({ required: false, default: 15 })
   columnsHeight!: number;
 
   @Watch("columnsHeight")
@@ -62,18 +66,6 @@ export default class DPlanningSerie extends Vue {
   @Watch("columnsOpacity")
   onColumnsOpacityChange = this.setColumnsOpacity;
 
-  @Prop({ required: false, default: 3 })
-  bulletRadius!: number;
-
-  @Watch("bulletRadius")
-  onBulletRadiusChange = this.setBullet;
-
-  @Prop({ required: false, default: 1 })
-  bulletOpacity!: number;
-
-  @Watch("bulletRadius")
-  onBulletOpacityChange = this.setBullet;
-
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
@@ -84,7 +76,7 @@ export default class DPlanningSerie extends Vue {
   tooltipText!: string;
 
   @Watch("tooltipText")
-  onTooltipTextChange = this.setTooltipText;
+  onTooltipTextChange = this.setShowTooltip;
 
   @Prop({ required: false, default: "" })
   legendLabelText!: string;
@@ -135,27 +127,21 @@ export default class DPlanningSerie extends Vue {
 
   setName(): void {
     this.serie!.set("name", this.name);
-    this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+    this.setLegendLabelText();
   }
 
   setShowTooltip(): void {
-    if (!this.showTooltip) {
-      if (this.tooltip != null) {
-        this.tooltip!.dispose();
-        this.serie!.set("tooltip", undefined);
-        this.tooltip = null;
-      }
+    if (this.showTooltip) {
+      this.serie!.columns.template.setAll({
+        tooltipX: am5.percent(50),
+        tooltipY: am5.percent(50),
+        tooltipText: this.tooltipText
+      });
     }
     else {
-      this.tooltip = am5.Tooltip.new(this.root, {});
-      this.serie!.set("tooltip", this.tooltip);
-      this.setTooltipText();
-    }
-  }
-
-  setTooltipText(): void {
-    if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText);
+      this.serie!.columns.template.setAll({
+        tooltipText: undefined
+      });      
     }
   }
 
@@ -164,28 +150,6 @@ export default class DPlanningSerie extends Vue {
   }
 
   setBullet(): void {
-    this.serie!.bullets.clear();
-    this.serie!.bullets.push(() => {
-      return am5.Bullet.new(this.root, {
-        sprite: am5.Circle.new(this.root, {
-          opacity: this.bulletOpacity,
-          radius: this.bulletRadius,
-          fill: this.serie!.get("fill"),
-        }),
-        locationX: 0
-      });
-    });
-    this.serie!.bullets.push(() => {
-      return am5.Bullet.new(this.root, {
-        sprite: am5.Circle.new(this.root, {
-          opacity: this.bulletOpacity,
-          radius: this.bulletRadius,
-          fill: this.serie!.get("fill"),
-        }),
-        locationX: 1
-      });
-    });
-
     if (this.showLabel) {
       this.serie!.bullets.push(() => {
         return am5.Bullet.new(this.root, {
@@ -225,8 +189,16 @@ export default class DPlanningSerie extends Vue {
       openValueXField: this.openDateXField,
       valueXField: this.closeDateXField,
       categoryYField: this.categoryYField,
-      sequencedInterpolation: true
+      sequencedInterpolation: true,
+      userData: { serie: SerieEnum.PlanningSerie }
     }));
+
+    this.serie.columns.template.setAll({
+      cornerRadiusTL: 5,
+      cornerRadiusTR: 5,
+      cornerRadiusBL: 5,
+      cornerRadiusBR: 5
+    });
 
     this.setName();
     this.setShowTooltip();
@@ -241,7 +213,7 @@ export default class DPlanningSerie extends Vue {
     }
 
     // Add to cursor
-    if (this.cursor != null) {
+    if (this.cursor != null && this.snapToSeries) {
       this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     

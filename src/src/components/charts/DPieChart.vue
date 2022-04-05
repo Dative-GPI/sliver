@@ -27,6 +27,9 @@ export default class DPieChart extends Vue {
   @ProvideReactive(CHART)
   chart: am5percent.PieChart | null = null;
 
+  @Prop({ required: false, default: 1500 })
+  readyTimeout!: number;
+
   @Prop({ required: false, default: '400px' })
   minHeight!: string;
 
@@ -59,6 +62,19 @@ export default class DPieChart extends Vue {
     // Create root
     this.root = am5.Root.new((this.$refs.piechart as HTMLElement));
     this.root.setThemes([ am5themes_Animated.new(this.root) ]);
+
+    // Warn the parent when the chart is ready
+    let timeout: number | undefined = undefined;
+    let chartReady = () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(() => {
+        this.root!.events.off("frameended", chartReady);
+        this.$emit("ready");
+      }, this.readyTimeout);
+    }
+    this.root.events.on("frameended", chartReady);
 
     // Add chart to root
     this.chart = this.root.container.children.push(am5percent.PieChart.new(this.root, {}));
