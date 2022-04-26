@@ -41,6 +41,18 @@ export default class DDateYAxis extends Vue {
   @Watch("tooltipDateFormat")
   onTooltipDateFormatChange = this.setTooltipDateFormat;
 
+  @Prop({ required: false, default: null })
+  min!: number | null;
+
+  @Watch("min")
+  onMinChange = this.setMin;
+
+  @Prop({ required: false, default: null })
+  max!: number | null;
+
+  @Watch("max")
+  onMaxChange = this.setMax;
+
   @ProvideReactive(YAXIS)
   axis: any = null;
 
@@ -90,6 +102,24 @@ export default class DDateYAxis extends Vue {
     this.axis!.set("tooltipDateFormat", this.tooltipDateFormat);
   }
 
+  setMin(): void {
+    if (this.min != null) {
+      this.axis!.set("min", this.min);
+    }
+    else {
+      this.axis!.set("min", undefined);
+    }
+  }
+
+  setMax(): void {
+    if (this.max != null) {
+      this.axis!.set("max", this.max);
+    }
+    else {
+      this.axis!.set("max", undefined);
+    }
+  }
+
   mounted(): void {
     // Add to chart
     this.axis = this.chart.yAxes.push(am5xy.DateAxis.new(this.root, {
@@ -122,6 +152,8 @@ export default class DDateYAxis extends Vue {
     this.setOpposite();
     this.setShowTooltip();
     this.setTooltipDateFormat();
+    this.setMin();
+    this.setMax();
 
     this.upAndRunning = true;
   }
