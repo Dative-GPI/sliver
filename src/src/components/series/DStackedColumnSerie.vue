@@ -111,7 +111,7 @@ export default class DStackedColumnSerie extends Vue {
   }
 
   setData(): void {
-    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.serieId));
+    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.serieId, true));
     this.serie!.data.setAll(this.data);
   }
 
@@ -159,7 +159,7 @@ export default class DStackedColumnSerie extends Vue {
     }
 
     // Remove from axis
-    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.categoryXField, this.serieId));
+    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.categoryXField, this.serieId, true));
 
     // Remove from cursor
     if (this.cursor) {

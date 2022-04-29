@@ -29,7 +29,7 @@ export default class DValueYAxis extends Vue {
   @Watch("opposite")
   onOppositeChange = this.setOpposite;
 
-  @Prop({ required: false, default: true })
+  @Prop({ required: false, default: false })
   logarithmic!: boolean;
 
   @Watch("logarithmic")
