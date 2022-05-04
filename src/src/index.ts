@@ -23,6 +23,7 @@ import DPieSerie from "./components/series/DPieSerie.vue";
 import DPlanningSerie from "./components/series/DPlanningSerie.vue";
 import DScatterPlotSerie from "./components/series/DScatterPlotSerie.vue";
 import DStackedColumnSerie from "./components/series/DStackedColumnSerie.vue";
+import DTopSerie from "./components/series/DTopSerie.vue";
 
 import { LayoutEnum, PositionEnum } from "./enums";
 
@@ -51,6 +52,7 @@ const Sliver = {
     vue.component("d-planning-serie", DPlanningSerie);
     vue.component("d-scatter-plot-serie", DScatterPlotSerie)
     vue.component("d-stacked-column-serie", DStackedColumnSerie);
+    vue.component("d-top-serie", DTopSerie);
   }
 };
  

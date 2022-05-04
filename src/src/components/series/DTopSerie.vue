@@ -15,7 +15,7 @@ import { updateCategories, addSerie, removeSerie } from "../../helpers";
 import { SerieEnum } from "../../enums";
 
 @Component({})
-export default class DPlanningSerie extends Vue {
+export default class DTopSerie extends Vue {
   serieId: number = 0;
 
   @InjectReactive(AMROOT)
@@ -25,7 +25,7 @@ export default class DPlanningSerie extends Vue {
   chart!: am5xy.XYChart;
 
   @InjectReactive(XAXIS)
-  xAxis!: am5xy.DateAxis<am5xy.AxisRendererX>;
+  xAxis!: am5xy.ValueAxis<am5xy.AxisRendererX>;
 
   @InjectReactive(YAXIS)
   yAxis!: am5xy.CategoryAxis<am5xy.AxisRendererY>;
@@ -42,29 +42,14 @@ export default class DPlanningSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
-  @Prop({ required: false, default: false })
+  @Prop({ required: false, default: true })
   snapToSeries!: boolean;
 
-  @Prop({ required: false, default: "closeTimestampX" })
-  openDateXField!: string;
-
-  @Prop({ required: false, default: "timestampX" })
-  closeDateXField!: string;
+  @Prop({ required: false, default: "valueX" })
+  valueXField!: string;
 
   @Prop({ required: false, default: "categoryY" })
   categoryYField!: string;
-
-  @Prop({ required: false, default: 15 })
-  columnsHeight!: number;
-
-  @Watch("columnsHeight")
-  onColumnsHeightChange = this.setColumnsHeight;
-
-  @Prop({ required: false, default: 1 })
-  columnsOpacity!: number;
-
-  @Watch("columnsOpacity")
-  onColumnsOpacityChange = this.setColumnsOpacity;
 
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
@@ -72,7 +57,7 @@ export default class DPlanningSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{name}: {categoryY}" })
+  @Prop({ required: false, default: "{name}: {valueX}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -83,36 +68,6 @@ export default class DPlanningSerie extends Vue {
 
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
-
-  @Prop({ required: false, default: false })
-  showLabel!: boolean;
-
-  @Watch("showLabel")
-  onShowLabelChange = this.setBullet;
-
-  @Prop({ required: false, default: "" })
-  labelText!: string;
-
-  @Watch("labelText")
-  onLabelTextChange = this.setBullet;
-
-  @Prop({ required: false, default: 50 })
-  labelCenterX!: number;
-
-  @Watch("labelCenterX")
-  onLabelCenterXChange = this.setBullet;
-
-  @Prop({ required: false, default: 50 })
-  labelCenterY!: number;
-
-  @Watch("labelCenterY")
-  onLabelCenterYChange = this.setBullet;
-
-  @Prop({ required: false, default: 16 })
-  labelFontSize!: number;
-
-  @Watch("labelFontSize")
-  onLabelFontSizeChange = this.setBullet;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -133,8 +88,7 @@ export default class DPlanningSerie extends Vue {
   setShowTooltip(): void {
     if (this.showTooltip) {
       this.serie!.columns.template.setAll({
-        tooltipX: am5.percent(50),
-        tooltipY: am5.percent(50),
+        tooltipY: am5.percent(0),
         tooltipText: this.tooltipText
       });
     }
@@ -149,63 +103,28 @@ export default class DPlanningSerie extends Vue {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
   }
 
-  setBullet(): void {
-    if (this.showLabel) {
-      this.serie!.bullets.push(() => {
-        return am5.Bullet.new(this.root, {
-          sprite: am5.Label.new(this.root, {
-            text: this.labelText ? this.labelText : "{" + this.categoryYField + "}",
-            fill: this.root.interfaceColors.get("alternativeText"),
-            centerX: am5.percent(this.labelCenterX),
-            centerY: am5.percent(this.labelCenterY),
-            fontSize: this.labelFontSize,
-            populateText: true
-          })
-        });
-      });
-    }
-  }
-
-  setColumnsHeight(): void {
-    this.serie!.columns.template.set("height", this.columnsHeight);
-  }
-
-  setColumnsOpacity(): void {
-    this.serie!.columns.template.set("opacity", this.columnsOpacity);
-  }
-
   setData(): void {
     // Add to axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId, false));
+    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId, true));
     this.serie!.data.setAll(this.data);
   }
 
   mounted(): void {
     this.serieId = Math.random();
-
+    
+    // Add to chart
     this.serie = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
       xAxis: this.xAxis,
       yAxis: this.yAxis,
-      openValueXField: this.openDateXField,
-      valueXField: this.closeDateXField,
+      valueXField: this.valueXField,
       categoryYField: this.categoryYField,
       sequencedInterpolation: true,
-      userData: { serie: SerieEnum.PlanningSerie }
+      userData: { serie: SerieEnum.ColumnSerie }
     }));
 
-    this.serie.columns.template.setAll({
-      cornerRadiusTL: 5,
-      cornerRadiusTR: 5,
-      cornerRadiusBL: 5,
-      cornerRadiusBR: 5
-    });
-
+    // Set updatable properties
     this.setName();
     this.setShowTooltip();
-    
-    this.setBullet();
-    this.setColumnsHeight();
-    this.setColumnsOpacity();
 
     // Add to legend
     if (this.legend != null) {
@@ -233,7 +152,7 @@ export default class DPlanningSerie extends Vue {
     }
 
     // Remove from axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, false));
+    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, true));
 
     // Remove from cursor
     if (this.cursor) {

@@ -25,10 +25,10 @@ export default class DColumnSerie extends Vue {
   chart!: am5xy.XYChart;
 
   @InjectReactive(XAXIS)
-  xAxis!: am5xy.DateAxis<am5xy.AxisRendererX> | am5xy.ValueAxis<am5xy.AxisRendererX> | am5xy.CategoryAxis<am5xy.AxisRendererX>;
+  xAxis!: am5xy.CategoryAxis<am5xy.AxisRendererX>;
 
   @InjectReactive(YAXIS)
-  yAxis!: am5xy.DateAxis<am5xy.AxisRendererY> | am5xy.ValueAxis<am5xy.AxisRendererY> | am5xy.CategoryAxis<am5xy.AxisRendererY>;
+  yAxis!: am5xy.ValueAxis<am5xy.AxisRendererY>;
 
   @InjectReactive(CURSOR)
   cursor!: am5xy.XYCursor | null;
