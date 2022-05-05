@@ -1,6 +1,6 @@
 import * as am5 from "@amcharts/amcharts5";
 
-export const updateCategories = (former: any[], data: any[], categoryField: string, serieId: number, xAxis: boolean): any[] => {
+export const updateCategories = (former: any[], data: any[], categoryField: string, serieId: number, sort: boolean, xAxis: boolean): any[] => {
   for (let i = 0; i < former.length; i++) {
     former[i].series = former[i].series.filter((s: number) => s !== serieId);
   }
@@ -14,11 +14,13 @@ export const updateCategories = (former: any[], data: any[], categoryField: stri
       former.filter(c => c[categoryField] == data[i][categoryField])[0].series.push(serieId);
     }
   }
-  former.sort((c1: any, c2: any) => {
-    if (c1[categoryField] < c2[categoryField]) return xAxis ? -1 : 1;
-    if (c1[categoryField] > c2[categoryField]) return xAxis ? 1 : -1;
-    return 0;
-  });
+  if (sort) {
+    former.sort((c1: any, c2: any) => {
+      if (c1[categoryField] < c2[categoryField]) return xAxis ? -1 : 1;
+      if (c1[categoryField] > c2[categoryField]) return xAxis ? 1 : -1;
+      return 0;
+    });
+  }
   return former;
 }
 

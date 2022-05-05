@@ -176,7 +176,7 @@ export default class DPlanningSerie extends Vue {
 
   setData(): void {
     // Add to axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId, false));
+    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId, true, false));
     this.serie!.data.setAll(this.data);
   }
 
@@ -233,7 +233,7 @@ export default class DPlanningSerie extends Vue {
     }
 
     // Remove from axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, false));
+    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, true, false));
 
     // Remove from cursor
     if (this.cursor) {

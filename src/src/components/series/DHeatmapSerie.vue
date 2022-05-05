@@ -124,11 +124,11 @@ export default class DHeatmapSerie extends Vue {
   setData(): void {
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
-      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.xField, this.serieId, true));
+      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.xField, this.serieId, true, true));
     }
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
-      this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.yField, this.serieId, false));
+      this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.yField, this.serieId, true, false));
     }
     this.serie!.data.setAll(this.data);
   }
@@ -190,12 +190,12 @@ export default class DHeatmapSerie extends Vue {
 
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
-      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.xField, this.serieId, true));
+      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.xField, this.serieId, true, true));
     }
 
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
-      this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.yField, this.serieId, false));
+      this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.yField, this.serieId, true, false));
     }
 
     // Remove from cursor

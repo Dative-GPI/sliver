@@ -105,7 +105,7 @@ export default class DColumnSerie extends Vue {
 
   setData(): void {
     // Add to axis
-    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.serieId, true));
+    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.serieId, true, true));
     this.serie!.data.setAll(this.data);
   }
 
@@ -152,7 +152,7 @@ export default class DColumnSerie extends Vue {
     }
 
     // Remove from axis
-    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.categoryXField, this.serieId, true));
+    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.categoryXField, this.serieId, true, true));
 
     // Remove from cursor
     if (this.cursor) {

@@ -51,7 +51,7 @@ export default class DTopSerie extends Vue {
   @Prop({ required: false, default: "categoryY" })
   categoryYField!: string;
 
-  @Prop({ required: false, default: true })
+  @Prop({ required: false, default: false })
   showTooltip!: boolean;
 
   @Watch("showTooltip")
@@ -105,7 +105,7 @@ export default class DTopSerie extends Vue {
 
   setData(): void {
     // Add to axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId, true));
+    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId, false, true));
     this.serie!.data.setAll(this.data);
   }
 
@@ -152,7 +152,7 @@ export default class DTopSerie extends Vue {
     }
 
     // Remove from axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, true));
+    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, false, true));
 
     // Remove from cursor
     if (this.cursor) {
