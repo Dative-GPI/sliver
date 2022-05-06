@@ -1,6 +1,8 @@
 import * as am5 from "@amcharts/amcharts5";
 
-export const updateCategories = (former: any[], data: any[], categoryField: string, serieId: number, sort: boolean, xAxis: boolean): any[] => {
+import { PositionEnum } from "./enums";
+
+export const updateCategories = (former: any[], data: any[], categoryField: string, serieId: number, sort: boolean, position: PositionEnum): any[] => {
   for (let i = 0; i < former.length; i++) {
     former[i].series = former[i].series.filter((s: number) => s !== serieId);
   }
@@ -16,8 +18,18 @@ export const updateCategories = (former: any[], data: any[], categoryField: stri
   }
   if (sort) {
     former.sort((c1: any, c2: any) => {
-      if (c1[categoryField] < c2[categoryField]) return xAxis ? -1 : 1;
-      if (c1[categoryField] > c2[categoryField]) return xAxis ? 1 : -1;
+      if (c1[categoryField] < c2[categoryField]) {
+        switch (position) {
+          case PositionEnum.Abscissa: return -1;
+          case PositionEnum.Ordinate: return 1;
+        }
+      }
+      else if (c1[categoryField] > c2[categoryField]) {
+        switch (position) {
+          case PositionEnum.Abscissa: return 1;
+          case PositionEnum.Ordinate: return -1;
+        }
+      }
       return 0;
     });
   }

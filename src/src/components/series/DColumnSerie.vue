@@ -12,7 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
-import { SerieEnum } from "../../enums";
+import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
 export default class DColumnSerie extends Vue {
@@ -105,7 +105,9 @@ export default class DColumnSerie extends Vue {
 
   setData(): void {
     // Add to axis
-    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.serieId, true, true));
+    this.xAxis.data.setAll(
+      updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.serieId, true, PositionEnum.Abscissa)
+    );
     this.serie!.data.setAll(this.data);
   }
 
@@ -152,7 +154,9 @@ export default class DColumnSerie extends Vue {
     }
 
     // Remove from axis
-    this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.categoryXField, this.serieId, true, true));
+    this.xAxis.data.setAll(
+      updateCategories(this.xAxis.data.values, [], this.categoryXField, this.serieId, true, PositionEnum.Abscissa)
+    );
 
     // Remove from cursor
     if (this.cursor) {

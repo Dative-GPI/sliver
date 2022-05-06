@@ -12,7 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
-import { SerieEnum } from "../../enums";
+import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
 export default class DPlanningSerie extends Vue {
@@ -176,7 +176,9 @@ export default class DPlanningSerie extends Vue {
 
   setData(): void {
     // Add to axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId, true, false));
+    this.yAxis.data.setAll(
+      updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId, true, PositionEnum.Ordinate)
+    );
     this.serie!.data.setAll(this.data);
   }
 
@@ -233,7 +235,9 @@ export default class DPlanningSerie extends Vue {
     }
 
     // Remove from axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, true, false));
+    this.yAxis.data.setAll(
+      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, true, PositionEnum.Ordinate)
+    );
 
     // Remove from cursor
     if (this.cursor) {

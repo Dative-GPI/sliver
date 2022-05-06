@@ -12,7 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
-import { SerieEnum } from "../../enums";
+import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
 export default class DScatterPlotSerie extends Vue {
@@ -161,11 +161,15 @@ export default class DScatterPlotSerie extends Vue {
   setData(): void {
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
-      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, this.data, this.xField, this.serieId, true, true));
+      this.xAxis.data.setAll(
+        updateCategories(this.xAxis.data.values, this.data, this.xField, this.serieId, true, PositionEnum.Abscissa)
+      );
     }
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
-      this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.yField, this.serieId, true, false));
+      this.yAxis.data.setAll(
+        updateCategories(this.yAxis.data.values, this.data, this.yField, this.serieId, true, PositionEnum.Ordinate)
+      );
     }
     this.serie!.data.setAll(this.data);
   }
@@ -220,12 +224,16 @@ export default class DScatterPlotSerie extends Vue {
 
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
-      this.xAxis.data.setAll(updateCategories(this.xAxis.data.values, [], this.xField, this.serieId, true, true));
+      this.xAxis.data.setAll(
+        updateCategories(this.xAxis.data.values, [], this.xField, this.serieId, true, PositionEnum.Abscissa)
+      );
     }
 
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
-      this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.yField, this.serieId, true, false));
+      this.yAxis.data.setAll(
+        updateCategories(this.yAxis.data.values, [], this.yField, this.serieId, true, PositionEnum.Ordinate)
+      );
     }
 
     // Remove from cursor

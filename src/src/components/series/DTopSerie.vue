@@ -12,7 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
-import { SerieEnum } from "../../enums";
+import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
 export default class DTopSerie extends Vue {
@@ -104,9 +104,16 @@ export default class DTopSerie extends Vue {
   }
 
   setData(): void {
+    let sortedData = this.data.slice().sort((a: any, b: any) => {
+      if (a[this.valueXField] < b[this.valueXField]) return -1;
+      if (a[this.valueXField] > b[this.valueXField]) return 1;
+      return 0;
+    });
     // Add to axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.serieId, false, true));
-    this.serie!.data.setAll(this.data);
+    this.yAxis.data.setAll(
+      updateCategories(this.yAxis.data.values, sortedData, this.categoryYField, this.serieId, false, PositionEnum.Abscissa)
+    );
+    this.serie!.data.setAll(sortedData);
   }
 
   mounted(): void {
@@ -152,7 +159,9 @@ export default class DTopSerie extends Vue {
     }
 
     // Remove from axis
-    this.yAxis.data.setAll(updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, false, true));
+    this.yAxis.data.setAll(
+      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, false, PositionEnum.Abscissa)
+    );
 
     // Remove from cursor
     if (this.cursor) {
