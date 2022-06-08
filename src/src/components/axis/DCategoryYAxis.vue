@@ -56,6 +56,12 @@ export default class DCategoryYAxis extends Vue {
   @Watch("cellEndLocation")
   onCellEndLocationChange = this.setCellEndLocation;
 
+  @Prop({ required: false, default: 15 })
+  minGridDistance!: number;
+
+  @Watch("minGridDistance")
+  onMinGridDistanceChange = this.setMinGridDistance;
+
   @ProvideReactive(YAXIS)
   axis: any = null;
 
@@ -113,6 +119,10 @@ export default class DCategoryYAxis extends Vue {
     this.axis!.get("renderer").set("cellEndLocation", this.cellEndLocation);
   }
 
+  setMinGridDistance(): void {
+    this.axis!.get("renderer").set("minGridDistance", this.minGridDistance);
+  }
+
   mounted(): void {
     // Add to chart
     this.axis = this.chart.yAxes.push(am5xy.CategoryAxis.new(this.root, {
@@ -130,6 +140,7 @@ export default class DCategoryYAxis extends Vue {
     this.setShowTooltip();
     this.setCellStartLocation();
     this.setCellEndLocation();
+    this.setMinGridDistance();
 
     this.upAndRunning = true;
   }

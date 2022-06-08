@@ -58,7 +58,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeColumnSerie("Line 1", ["Donald", "Riri", "Fifi", "Loulou"], 100 ) }
+      { ...makeColumnSerie("Line 1", ["Donald Duck", "Riri Duck", "Fifi Duck", "Loulou Duck", "Balthazar Picsou", "Della Duck", "Gontran Bonheur", "Daisy Duck", "Archibald Gripsou", "Geo Trouvetou", "Rapetou", "Fantomiald", "Miss Tick", "Miss Frappe", "Matilda Picsou", "Hortense Picsou", "Gustave Bonheur", "Daphnée Duck"], 100 ) }
     ]
   },
   minHeight: '400px',

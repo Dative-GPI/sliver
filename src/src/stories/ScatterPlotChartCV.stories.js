@@ -46,7 +46,7 @@ const makeScatterPlotSerie = (name, categories, minRange, maxRange, values) => {
     data.push({
       categoryX: categories[categoryRandom],
       valueY: Math.floor(Math.random() * (maxRange - minRange)) + minRange,
-      valueZ: Math.floor(Math.random() * (maxRange - minRange)) + minRange
+      valueZ: (Math.floor(Math.random() * (maxRange - minRange)) + minRange) * 10
     });
   }
 
@@ -60,8 +60,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeScatterPlotSerie("First furnace", ["Croissants", "Baguettes"], 5, 30, 20 ) },
-      { ...makeScatterPlotSerie("Second furnace", ["Croissants", "Pains"], 10, 20, 10 ) },
+      { ...makeScatterPlotSerie("", ["Croissants", "Baguettes", "Pains", "Gauffres", "Miches"], 5, 30, 500 ) }
     ]
   },
   minHeight: '400px',
