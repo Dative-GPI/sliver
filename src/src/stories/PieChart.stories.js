@@ -20,8 +20,8 @@ const Template = (args, { argTypes }) => ({
       :legendCenterX="legendCenterX"
       :legendY="legendY"
       :legendCenterY="legendCenterY"
-      :breakDownSlices="breakDownSlices"
-      :breakDownSlicesSubname="breakDownSlicesSubname"
+      :otherLabel="otherLabel"
+      :otherThreshold="otherThreshold"
     />`,
 });
 
@@ -44,7 +44,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePieSerie("Categories", ["Pineapple", "Orange", "Cherry", "Strawberry", "Watermelon"], 500 ) }
+      { ...makePieSerie("Categories", ["Pineapple", "Orange", "Cherry", "Strawberry", "Watermelon", "Canteloup", "Blueberry", "Apple", "Peach", "Pear", "Cherry", "Cramberry"], 500 ) }
     ]
   },
   minHeight: '400px',
@@ -56,6 +56,6 @@ Default.args = {
   legendCenterX: 50,
   legendY: 50,
   legendCenterY: 50,
-  breakDownSlices: false,
-  breakDownSlicesSubname: "subs"
+  otherLabel: "Other",
+  otherThreshold: 5
 };

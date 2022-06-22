@@ -114,6 +114,18 @@ export default class DPlanningSerie extends Vue {
   @Watch("labelFontSize")
   onLabelFontSizeChange = this.setBullet;
 
+  @Prop({ required: false, default: undefined })
+  templateWidth!: number | undefined;
+
+  @Watch("templateWidth")
+  onTemplateWidthChange = this.setTemplateWidth;
+
+  @Prop({ required: false, default: 5 })
+  templateCornerRadius!: number;
+
+  @Watch("templateCornerRadius")
+  onTemplateCornerRadiusChange = this.setTemplateCornerRadius;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -174,6 +186,19 @@ export default class DPlanningSerie extends Vue {
     this.serie!.columns.template.set("opacity", this.columnsOpacity);
   }
 
+  setTemplateWidth(): void {
+    this.serie!.columns.template.set("width", this.templateWidth);
+  }
+
+  setTemplateCornerRadius(): void {
+    this.serie!.columns.template.setAll({
+      cornerRadiusTL: this.templateCornerRadius,
+      cornerRadiusTR: this.templateCornerRadius,
+      cornerRadiusBL: this.templateCornerRadius,
+      cornerRadiusBR: this.templateCornerRadius
+    });
+  }
+
   setData(): void {
     // Add to axis
     this.yAxis.data.setAll(
@@ -195,19 +220,14 @@ export default class DPlanningSerie extends Vue {
       userData: { serie: SerieEnum.PlanningSerie }
     }));
 
-    this.serie.columns.template.setAll({
-      cornerRadiusTL: 5,
-      cornerRadiusTR: 5,
-      cornerRadiusBL: 5,
-      cornerRadiusBR: 5
-    });
-
     this.setName();
     this.setShowTooltip();
     
     this.setBullet();
     this.setColumnsHeight();
     this.setColumnsOpacity();
+    this.setTemplateWidth();
+    this.setTemplateCornerRadius();
 
     // Add to legend
     if (this.legend != null) {

@@ -1,15 +1,15 @@
-import BarsChart from '../components/examples/BarsChart.vue';
+import PlanningChart from '../components/examples/PlanningChart.vue';
 
 export default {
-  title: 'Example/BarsChart',
-  component: BarsChart,
+  title: 'Example/PlanningChart/Gantt',
+  component: PlanningChart,
 };
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { BarsChart },
+  components: { PlanningChart },
   template:
-    `<bars-chart
+    `<planning-chart
       :data="data"
       :minHeight="minHeight"
       :chartLayout="chartLayout"
@@ -30,22 +30,27 @@ const Template = (args, { argTypes }) => ({
       :scrollbarEndGripVisible="scrollbarEndGripVisible"
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
-      :xAxisLabelsOversizedBehavior="xAxisLabelsOversizedBehavior"
-      :xAxisLabelsMaxWidth="xAxisLabelsMaxWidth"
-      :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
+      :xAxisTooltipDateFormat="xAxisTooltipDateFormat"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
-      :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :yAxisCellStartLocation="yAxisCellStartLocation"
+      :yAxisCellEndLocation="yAxisCellEndLocation"
+      :templateWidth="templateWidth"
+      :templateCornerRadius="templateCornerRadius"
     />`,
 });
 
-const makeColumnSerie = (name, categories, rangeValue) => {
+const makePlanningSerie = (name, tZero, timeRange, categories, values) => {
   var data = [];
-  for (let i = 0; i < categories.length; i++) {
+  for (let i = 0; i < values; i++) {
+    let categoryRandom = Math.floor(Math.random() * categories.length);
+    let timeOffset = (Math.floor(Math.random() * (timeRange)) + 60) * 1000
     data.push({
-      categoryX: categories[i],
-      valueY: Math.floor(Math.random() * rangeValue)
+      timestampX: tZero,
+      closeTimestampX: tZero + timeOffset,
+      categoryY: categories[categoryRandom]
     });
+    tZero += timeOffset;
   }
 
   return {
@@ -58,8 +63,10 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeColumnSerie("Line 1", ["Grapefruit", "Coconut", "Passion fruit with a really long name", "Banana"], 50 ) },
-      { ...makeColumnSerie("Line 2", ["Grapefruit", "Apple", "Peach", "Pear"], 100 ) }
+      { ...makePlanningSerie("Production", 1577836800000, 0, ["Line 1", "Line 2"], 10 ) },
+      { ...makePlanningSerie("Idle", 1577836800000, 0, ["Line 1", "Line 2"], 10 ) },
+      { ...makePlanningSerie("Cooling", 1577836800000, 0, ["Line 1", "Line 2"], 10 ) },
+      { ...makePlanningSerie("Warming", 1577836800000, 0, ["Line 1", "Line 2"], 10 ) }
     ]
   },
   minHeight: '400px',
@@ -81,10 +88,11 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisLabelsOversizedBehavior: "wrap",
-  xAxisLabelsMaxWidth: 100,
-  xAxisLabelsTooltipText: "{categoryX}",
+  xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#"
+  yAxisCellStartLocation: 0.5,
+  yAxisCellEndLocation: 0.5,
+  templateWidth: undefined,
+  templateCornerRadius: 5
 };

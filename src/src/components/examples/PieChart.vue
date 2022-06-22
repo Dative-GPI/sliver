@@ -24,8 +24,8 @@
           :key="index"
           :name="serie.serie"
           :data="serie.data"
-          :breakDownSlices="breakDownSlices"
-          :breakDownSlicesSubname="breakDownSlicesSubname"
+          :otherLabel="otherLabel"
+          :otherThreshold="otherThreshold"
         />
       </d-legend>
     </d-pie-chart>
@@ -72,10 +72,10 @@ export default class PieChart extends Vue {
   legendCenterY!: number;
 
   @Prop({ required: true })
-  breakDownSlices!: boolean;
+  otherLabel!: string;
 
   @Prop({ required: true })
-  breakDownSlicesSubname!: string;
+  otherThreshold!: number;
 
   ready: boolean = false;
 }

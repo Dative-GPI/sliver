@@ -25,15 +25,16 @@
           :xVisible="cursorXVisible"
           :yVisible="cursorYVisible"
         >
-          <d-date-x-axis
-            :opposite="xAxisOpposite"
-            :showTooltip="xAxisShowTooltip"
-            :tooltipDateFormat="xAxisTooltipDateFormat"
+          <d-value-y-axis
+            :opposite="yAxisOpposite"
+            :showTooltip="yAxisShowTooltip"
+            :tooltipNumberFormat="yAxisTooltipNumberFormat"
+            :ranges="yAxisRanges"
           >
-            <d-value-y-axis
-              :opposite="yAxisOpposite"
-              :showTooltip="yAxisShowTooltip"
-              :tooltipNumberFormat="yAxisTooltipNumberFormat"
+            <d-date-x-axis
+              :opposite="xAxisOpposite"
+              :showTooltip="xAxisShowTooltip"
+              :tooltipDateFormat="xAxisTooltipDateFormat"
             >
               <d-line-serie
                 v-for="(serie, index) in data.series"
@@ -43,8 +44,8 @@
                 :bulletRadius="lineSeriesBulletRadius"
                 :data="serie.data"
               />
-            </d-value-y-axis>
-          </d-date-x-axis>
+            </d-date-x-axis>
+          </d-value-y-axis>
         </d-xy-cursor>
       </d-legend>
       <d-x-scrollbar
@@ -61,6 +62,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
+import { AxisRange } from "../../helpers";
 
 import Spinner from "./Spinner.vue";
 
@@ -137,6 +139,9 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  yAxisRanges!: AxisRange[] | undefined;
 
   @Prop({ required: true })
   lineSeriesBullet!: boolean;

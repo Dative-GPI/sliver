@@ -11,6 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, YAXIS } from "../../literals";
+import { AxisRange, textColor } from "../../helpers";
 
 @Component({})
 export default class DValueYAxis extends Vue {
@@ -36,6 +37,18 @@ export default class DValueYAxis extends Vue {
   onLogarithmicChange = this.setLogarithmic;
 
   @Prop({ required: false, default: true })
+  showGrid!: boolean;
+
+  @Watch("showGrid")
+  onShowGridChange = this.setShowGrid;
+
+  @Prop({ required: false, default: true })
+  showLabels!: boolean;
+
+  @Watch("showLabels")
+  onShowLabelsChange = this.setShowLabels;
+
+  @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
   @Watch("showTooltip")
@@ -46,6 +59,30 @@ export default class DValueYAxis extends Vue {
 
   @Watch("tooltipNumberFormat")
   onTooltipNumberFormatChange = this.setTooltipNumberFormat;
+
+  @Prop({ required: false, default: undefined })
+  min!: number | undefined;
+
+  @Watch("min")
+  onMinChange = this.setMin;
+
+  @Prop({ required: false, default: undefined })
+  max!: number | undefined;
+
+  @Watch("max")
+  onMaxChange = this.setMax;
+
+  @Prop({ required: false, default: false })
+  strictMinMax!: boolean;
+
+  @Watch("strictMinMax")
+  onStrictMinMaxChange = this.setStrictMinMax;
+
+  @Prop({ required: false, default: undefined })
+  ranges!: AxisRange[] | undefined;
+
+  @Watch("ranges")
+  onRangesChange = this.setRanges;
 
   @ProvideReactive(YAXIS)
   axis: any = null;
@@ -63,6 +100,14 @@ export default class DValueYAxis extends Vue {
     if (this.logarithmic) {
       this.axis!.set("treatZeroAs", 0.0000001);
     }
+  }
+
+  setShowGrid(): void {
+    this.axis!.get("renderer").grid.template.set("visible", this.showGrid);
+  }
+
+  setShowLabels(): void {
+    this.axis!.get("renderer").labels.template.set("visible", this.showLabels);
   }
 
   setShowTooltip(): void {
@@ -103,6 +148,54 @@ export default class DValueYAxis extends Vue {
     this.axis!.set("tooltipNumberFormat", this.tooltipNumberFormat);
   }
 
+  setMin(): void {
+    this.axis!.set("min", this.min);
+  }
+
+  setMax(): void {
+    this.axis!.set("max", this.max);
+  }
+
+  setStrictMinMax(): void {
+    this.axis!.set("strictMinMax", this.strictMinMax);
+  }
+  
+  setRanges(): void {
+    for (let i = this.axis!.axisRanges.values.length - 1; i >= 0; i--) {
+      let range = this.axis!.axisRanges.values[i];
+      this.axis!.axisRanges.removeValue(range!);
+      range!.dispose();
+    }
+    
+    if (this.ranges && this.ranges!.length > 0) {
+      am5.array.each(this.ranges!, (range : AxisRange) => {
+        let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
+
+        axisRange.get("axisFill")!.setAll({
+          visible: true,
+          fillOpacity: range.opacity,
+          fill: am5.color(range.color)
+        });
+
+        // TODO : Pourquoi ça marche avec les axes T et X et pas Y ?
+        // if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
+        //   axisRange.get("label")!.setAll({
+        //     text: range.label,
+        //     inside: true,
+        //     centerX: 0,
+        //     radius: 10,
+        //     fill: textColor(range.color)
+        //   });
+        // }
+
+        axisRange.setAll({
+          value: range.startValue,
+          endValue: range.endValue
+        });
+      });
+    }
+  }
+
   mounted(): void {
     // Add to chart
     this.axis = this.chart.yAxes.push(am5xy.ValueAxis.new(this.root, {
@@ -131,8 +224,14 @@ export default class DValueYAxis extends Vue {
 
     this.setOpposite();
     this.setLogarithmic();
+    this.setShowGrid();
+    this.setShowLabels();
     this.setShowTooltip();
     this.setTooltipNumberFormat();
+    this.setMin();
+    this.setMax();
+    this.setStrictMinMax();
+    this.setRanges();
 
     this.upAndRunning = true;
   }

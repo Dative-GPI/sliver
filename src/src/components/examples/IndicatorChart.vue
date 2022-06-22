@@ -22,38 +22,43 @@
         <d-xy-cursor
           :enabled="cursor"
           :behavior="cursorBehavior"
-          :xVisible="cursorXVisible"
-          :yVisible="cursorYVisible"
+          :xVisible="false"
+          :yVisible="false"
         >
-          <d-date-x-axis
+          <d-value-x-axis
             :opposite="xAxisOpposite"
+            :showGrid="false"
+            :showLabels="true"
             :showTooltip="xAxisShowTooltip"
-            :tooltipDateFormat="xAxisTooltipDateFormat"
+            :tooltipNumberFormat="xAxisTooltipNumberFormat"
+            :min="xAxisMin"
+            :max="xAxisMax"
+            :strictMinMax="true"
+            :ranges="xAxisRanges"
+            :strokeOpacity="1"
+            :strokeWidth="5"
           >
-            <d-category-y-axis
+            <d-value-y-axis
               :opposite="yAxisOpposite"
-              :showTooltip="yAxisShowTooltip"
-              :cellStartLocation="yAxisCellStartLocation"
-              :cellEndLocation="yAxisCellEndLocation"
+              :showGrid="false"
+              :showLabels="false"
+              :showTooltip="false"
+              :min="yAxisMin"
+              :max="yAxisMax"
+              :strictMinMax="true"
+              :ranges="yAxisRanges"
             >
-              <d-planning-serie
+              <d-progress-indicator
                 v-for="(serie, index) in data.series"
                 :key="index"
+                :colorIndex="index"
                 :name="serie.serie"
-                :data="serie.data"
-                :templateWidth="templateWidth"
-                :templateCornerRadius="templateCornerRadius"
+                :value="serie.data[0].valueX"
               />
-            </d-category-y-axis>
-          </d-date-x-axis>
+            </d-value-y-axis>
+          </d-value-x-axis>
         </d-xy-cursor>
       </d-legend>
-      <d-x-scrollbar
-        v-if="scrollbar"
-        :height="scrollbarHeight"
-        :startGripVisible="scrollbarStartGripVisible"
-        :endGripVisible="scrollbarEndGripVisible"
-      />
     </d-xy-chart>
   </div>
 </template>
@@ -62,11 +67,12 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
+import { AxisRange } from "../../helpers";
 
 import Spinner from "./Spinner.vue";
 
 @Component({ components: { Spinner } })
-export default class PlanningChart extends Vue {
+export default class IndicatorChart extends Vue {
   @Prop({ required: true })
   data!: any;
 
@@ -128,7 +134,16 @@ export default class PlanningChart extends Vue {
   xAxisShowTooltip!: boolean;
 
   @Prop({ required: true })
-  xAxisTooltipDateFormat!: string;
+  xAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  xAxisMin!: number | undefined;
+
+  @Prop({ required: true })
+  xAxisMax!: number | undefined;
+
+  @Prop({ required: true })
+  xAxisRanges!: AxisRange[] | undefined;
 
   @Prop({ required: true })
   yAxisOpposite!: boolean;
@@ -137,16 +152,16 @@ export default class PlanningChart extends Vue {
   yAxisShowTooltip!: boolean;
 
   @Prop({ required: true })
-  yAxisCellStartLocation!: number;
+  yAxisTooltipNumberFormat!: string;
 
   @Prop({ required: true })
-  yAxisCellEndLocation!: number;
-
-  @Prop({ required: false })
-  templateWidth!: number | undefined;
+  yAxisMin!: number | undefined;
 
   @Prop({ required: true })
-  templateCornerRadius!: number;
+  yAxisMax!: number | undefined;
+
+  @Prop({ required: true })
+  yAxisRanges!: AxisRange[] | undefined;
 
   ready: boolean = false;
 }

@@ -57,11 +57,11 @@ Default.args = {
   axisMin: 0,
   axisMax: 200,
   ranges: [
-    { lowBound: 0, highBound: 40, color: "#ff3c3c", label: "Bad" },
-    { lowBound: 40, highBound: 80, color: "#ff8c3c", label: "Somewhat bad" },
-    { lowBound: 80, highBound: 120, color: "#b4b4b4", label: "Just meh" },
-    { lowBound: 120, highBound: 160, color: "#aaff64", label: "Somewhat good" },
-    { lowBound: 160, highBound: 200, color: "#64ff8c", label: "Good" }
+    { startValue: 0,   endValue: 40,  opacity: 1, color: "#ff3c3c", label: "Bad" },
+    { startValue: 40,  endValue: 80,  opacity: 1, color: "#ff8c3c", label: "Somewhat bad" },
+    { startValue: 80,  endValue: 120, opacity: 1, color: "#b4b4b4", label: "Just meh" },
+    { startValue: 120, endValue: 160, opacity: 1, color: "#aaff64", label: "Somewhat good" },
+    { startValue: 160, endValue: 200, opacity: 1, color: "#64ff8c", label: "Good" }
   ],
   minHeight: '400px',
   chartLayout: 2,

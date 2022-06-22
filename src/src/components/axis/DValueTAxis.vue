@@ -12,7 +12,7 @@ import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, XAXIS } from "../../literals";
-import { textColor } from "../../helpers";
+import { AxisRange, textColor } from "../../helpers";
 
 @Component({})
 export default class DValueTAxis extends Vue {
@@ -113,7 +113,7 @@ export default class DValueTAxis extends Vue {
   onLabelsRadiusChange = this.setLabelsRadius;
 
   @Prop({ required: false, default: undefined })
-  ranges!: { lowBound: number; highBound: number; color: string; label: string; }[] | undefined;
+  ranges!: AxisRange[] | undefined;
 
   @Watch("ranges")
   onRangesChange = this.setRanges;
@@ -124,19 +124,11 @@ export default class DValueTAxis extends Vue {
   upAndRunning = false;
 
   setMin(): void {
-    let min = (this.ranges != null && this.ranges.length > 0) ?
-      this.ranges.reduce((acc, cur) => Math.min(acc, cur.lowBound), this.ranges[0].lowBound) :
-      this.min;
-
-    this.axis!.set("min", min);
+    this.axis!.set("min", this.min);
   }
 
   setMax(): void {
-    let max = (this.ranges && this.ranges.length > 0) ?
-      this.ranges.reduce((acc, cur) => Math.max(acc, cur.highBound), this.ranges[0].highBound) :
-      this.max;
-
-    this.axis!.set("max", max);
+    this.axis!.set("max", this.max);
   }
 
   setMaxDeviation(): void {
@@ -192,40 +184,38 @@ export default class DValueTAxis extends Vue {
   }
 
   setRanges(): void {
-    // Remove all DataItems except ClockHands
-    for (let i = 0; i < this.axis!.axisRanges.values.length; i++) {
+    for (let i = this.axis!.axisRanges.values.length - 1; i >= 0; i--) {
       let range = this.axis!.axisRanges.values[i];
       if (!range.get("bullet")) {
         this.axis!.axisRanges.removeValue(range!);
         range!.dispose();
-        i--;
       }
     }
     
     if (this.ranges && this.ranges!.length > 0) {
-      am5.array.each(this.ranges!, (range : { lowBound: number; highBound: number; color: string; label: string; }) => {
+      am5.array.each(this.ranges!, (range : AxisRange) => {
         let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
 
         axisRange.setAll({
-          value: range.lowBound,
-          endValue: range.highBound
+          value: range.startValue,
+          endValue: range.endValue
         });
 
         axisRange.get("axisFill")!.setAll({
+          visible: true,
+          fillOpacity: range.opacity,
           fill: am5.color(range.color)
         });
 
         axisRange.get("label")!.setAll({
           text: range.label,
           inside: true,
+          centerX: 0,
           radius: 10,
           fill: textColor(range.color)
         });
       });
     }
-
-    this.setMin();
-    this.setMax();
   }
   
   mounted(): void {
@@ -248,6 +238,8 @@ export default class DValueTAxis extends Vue {
       })
     }));
 
+    this.setMin();
+    this.setMax();
     this.setMaxDeviation();
     this.setStrictMinMax();
 

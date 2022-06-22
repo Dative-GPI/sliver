@@ -36,6 +36,8 @@ const Template = (args, { argTypes }) => ({
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisCellStartLocation="yAxisCellStartLocation"
       :yAxisCellEndLocation="yAxisCellEndLocation"
+      :minColor="minColor"
+      :maxColor="maxColor"
     />`,
 });
 
@@ -86,10 +88,12 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm",
+  xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#",
   yAxisCellStartLocation: 0,
-  yAxisCellEndLocation: 1
+  yAxisCellEndLocation: 1,
+  minColor: "#00ffff",
+  maxColor: "#ff0000"
 };

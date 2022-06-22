@@ -35,7 +35,7 @@ export default class DDateYAxis extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "yyyy-MM-dd HH:mm" })
+  @Prop({ required: false, default: "yyyy-MM-dd HH:mm:ss" })
   tooltipDateFormat!: string;
 
   @Watch("tooltipDateFormat")

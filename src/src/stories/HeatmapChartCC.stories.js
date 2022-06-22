@@ -39,6 +39,8 @@ const Template = (args, { argTypes }) => ({
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisCellStartLocation="yAxisCellStartLocation"
       :yAxisCellEndLocation="yAxisCellEndLocation"
+      :minColor="minColor"
+      :maxColor="maxColor"
     />`,
 });
 
@@ -94,5 +96,7 @@ Default.args = {
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#",
   yAxisCellStartLocation: 0,
-  yAxisCellEndLocation: 1
+  yAxisCellEndLocation: 1,
+  minColor: "#00ffff",
+  maxColor: "#ff0000"
 };

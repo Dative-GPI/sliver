@@ -30,21 +30,18 @@
             :showTooltip="xAxisShowTooltip"
             :tooltipDateFormat="xAxisTooltipDateFormat"
           >
-            <d-category-y-axis
+            <d-value-y-axis
               :opposite="yAxisOpposite"
               :showTooltip="yAxisShowTooltip"
-              :cellStartLocation="yAxisCellStartLocation"
-              :cellEndLocation="yAxisCellEndLocation"
+              :tooltipNumberFormat="yAxisTooltipNumberFormat"
             >
-              <d-planning-serie
-                v-for="(serie, index) in data.series"
-                :key="index"
+              <d-range-serie
                 :name="serie.serie"
                 :data="serie.data"
-                :templateWidth="templateWidth"
-                :templateCornerRadius="templateCornerRadius"
+                :subNames="subSeries.map(ss => ss.serie)"
+                :subDatas="subSeries.map(ss => ss.data)"
               />
-            </d-category-y-axis>
+            </d-value-y-axis>
           </d-date-x-axis>
         </d-xy-cursor>
       </d-legend>
@@ -66,9 +63,12 @@ import { LayoutEnum, PositionEnum } from "../../enums";
 import Spinner from "./Spinner.vue";
 
 @Component({ components: { Spinner } })
-export default class PlanningChart extends Vue {
+export default class RangeChart extends Vue {
   @Prop({ required: true })
-  data!: any;
+  serie!: any;
+
+  @Prop({ required: true })
+  subSeries!: any[];
 
   @Prop({ required: true })
   minHeight!: string;
@@ -137,17 +137,8 @@ export default class PlanningChart extends Vue {
   yAxisShowTooltip!: boolean;
 
   @Prop({ required: true })
-  yAxisCellStartLocation!: number;
-
-  @Prop({ required: true })
-  yAxisCellEndLocation!: number;
-
-  @Prop({ required: false })
-  templateWidth!: number | undefined;
-
-  @Prop({ required: true })
-  templateCornerRadius!: number;
-
+  yAxisTooltipNumberFormat!: string;
+  
   ready: boolean = false;
 }
 </script>

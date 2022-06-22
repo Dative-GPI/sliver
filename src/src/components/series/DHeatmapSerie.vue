@@ -75,6 +75,18 @@ export default class DHeatmapSerie extends Vue {
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
 
+  @Prop({ required: false, default: "#ffff00" })
+  minColor!: string;
+
+  @Watch("minColor")
+  onMinColorChange = this.setHeatRules;
+
+  @Prop({ required: false, default: "#ff0000" })
+  maxColor!: string;
+
+  @Watch("maxColor")
+  onMaxColorChange = this.setHeatRules;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -114,8 +126,8 @@ export default class DHeatmapSerie extends Vue {
   setHeatRules(): void {
     this.serie!.set("heatRules", [{
       target: this.serie!.columns.template,
-      min: am5.color(0xfffb77),
-      max: am5.color(0xfe131a),
+      min: am5.color(this.minColor),
+      max: am5.color(this.maxColor),
       dataField: "value",
       key: "fill"
     }]);
@@ -142,7 +154,7 @@ export default class DHeatmapSerie extends Vue {
 
     this.serie = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
       calculateAggregates: true,
-      stroke: am5.color(0xffffff),
+      stroke: am5.color("#ffffff"),
       clustered: false,
       name: this.name,
       xAxis: this.xAxis,
@@ -156,10 +168,10 @@ export default class DHeatmapSerie extends Vue {
     }));
 
     this.serie.columns.template.setAll({
-      strokeOpacity: 1,
-      strokeWidth: 2,
+      height: am5.percent(100),
       width: am5.percent(100),
-      height: am5.percent(100)
+      strokeOpacity: 1,
+      strokeWidth: 2
     });
 
     // Set updatable properties

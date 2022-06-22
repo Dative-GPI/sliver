@@ -44,12 +44,6 @@ export default class DCategoryXAxis extends Vue {
   @Watch("labelsOversizedBehavior")
   onLabelsOversizedBehaviorChange = this.setLabelsOversizedBehavior;
 
-  @Prop({ required: false, default: 100 })
-  labelsMaxWidth!: number;
-
-  @Watch("labelsMaxWidth")
-  onLabelsMaxWidthChange = this.setLabelsMaxWidth;
-
   @Prop({ required: false, default: "{categoryX}" })
   labelsTooltipText!: string;
 
@@ -103,22 +97,6 @@ export default class DCategoryXAxis extends Vue {
 
   setLabelsOversizedBehavior(): void {
     this.axis!.get("renderer").labels.template.set("oversizedBehavior", this.labelsOversizedBehavior);
-
-    if (this.labelsOversizedBehavior === "truncate") {
-      this.axis!.get("renderer").labels.template.setup = (target: any): void => {
-        target.set("background", am5.Rectangle.new(this.root!, {
-          fill: am5.color(0x000000),
-          fillOpacity: 0
-        }));
-      };
-    }
-    else {
-      this.axis!.get("renderer").labels.template.setup = (): void => {};
-    }
-  }
-
-  setLabelsMaxWidth(): void {
-    this.axis!.get("renderer").labels.template.set("maxWidth", this.labelsMaxWidth);
   }
 
   setLabelsTooltipText(): void {
@@ -139,10 +117,17 @@ export default class DCategoryXAxis extends Vue {
 
     this.setOpposite();
     this.setShowTooltip();
-
     this.setLabelsOversizedBehavior();
-    this.setLabelsMaxWidth();
     this.setLabelsTooltipText();
+
+    this.axis!.get("renderer").labels.template.set("textAlign", "center");
+
+    this.axis!.get("renderer").labels.template.adapters.add("width", (width: any, target: any) =>  {
+      let x0 = this.axis!.getDataItemCoordinateY(this.axis!.dataItems[0], "category", 0);
+      let x1 = this.axis!.getDataItemCoordinateY(this.axis!.dataItems[0], "category", 1);
+      target.set("maxWidth", x1 - x0)
+      return x1 - x0;
+    });
 
     this.upAndRunning = true;
   }

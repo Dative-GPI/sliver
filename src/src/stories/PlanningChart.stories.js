@@ -35,20 +35,21 @@ const Template = (args, { argTypes }) => ({
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisCellStartLocation="yAxisCellStartLocation"
       :yAxisCellEndLocation="yAxisCellEndLocation"
+      :templateWidth="templateWidth"
+      :templateCornerRadius="templateCornerRadius"
     />`,
 });
 
-const makePlanningSerie = (name, tZero, timeRange, categories, values) => {
+const makePlanningSerie = (name, tZero, categories, values) => {
   var data = [];
   for (let i = 0; i < values; i++) {
     let categoryRandom = Math.floor(Math.random() * categories.length);
-    let timeOffset = (Math.floor(Math.random() * (timeRange)) + 60) * 1000
     data.push({
       timestampX: tZero,
-      closeTimestampX: tZero + timeOffset,
+      closeTimestampX: tZero,
       categoryY: categories[categoryRandom]
     });
-    tZero += timeOffset;
+    tZero += 60000
   }
 
   return {
@@ -61,7 +62,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePlanningSerie("Line 1", 1577836800000, 540, ["Production", "Idle", "Cooling", "Warming"], 10 ) }
+      { ...makePlanningSerie("Line 1", 1577836800000, ["Production", "Idle", "Cooling", "Warming"], 10 ) }
     ]
   },
   minHeight: '400px',
@@ -87,5 +88,7 @@ Default.args = {
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisCellStartLocation: 0.5,
-  yAxisCellEndLocation: 0.5
+  yAxisCellEndLocation: 0.5,
+  templateWidth: 15,
+  templateCornerRadius: 10
 };

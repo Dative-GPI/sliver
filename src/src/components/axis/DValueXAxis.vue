@@ -11,6 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, XAXIS } from "../../literals";
+import { AxisRange, textColor } from "../../helpers";
 
 @Component({})
 export default class DValueXAxis extends Vue {
@@ -36,6 +37,18 @@ export default class DValueXAxis extends Vue {
   onLogarithmicChange = this.setLogarithmic;
 
   @Prop({ required: false, default: true })
+  showGrid!: boolean;
+
+  @Watch("showGrid")
+  onShowGridChange = this.setShowGrid;
+
+  @Prop({ required: false, default: true })
+  showLabels!: boolean;
+
+  @Watch("showLabels")
+  onShowLabelsChange = this.setShowLabels;
+
+  @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
   @Watch("showTooltip")
@@ -46,6 +59,45 @@ export default class DValueXAxis extends Vue {
 
   @Watch("tooltipNumberFormat")
   onTooltipNumberFormatChange = this.setTooltipNumberFormat;
+
+  @Prop({ required: false, default: undefined })
+  min!: number | undefined;
+
+  @Watch("min")
+  onMinChange = this.setMin;
+
+  @Prop({ required: false, default: undefined })
+  max!: number | undefined;
+
+  @Watch("max")
+  onMaxChange = this.setMax;
+
+  @Prop({ required: false, default: false })
+  strictMinMax!: boolean;
+
+  @Watch("strictMinMax")
+  onStrictMinMaxChange = this.setStrictMinMax;
+
+  @Prop({ required: false, default: undefined })
+  ranges!: AxisRange[] | undefined;
+
+  @Watch("ranges")
+  onRangesChange = this.setRanges;
+
+  @Prop({ required: false, default: 0 })
+  strokeOpacity!: number;
+
+  @Watch("strokeOpacity")
+  onStrokeOpacityChange = this.setStrokeOpacity;
+
+  @Prop({ required: false, default: 1 })
+  strokeWidth!: number;
+
+  @Watch("strokeWidth")
+  onStrokeWidthChange = this.setStrokeWidth;
+
+  @Prop({ required: false, default: true })
+  gridForceHidden!: boolean;
 
   @ProvideReactive(XAXIS)
   axis: any = null;
@@ -63,6 +115,14 @@ export default class DValueXAxis extends Vue {
     if (this.logarithmic) {
       this.axis!.set("treatZeroAs", 0.0000001);
     }
+  }
+
+  setShowGrid(): void {
+    this.axis!.get("renderer").grid.template.set("visible", this.showGrid);
+  }
+
+  setShowLabels(): void {
+    this.axis!.get("renderer").labels.template.set("visible", this.showLabels);
   }
 
   setShowTooltip(): void {
@@ -103,6 +163,61 @@ export default class DValueXAxis extends Vue {
     this.axis!.set("tooltipNumberFormat", this.tooltipNumberFormat);
   }
 
+  setMin(): void {
+    this.axis!.set("min", this.min);
+  }
+
+  setMax(): void {
+    this.axis!.set("max", this.max);
+  }
+
+  setStrictMinMax(): void {
+    this.axis!.set("strictMinMax", this.strictMinMax);
+  }
+  
+  setRanges(): void {
+    for (let i = this.axis!.axisRanges.values.length - 1; i >= 0; i--) {
+      let range = this.axis!.axisRanges.values[i];
+      this.axis!.axisRanges.removeValue(range!);
+      range!.dispose();
+    }
+    
+    if (this.ranges && this.ranges!.length > 0) {
+      am5.array.each(this.ranges!, (range : AxisRange) => {
+        let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
+
+        axisRange.get("axisFill")!.setAll({
+          visible: true,
+          fillOpacity: range.opacity,
+          fill: am5.color(range.color)
+        });
+
+        if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
+          axisRange.get("label")!.setAll({
+            text: range.label,
+            inside: true,
+            centerY: 30,
+            radius: 10,
+            fill: textColor(range.color)
+          });
+        }
+
+        axisRange.setAll({
+          value: range.startValue,
+          endValue: range.endValue
+        });
+      });
+    }
+  }
+
+  setStrokeOpacity(): void {
+    this.axis!.get("renderer").set("strokeOpacity", this.strokeOpacity);
+  }
+
+  setStrokeWidth(): void {
+    this.axis!.get("renderer").set("strokeWidth", this.strokeWidth);
+  }
+
   mounted(): void {
     // Add to chart
     this.axis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
@@ -131,8 +246,16 @@ export default class DValueXAxis extends Vue {
 
     this.setOpposite();
     this.setLogarithmic();
+    this.setShowGrid();
+    this.setShowLabels();
     this.setShowTooltip();
     this.setTooltipNumberFormat();
+    this.setMin();
+    this.setMax();
+    this.setStrictMinMax();
+    this.setRanges();
+    this.setStrokeOpacity();
+    this.setStrokeWidth();
 
     this.upAndRunning = true;
   }

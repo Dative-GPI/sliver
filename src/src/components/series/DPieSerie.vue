@@ -12,6 +12,7 @@ import * as am5percent from "@amcharts/amcharts5/percent";
 
 import { AMROOT, CHART, LEGEND } from "../../literals";
 import { SerieEnum } from "../../enums";
+import { uuidv4 } from "../../helpers";
 
 @Component({})
 export default class DPieSerie extends Vue {
@@ -35,6 +36,9 @@ export default class DPieSerie extends Vue {
 
   @Prop({ required: false, default: "valueY" })
   valueField!: string;
+
+  @Prop({ required: false, default: "subs" })
+  subField!: string;
 
   @Prop({ required: false, default: false })
   alignLabels!: boolean;
@@ -72,33 +76,42 @@ export default class DPieSerie extends Vue {
   @Watch("textLabels")
   onTextLabelsCHange = this.setTextLabels;
 
-  @Prop({ required: false, default: "circular" })
+  @Prop({ required: false, default: "aligned" })
   textTypeLabels!: "regular" | "circular" | "radial" | "aligned" | "adjusted" | undefined;
 
   @Watch("textTypeLabels")
   onTextTypeLabelsChange = this.setTextTypeLabels;
 
-  @Prop({ required: false, default: false })
-  breakDownSlices!: boolean;
+  @Prop({ required: false, default: "Other" })
+  otherLabel!: string;
 
-  @Watch("breakDownSlices")
-  onBreakDownSlicesChange = this.setBreakDownSlices;
+  @Watch("otherLabel")
+  onOtherLabelChange = this.subData;
 
-  @Prop({ required: false, default: "subs" })
-  breakDownSlicesSubname!: string;
+  @Prop({ required: false, default: 1 })
+  otherThreshold: number | undefined;
+
+  @Watch("otherThreshold")
+  onOtherThresholdChange = this.subData;
 
   @Prop({ required: true })
   data!: any[];
 
   @Watch("data")
-  onDataChange = this.setData;
+  onDataChange = this.subData;
 
   serie: am5percent.PieSeries | null = null;
   tooltip: am5.Tooltip | null = null;
 
-  selected: any = null;
+  subbedData: any[] = [];
+  
+  explodingSelectedId: string | null = null;
+  explodingSelectedLabel: string | null = null;
+  explodingSelectedValue: number | null = null;
+  zoomSelectedId: string | null = null;
+  selectedId: string | null = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setName(): void {
     this.serie!.set("name", this.name);
@@ -146,22 +159,73 @@ export default class DPieSerie extends Vue {
     this.serie!.labels.template.set("textType", this.textTypeLabels);
   }
 
-  setBreakDownSlices(): void {
-    if (this.breakDownSlices) {
-      this.serie!.slices.template.events.on("click", this.handleBreakDownSlices);
+  subData(): void {
+    let sum = 0;
+    this.subbedData = [];
+
+    for (let i = 0; i < this.data.length; i++) {
+      sum += this.data[i][this.valueField];
+      let id = uuidv4();
+
+      this.subbedData.push({
+        id: id,
+        parentId: undefined,
+        exploding: (this.data[i][this.subField] != null && this.data[i][this.subField].length > 0),
+        zooming: false,
+        belowThreshold: false,
+        sortValue: this.data[i][this.valueField],
+        subSortValue: this.data[i][this.valueField],
+        [this.categoryField]: this.data[i][this.categoryField],
+        [this.valueField]: this.data[i][this.valueField],
+        [this.subField]: (this.data[i][this.subField] != null && this.data[i][this.subField].length > 0) ? this.data[i][this.subField].map((s: any) => ({
+          id: uuidv4(),
+          parentId: id,
+          belowThreshold: false,
+          exploding: false,
+          sortValue: this.data[i][this.valueField],
+          subSortValue: s[this.valueField],
+          [this.categoryField]: s[this.categoryField],
+          [this.valueField]: s[this.valueField]
+        })) : null
+      });
     }
-    else {
-      this.serie!.slices.template.events.off("click", this.handleBreakDownSlices);
+
+    if (this.otherThreshold != null) {
+      let threshold = (sum / 100) * this.otherThreshold;
+
+      for (let i = 0; i < this.subbedData.length; i++) {
+        if (this.subbedData[i][this.valueField] <= threshold) {
+          this.subbedData[i].belowThreshold = true;
+        }
+        if (this.subbedData[i][this.subField] != null) {
+          for (let j = 0; j < this.subbedData[i][this.subField].length; j++) {
+            if (this.subbedData[i][this.subField][j][this.valueField] <= threshold) {
+              this.subbedData[i][this.subField][j].belowThreshold = true;
+            }
+          }
+        }
+      }
     }
+
+    this.setData();
   }
 
-  handleBreakDownSlices(event: any) {
-    if (event.target.dataItem.dataContext.id != null) {
-      this.selected = event.target.dataItem.dataContext.id;
-    } else {
-      this.selected = undefined;
+  handleBreakDownSlices(event: any): void {
+    let formerExplodingId = this.explodingSelectedId;
+    let formerZoomingId = this.zoomSelectedId;
+    
+    let target = event.target.dataItem.dataContext;
+    if (!target.zooming || target.id !== "1") {
+      this.explodingSelectedId = target.exploding ? target.id : null;
+      this.explodingSelectedLabel = target.exploding ? target[this.categoryField] : null;
+      this.explodingSelectedValue = target.exploding ? target[this.valueField] : null;
     }
-    this.setData();
+    this.zoomSelectedId = target.zooming ? target.id : null;
+    this.selectedId = target.id;
+
+    if (formerExplodingId != this.explodingSelectedId || formerZoomingId != this.zoomSelectedId) {
+      this.setData();
+    }
   }
 
   setData(): void {
@@ -171,33 +235,110 @@ export default class DPieSerie extends Vue {
         this.legend!.data.removeValue(dataItem);
       });
     }
-    if (this.breakDownSlices) {
-      var chartData = [];
-      for (var i = 0; i < this.data.length; i++) {
-        if (this.selected === i) {
-          for (var x = 0; x < this.data[i][this.breakDownSlicesSubname].length; x++) {
-            chartData.push({
-              [this.categoryField]: this.data[i][this.breakDownSlicesSubname][x][this.categoryField],
-              [this.valueField]: this.data[i][this.breakDownSlicesSubname][x][this.valueField],
-              color: this.serie!.get("colors")!.getIndex(this.data.length + x)!,
-              sliceSettings: { active: true },
-              pulled: true
-            });
-          }
-        } else {
+
+    let chartData: any[] = [];
+
+    for (let i = 0; i < this.subbedData.length; i++) {
+      if (this.explodingSelectedId === this.subbedData[i].id) {
+        for (let j = 0; j < this.subbedData[i][this.subField].length; j++) {
           chartData.push({
-            [this.categoryField]: this.data[i][this.categoryField],
-            [this.valueField]: this.data[i][this.valueField],
-            color: this.serie!.get("colors")!.getIndex(i)!,
-            id: i
+            id: this.subbedData[i][this.subField][j].id,
+            parentId: this.subbedData[i].id,
+            exploding: false,
+            zooming: false,
+            belowThreshold: this.subbedData[i][this.subField][j].belowThreshold,
+            sortValue: this.subbedData[i][this.subField][j].sortValue,
+            subSortValue: this.subbedData[i][this.subField][j].subSortValue,
+            [this.categoryField]: this.subbedData[i][this.subField][j][this.categoryField],
+            [this.valueField]: this.subbedData[i][this.subField][j][this.valueField],
+            color: this.serie!.get("colors")!.getIndex(this.subbedData.length + j)!,
+            sliceSettings: { active: true },
+            pulled: true
           });
         }
       }
-      this.serie!.data.setAll(chartData);
+      else {
+        let pulled = (this.subbedData[i].belowThreshold && this.zoomSelectedId === "0") || (this.subbedData[i].id === this.selectedId);
+        chartData.push({
+          id: this.subbedData[i].id,
+          parentId: undefined,
+          exploding: this.subbedData[i].exploding,
+          zooming: false,
+          belowThreshold: this.subbedData[i].belowThreshold,
+          sortValue: this.subbedData[i].sortValue,
+          subSortValue: this.subbedData[i].subSortValue,
+          [this.categoryField]: this.subbedData[i][this.categoryField],
+          [this.valueField]: this.subbedData[i][this.valueField],
+          color: this.serie!.get("colors")!.getIndex(i)!,
+          sliceSettings: { active: pulled },
+          pulled: pulled
+        });
+      }
     }
-    else {
-      this.serie!.data.setAll(this.data);
+
+    if (this.zoomSelectedId !== "0") {
+      let mainOther = {
+        id: "0",
+        parentId: undefined,
+        exploding: false,
+        zooming: true,
+        belowThreshold: false,
+        sortValue: -5,
+        subSortValue: -5,
+        [this.categoryField]: this.otherLabel,
+        [this.valueField]: 0,
+        color: this.serie!.get("colors")!.getIndex(chartData.length + 1)!
+      }
+      let mainPush = false;
+
+      for (let i = chartData.length - 1; i >= 0; i--) {
+        if (chartData[i].belowThreshold && chartData[i].parentId == null) {
+          mainPush = true;
+          mainOther[this.valueField] += chartData[i][this.valueField];
+          chartData.splice(i, 1);
+        }
+      }
+      if (mainPush) {
+        chartData.push(mainOther);
+      }
     }
+    
+    if (this.zoomSelectedId !== "1") {
+      let subOther = {
+        id: "1",
+        parentId: this.explodingSelectedId,
+        exploding: false,
+        zooming: true,
+        belowThreshold: false,
+        sortValue: this.explodingSelectedValue,
+        subSortValue: 0,
+        [this.categoryField]: this.explodingSelectedLabel + " - " + this.otherLabel,
+        [this.valueField]: 0,
+        color: this.serie!.get("colors")!.getIndex(chartData.length + 2)!,
+        sliceSettings: { active: true },
+        pulled: true
+      }
+      let subPush = false;
+
+      for (let i = chartData.length - 1; i >= 0; i--) {
+        if (chartData[i].belowThreshold && chartData[i].parentId != null && chartData[i].parentId === this.explodingSelectedId) {
+          subPush = true;
+          subOther[this.valueField] += chartData[i][this.valueField];
+          chartData.splice(i, 1);
+        }
+      }
+      if (subPush) {
+        chartData.push(subOther);
+      }
+    }
+
+    chartData.sort((a: any, b: any) => {
+      if (b.sortValue === a.sortValue) return b.subSortValue - a.subSortValue
+      else return b.sortValue - a.sortValue
+    });
+
+    this.serie!.data.setAll(chartData);
+
     // Add to legend
     if (this.legend != null) {
       this.legend.data.pushAll(this.serie!.dataItems);
@@ -214,6 +355,7 @@ export default class DPieSerie extends Vue {
       userData: { serie: SerieEnum.PieSerie }
     }));
     
+    this.serie!.slices.template.events.on("click", this.handleBreakDownSlices);
     this.serie!.slices.template.set("templateField", "sliceSettings");
 
     this.setName();
@@ -223,11 +365,9 @@ export default class DPieSerie extends Vue {
     this.setForceHiddenLabels();
     this.setTextLabels();
     this.setTextTypeLabels();
-
-    this.setBreakDownSlices();
     
     // Set data
-    this.setData();
+    this.subData();
 
     this.upAndRunning = true;
   }

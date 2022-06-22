@@ -118,7 +118,7 @@ export default class DLineSerie extends Vue {
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : "{" + this.valueYField + "}");
+      this.tooltip!.set("labelText", this.tooltipText);
     }
   }
 
@@ -128,11 +128,6 @@ export default class DLineSerie extends Vue {
 
   setLegendLabelText(): void {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
-  }
-
-  getBulletTemplate(): am5.Template<am5.Circle> {
-    return am5.Template.new({
-    });
   }
 
   setBullet(): void {

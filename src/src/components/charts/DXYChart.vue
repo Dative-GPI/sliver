@@ -99,6 +99,7 @@ export default class DXYChart extends Vue {
     // Add chart to root
     this.chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {
       maxTooltipDistance: 0
+
     }));
 
     // Hack to bypass the cursor behavior when clicking the zoom out button

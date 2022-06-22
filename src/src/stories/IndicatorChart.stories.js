@@ -1,15 +1,15 @@
-import BarsChart from '../components/examples/BarsChart.vue';
+import IndicatorChart from '../components/examples/IndicatorChart.vue';
 
 export default {
-  title: 'Example/BarsChart',
-  component: BarsChart,
+  title: 'Example/IndicatorChart',
+  component: IndicatorChart,
 };
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { BarsChart },
+  components: { IndicatorChart },
   template:
-    `<bars-chart
+    `<indicator-chart
       :data="data"
       :minHeight="minHeight"
       :chartLayout="chartLayout"
@@ -30,39 +30,36 @@ const Template = (args, { argTypes }) => ({
       :scrollbarEndGripVisible="scrollbarEndGripVisible"
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
-      :xAxisLabelsOversizedBehavior="xAxisLabelsOversizedBehavior"
-      :xAxisLabelsMaxWidth="xAxisLabelsMaxWidth"
-      :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
+      :xAxisTooltipNumberFormat="xAxisTooltipNumberFormat"
+      :xAxisMin="xAxisMin"
+      :xAxisMax="xAxisMax"
+      :xAxisRanges="xAxisRanges"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :yAxisMin="yAxisMin"
+      :yAxisMax="yAxisMax"
+      :yAxisRanges="yAxisRanges"
     />`,
 });
-
-const makeColumnSerie = (name, categories, rangeValue) => {
-  var data = [];
-  for (let i = 0; i < categories.length; i++) {
-    data.push({
-      categoryX: categories[i],
-      valueY: Math.floor(Math.random() * rangeValue)
-    });
-  }
-
-  return {
-    serie: name,
-    data: data
-  };
-}
 
 export const Default = Template.bind({});
 Default.args = {
   data: {
-    series: [
-      { ...makeColumnSerie("Line 1", ["Grapefruit", "Coconut", "Passion fruit with a really long name", "Banana"], 50 ) },
-      { ...makeColumnSerie("Line 2", ["Grapefruit", "Apple", "Peach", "Pear"], 100 ) }
-    ]
+    series: [{
+      serie: "Indicator",
+      data: [{
+        valueX: 10
+      }]
+    },
+    {
+      serie: "Indicator",
+      data: [{
+        valueX: 25
+      }]
+    }]
   },
-  minHeight: '400px',
+  minHeight: '200px',
   chartLayout: 2,
   legend: true,
   legendLayout: 0,
@@ -81,10 +78,22 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisLabelsOversizedBehavior: "wrap",
-  xAxisLabelsMaxWidth: 100,
-  xAxisLabelsTooltipText: "{categoryX}",
+  xAxisTooltipNumberFormat: "#",
+  xAxisMin: 0,
+  xAxisMax: 200,
+  xAxisRanges: [
+    { startValue: 0,   endValue: 40,  opacity: 0.5, color: "#ff3c3c", label: "Bad" },
+    { startValue: 40,  endValue: 80,  opacity: 0.5, color: "#ff8c3c", label: "Somewhat bad" },
+    { startValue: 80,  endValue: 120, opacity: 0.5, color: "#b4b4b4", label: "Just meh" },
+    { startValue: 120, endValue: 160, opacity: 0.5, color: "#aaff64", label: "Somewhat good" },
+    { startValue: 160, endValue: 200, opacity: 0.5, color: "#64ff8c", label: "Good" }
+  ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#"
+  yAxisTooltipNumberFormat: "#",
+  yAxisMin: 0,
+  yAxisMax: 10,
+  yAxisRanges: [
+    { startValue: 3,   endValue: 10,  opacity: 1, color: "#ffffff", label: "Bad" },
+  ]
 };

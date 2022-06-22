@@ -43,6 +43,8 @@
                 :data="serie.data"
                 :xField="'timestampX'"
                 :yField="'categoryY'"
+                :minColor="minColor"
+                :maxColor="maxColor"
               />
             </d-category-y-axis>
           </d-date-x-axis>
@@ -144,6 +146,12 @@ export default class HeatmapChart extends Vue {
 
   @Prop({ required: true })
   yAxisCellEndLocation!: number;
+
+  @Prop({ required: true })
+  minColor!: string;
+
+  @Prop({ required: true })
+  maxColor!: string;
 
   ready: boolean = false;
 }

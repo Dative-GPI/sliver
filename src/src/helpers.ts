@@ -54,14 +54,34 @@ export const textColor = (backgroundHexColor: string): am5.Color => {
     let b = parseInt(result[3], 16);
 
     if (Math.max(r, g, b) < 127) {
-      return am5.color(0xffffff);
+      return am5.color("#ffffff");
     }
     else if (Math.max(r, g) < 127) {
-      return am5.color(0xffffff);
+      return am5.color("#ffffff");
     }
     else if (Math.max(g, b) < 127) {
-      return am5.color(0xffffff);
+      return am5.color("#ffffff");
     }
   }
-  return am5.color(0x000000);
+  return am5.color("#000000");
+}
+
+export const getLineIntersection = (a1: { x: number, y: number }, a2: { x: number, y: number }, b1: { x: number, y: number }, b2: { x: number, y: number }): { x: number, y: number } => {
+  let x = ((a1.x * a2.y - a2.x * a1.y) * (b1.x - b2.x) - (a1.x - a2.x) * (b1.x * b2.y - b1.y * b2.x)) / ((a1.x - a2.x) * (b1.y - b2.y) - (a1.y - a2.y) * (b1.x - b2.x));
+  let y = ((a1.x * a2.y - a2.x * a1.y) * (b1.y - b2.y) - (a1.y - a2.y) * (b1.x * b2.y - b1.y * b2.x)) / ((a1.x - a2.x) * (b1.y - b2.y) - (a1.y - a2.y) * (b1.x - b2.x));
+  return { x: x, y: y };
+}
+
+export const uuidv4 = (): string => {
+  return (([1e7] as any)+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, (c: any) =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+export interface AxisRange {
+  startValue: number;
+  endValue: number;
+  color: string;
+  opacity: number;
+  label?: string;
 }

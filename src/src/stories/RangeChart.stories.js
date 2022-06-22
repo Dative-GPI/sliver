@@ -1,16 +1,17 @@
-import BarsChart from '../components/examples/BarsChart.vue';
+import RangeChart from '../components/examples/RangeChart.vue';
 
 export default {
-  title: 'Example/BarsChart',
-  component: BarsChart,
+  title: 'Example/RangeChart',
+  component: RangeChart,
 };
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { BarsChart },
+  components: { RangeChart },
   template:
-    `<bars-chart
-      :data="data"
+    `<range-chart
+      :serie="data.series[0]"
+      :subSeries="data.series.slice(1)"
       :minHeight="minHeight"
       :chartLayout="chartLayout"
       :legend="legend"
@@ -30,22 +31,25 @@ const Template = (args, { argTypes }) => ({
       :scrollbarEndGripVisible="scrollbarEndGripVisible"
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
-      :xAxisLabelsOversizedBehavior="xAxisLabelsOversizedBehavior"
-      :xAxisLabelsMaxWidth="xAxisLabelsMaxWidth"
-      :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
+      :xAxisTooltipDateFormat="xAxisTooltipDateFormat"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
     />`,
 });
 
-const makeColumnSerie = (name, categories, rangeValue) => {
+const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
   var data = [];
-  for (let i = 0; i < categories.length; i++) {
+  for (let i = 0; i < values; i++) {
     data.push({
-      categoryX: categories[i],
-      valueY: Math.floor(Math.random() * rangeValue)
+      timestampX: tZero,
+      valueY: vZero
     });
+
+    let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+
+    tZero += elapsedTime;
+    vZero += (Math.floor(Math.random() * rangeValue) * plusOrMinus)
   }
 
   return {
@@ -58,8 +62,9 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeColumnSerie("Line 1", ["Grapefruit", "Coconut", "Passion fruit with a really long name", "Banana"], 50 ) },
-      { ...makeColumnSerie("Line 2", ["Grapefruit", "Apple", "Peach", "Pear"], 100 ) }
+      makeLineSerie("Reference", 1640815320000, 50, 120000, 5, 50),
+      makeLineSerie("Line 1", 1640815320000, 100, 120000, 5, 50),
+      makeLineSerie("Line 2", 1640815320000, 0, 120000, 5, 50)
     ]
   },
   minHeight: '400px',
@@ -81,9 +86,7 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisLabelsOversizedBehavior: "wrap",
-  xAxisLabelsMaxWidth: 100,
-  xAxisLabelsTooltipText: "{categoryX}",
+  xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#"

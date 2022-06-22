@@ -20,28 +20,40 @@ const Template = (args, { argTypes }) => ({
       :legendCenterX="legendCenterX"
       :legendY="legendY"
       :legendCenterY="legendCenterY"
-      :breakDownSlices="breakDownSlices"
-      :breakDownSlicesSubname="breakDownSlicesSubname"
+      :otherLabel="otherLabel"
+      :otherThreshold="otherThreshold"
     />`,
 });
 
 const makeExplodingPieSerie = (name, categories, subCategories, rangeValue) => {
   var data = [];
   for (let i = 0; i < categories.length; i++) {
-    let parentCategory = {
-      categoryX: categories[i],
-      valueY: 0,
-      subs: []
-    };
-    for (let j = 0; j < subCategories.length; j++) {
-      parentCategory.subs.push({
-        categoryX: subCategories[j],
-        valueY: Math.floor(Math.random() * rangeValue)
-      });
+    if (categories[i] === "X") {
+      let parentCategory = {
+        categoryX: categories[i],
+        valueY: 5,
+        subs: [{
+          categoryX:"Fraud",
+          ValueY: 5
+        }]
+      };
+      data.push(parentCategory);
     }
-    parentCategory.valueY = parentCategory.subs.reduce((acc, cur) => acc + cur.valueY, 0);
-
-    data.push(parentCategory);
+    else {
+      let parentCategory = {
+        categoryX: categories[i],
+        valueY: 0,
+        subs: []
+      };
+      for (let j = 0; j < subCategories.length; j++) {
+        parentCategory.subs.push({
+          categoryX: subCategories[j],
+          valueY: Math.floor(Math.random() * rangeValue)
+        });
+      }
+      parentCategory.valueY = parentCategory.subs.reduce((acc, cur) => acc + cur.valueY, 0);
+      data.push(parentCategory);
+    }
   }
 
   return {
@@ -56,10 +68,10 @@ Default.args = {
     series: [
       { ...makeExplodingPieSerie(
         "Expenses",
-        ["First company", "Second company"],
+        ["First company", "Second company", "X"],
         ["Employees well-being", "Dividends", "Salaries & compensations", "Raw materials", "Wrongful terminations suing costs", "Public relations & marketing", "Miscellaneous"],
         500
-      )}
+      )},
     ]
   },
   minHeight: '400px',
@@ -71,6 +83,6 @@ Default.args = {
   legendCenterX: 50,
   legendY: 50,
   legendCenterY: 50,
-  breakDownSlices: true,
-  breakDownSlicesSubname: "subs"
+  otherLabel: "Other",
+  otherThreshold: 2
 };

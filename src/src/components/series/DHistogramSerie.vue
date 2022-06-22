@@ -135,6 +135,8 @@ export default class DHistogramSerie extends Vue {
       userData: { serie: SerieEnum.HistogramSerie }
     }));
 
+    this.serie!.columns.template.set("width", am5.percent(80));
+
     // Set updatable properties
     this.setName();
     this.setShowTooltip();
