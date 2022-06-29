@@ -18,6 +18,7 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
 import { AMROOT, CHART } from "../../literals";
 import { LayoutEnum } from "../../enums";
+import { getLocale } from "../../helpers";
 
 @Component({})
 export default class DRadarChart extends Vue {
@@ -26,6 +27,9 @@ export default class DRadarChart extends Vue {
 
   @ProvideReactive(CHART)
   chart: am5radar.RadarChart | null = null;
+
+  @Prop({ required: false, default: "en-US" })
+  locale!: string;
 
   @Prop({ required: false, default: 1500 })
   readyTimeout!: number;
@@ -112,6 +116,7 @@ export default class DRadarChart extends Vue {
     // Create root
     this.root = am5.Root.new((this.$refs.radarchart as HTMLElement));
     this.root.setThemes([ am5themes_Animated.new(this.root) ]);
+    this.root.locale = getLocale(this.locale);
 
     // Warn the parent when the chart is ready
     let timeout: number | undefined = undefined;

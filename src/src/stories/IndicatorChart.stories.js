@@ -12,6 +12,7 @@ const Template = (args, { argTypes }) => ({
     `<indicator-chart
       :data="data"
       :minHeight="minHeight"
+      :locale="locale"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"

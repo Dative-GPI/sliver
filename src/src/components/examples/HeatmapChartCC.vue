@@ -7,8 +7,9 @@
     <d-xy-chart
       :min-height="minHeight"
       :layout="chartLayout"
-      @ready="ready = true"
+      :locale="locale"
       :style="{ display: ready ? 'flex': 'none' }"
+      @ready="ready = true"
     >
       <d-legend
         :enabled="legend"
@@ -76,6 +77,9 @@ export default class HeatmapChart extends Vue {
 
   @Prop({ required: true })
   minHeight!: string;
+
+  @Prop({ required: true })
+  locale!: string;
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

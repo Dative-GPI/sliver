@@ -1,5 +1,12 @@
 import * as am5 from "@amcharts/amcharts5";
 
+import am5locales_en_US from "@amcharts/amcharts5/locales/en_US";
+import am5locales_fr_FR from "@amcharts/amcharts5/locales/fr_FR";
+import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
+import am5locales_es_ES from "@amcharts/amcharts5/locales/es_ES";
+import am5locales_de_DE from "@amcharts/amcharts5/locales/de_DE";
+import am5locales_pt_PT from "@amcharts/amcharts5/locales/pt_PT";
+
 import { PositionEnum } from "./enums";
 
 export const updateCategories = (former: any[], data: any[], categoryField: string, serieId: number, sort: boolean, position: PositionEnum): any[] => {
@@ -76,6 +83,33 @@ export const uuidv4 = (): string => {
   return (([1e7] as any)+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, (c: any) =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
+}
+
+export const getLocale = (code: string): any => {
+  switch (code) {
+    case "en-UK":
+    case "en-US": {
+      return am5locales_en_US;
+    }
+    case "fr-FR": {
+      return am5locales_fr_FR;
+    }
+    case "it-IT": {
+      return am5locales_it_IT;
+    }
+    case "es-ES": {
+      return am5locales_es_ES;
+    }
+    case "de-DE": {
+      return am5locales_de_DE;
+    }
+    case "pt-PT": {
+      return am5locales_pt_PT;
+    }
+    default: {
+      return am5locales_en_US;
+    }
+  }
 }
 
 export interface AxisRange {

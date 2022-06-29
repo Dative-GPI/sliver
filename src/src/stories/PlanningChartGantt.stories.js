@@ -12,6 +12,7 @@ const Template = (args, { argTypes }) => ({
     `<planning-chart
       :data="data"
       :minHeight="minHeight"
+      :locale="locale"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -63,13 +64,14 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePlanningSerie("Production", 1577836800000, 0, ["Line 1", "Line 2"], 10 ) },
-      { ...makePlanningSerie("Idle", 1577836800000, 0, ["Line 1", "Line 2"], 10 ) },
-      { ...makePlanningSerie("Cooling", 1577836800000, 0, ["Line 1", "Line 2"], 10 ) },
-      { ...makePlanningSerie("Warming", 1577836800000, 0, ["Line 1", "Line 2"], 10 ) }
+      { ...makePlanningSerie("Production", 1577836800000, 0, ["Line [[1]]", "Line 2"], 10 ) },
+      { ...makePlanningSerie("Idle", 1577836800000, 0, ["Line [1]", "Line 2"], 10 ) },
+      { ...makePlanningSerie("Cooling", 1577836800000, 0, ["Line [1]", "Line 2"], 10 ) },
+      { ...makePlanningSerie("Warming", 1577836800000, 0, ["Line [1]", "Line 2"], 10 ) }
     ]
   },
   minHeight: '400px',
+  locale: "fr-FR",
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

@@ -11,6 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<radar-chart
       :minHeight="minHeight"
+      :locale="locale"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -58,6 +59,7 @@ Default.args = {
   axisMax: 200,
   ranges: undefined,
   minHeight: '400px',
+  locale: "fr-FR",
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

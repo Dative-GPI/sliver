@@ -12,6 +12,7 @@ const Template = (args, { argTypes }) => ({
     `<line-chart
       :data="data"
       :minHeight="minHeight"
+      :locale="locale"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -51,7 +52,7 @@ const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
     let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
 
     tZero += elapsedTime;
-    vZero += (Math.floor(Math.random() * rangeValue) * plusOrMinus)
+    vZero += (Math.random() * rangeValue * plusOrMinus)
   }
 
   return {
@@ -69,6 +70,7 @@ Default.args = {
     ]
   },
   minHeight: '400px',
+  locale: "fr-FR",
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

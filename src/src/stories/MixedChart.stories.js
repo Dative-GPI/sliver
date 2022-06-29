@@ -14,6 +14,7 @@ const Template = (args, { argTypes }) => ({
       :dataBis="dataBis"
       :dataTiers="dataTiers"
       :minHeight="minHeight"
+      :locale="locale"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -138,6 +139,7 @@ Default.args = {
     ]
   },
   minHeight: '400px',
+  locale: "fr-FR",
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

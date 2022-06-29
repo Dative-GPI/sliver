@@ -222,20 +222,20 @@ export default class DValueTAxis extends Vue {
     this.axis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
       renderer: am5radar.AxisRendererCircular.new(this.root, {}),
       numberFormat: "#a",
-      numberFormatter:  am5.NumberFormatter.new(this.root, {
-        bigNumberPrefixes: [
-          { "number": 1e+3, "suffix": "k" },
-          { "number": 1e+6, "suffix": "M" },
-          { "number": 1e+9, "suffix": "G" },
-          { "number": 1e+12, "suffix": "T" },
-          { "number": 1e+15, "suffix": "P" }
-        ],
-        smallNumberPrefixes: [
-          { "number": 1e-9, "suffix": "n" },
-          { "number": 1e-6, "suffix": "µ" },
-          { "number": 1e-3, "suffix": "m" }
-        ]
-      })
+      // numberFormatter:  am5.NumberFormatter.new(this.root, {
+      //   bigNumberPrefixes: [
+      //     { "number": 1e+3, "suffix": "k" },
+      //     { "number": 1e+6, "suffix": "M" },
+      //     { "number": 1e+9, "suffix": "G" },
+      //     { "number": 1e+12, "suffix": "T" },
+      //     { "number": 1e+15, "suffix": "P" }
+      //   ],
+      //   smallNumberPrefixes: [
+      //     { "number": 1e-9, "suffix": "n" },
+      //     { "number": 1e-6, "suffix": "µ" },
+      //     { "number": 1e-3, "suffix": "m" }
+      //   ]
+      // })
     }));
 
     this.setMin();

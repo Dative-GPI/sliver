@@ -12,6 +12,7 @@ const Template = (args, { argTypes }) => ({
     `<stacked-bars-chart
       :data="data"
       :minHeight="minHeight"
+      :locale="locale"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -64,6 +65,7 @@ Default.args = {
     ]
   },
   minHeight: '400px',
+  locale: "fr-FR",
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

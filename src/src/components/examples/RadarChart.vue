@@ -7,8 +7,9 @@
     <d-radar-chart
       :min-height="minHeight"
       :layout="chartLayout"
-      @ready="ready = true"
+      :locale="locale"
       :style="{ display: ready ? 'flex': 'none' }"
+      @ready="ready = true"
     >
       <d-legend
         :enabled="legend"
@@ -63,6 +64,9 @@ import Spinner from "./Spinner.vue";
 export default class RadarChart extends Vue {
   @Prop({ required: true })
   minHeight!: string;
+
+  @Prop({ required: true })
+  locale!: string;
 
   @Prop({ required: true })
   panX!: boolean;
