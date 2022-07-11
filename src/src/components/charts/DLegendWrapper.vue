@@ -18,6 +18,9 @@ export default class DLegendWrapper extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 
+  @Prop({ required: false, default: false })
+  singleColumn!: boolean;
+
   @Prop({ required: false, default: LayoutEnum.Grid })
   layout!: LayoutEnum;
 

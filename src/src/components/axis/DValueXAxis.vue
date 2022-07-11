@@ -164,11 +164,21 @@ export default class DValueXAxis extends Vue {
   }
 
   setMin(): void {
-    this.axis!.set("min", this.min);
+    if (this.logarithmic && this.min === 0) {
+      this.axis!.set("min", 0.0000001);
+    }
+    else {
+      this.axis!.set("min", this.min);
+    }
   }
 
   setMax(): void {
-    this.axis!.set("max", this.max);
+    if (this.logarithmic && this.max === 0) {
+      this.axis!.set("max", 0.0000001);
+    }
+    else {
+      this.axis!.set("max", this.max);
+    }
   }
 
   setStrictMinMax(): void {
@@ -222,21 +232,7 @@ export default class DValueXAxis extends Vue {
     // Add to chart
     this.axis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
       renderer: am5xy.AxisRendererX.new(this.root, {}),
-      numberFormat: "#a",
-      // numberFormatter:  am5.NumberFormatter.new(this.root, {
-      //   bigNumberPrefixes: [
-      //     { "number": 1e+3, "suffix": "k" },
-      //     { "number": 1e+6, "suffix": "M" },
-      //     { "number": 1e+9, "suffix": "G" },
-      //     { "number": 1e+12, "suffix": "T" },
-      //     { "number": 1e+15, "suffix": "P" }
-      //   ],
-      //   smallNumberPrefixes: [
-      //     { "number": 1e-9, "suffix": "n" },
-      //     { "number": 1e-6, "suffix": "µ" },
-      //     { "number": 1e-3, "suffix": "m" }
-      //   ]
-      // })
+      numberFormat: "#a"
     }));
 
     // Add to cursor

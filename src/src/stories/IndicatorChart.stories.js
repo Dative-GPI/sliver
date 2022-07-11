@@ -48,19 +48,29 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [{
-      serie: "Indicator",
+      serie: "A",
+      data: [{
+        valueX: 0
+      }]
+    },{
+      serie: "B",
+      data: [{
+        valueX: 5
+      }]
+    },{
+      serie: "C",
       data: [{
         valueX: 10
       }]
     },
     {
-      serie: "Indicator",
+      serie: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore",
       data: [{
-        valueX: 25
+        valueX: 20
       }]
     }]
   },
-  minHeight: '200px',
+  minHeight: '300px',
   chartLayout: 2,
   legend: true,
   legendLayout: 0,
@@ -95,6 +105,6 @@ Default.args = {
   yAxisMin: 0,
   yAxisMax: 10,
   yAxisRanges: [
-    { startValue: 3,   endValue: 10,  opacity: 1, color: "#ffffff", label: "Bad" },
+    { startValue: 0,   endValue: 10,  opacity: 1, color: "#ffffff", label: "Bad" },
   ]
 };

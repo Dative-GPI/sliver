@@ -27,6 +27,9 @@ export default class DLegend extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 
+  @Prop({ required: false, default: false })
+  singleColumn!: boolean;
+
   @Prop({ required: false, default: LayoutEnum.Grid })
   layout!: LayoutEnum;
 
@@ -110,7 +113,14 @@ export default class DLegend extends Vue {
   mounted(): void {
     if (this.enabled) {
       // Add to chart
-      this.legend = this.chart.children.push(am5.Legend.new(this.root, {}));
+      if (this.singleColumn) {
+        this.legend = this.chart.children.push(am5.Legend.new(this.root, {
+          layout: am5.GridLayout.new(this.root, { maxColumns: 1 })
+        }));
+      }
+      else {
+        this.legend = this.chart.children.push(am5.Legend.new(this.root, {}));
+      }
 
       this.legend.itemContainers.template.events.on("pointerover", (event: ISpritePointerEvent) => {
         var itemContainer = event!.target;
@@ -208,7 +218,9 @@ export default class DLegend extends Vue {
         }
       });
 
-      this.setLayout();
+      if (!this.singleColumn) {
+        this.setLayout();
+      }
       this.setPosition();
     }
 

@@ -12,7 +12,6 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { addSerie, getLineIntersection, removeSerie } from "../../helpers";
-import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DRangeSerie extends Vue {

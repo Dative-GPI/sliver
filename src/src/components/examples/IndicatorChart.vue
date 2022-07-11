@@ -13,12 +13,7 @@
     >
       <d-legend
         :enabled="legend"
-        :layout="legendLayout"
-        :position="legendPosition"
-        :x="legendX"
-        :centerX="legendCenterX"
-        :y="legendY"
-        :centerY="legendCenterY"
+        :singleColumn="true"
       >
         <d-xy-cursor
           :enabled="cursor"
@@ -47,6 +42,7 @@
               :min="yAxisMin"
               :max="yAxisMax"
               :strictMinMax="true"
+              :height="yAxisHeight"
               :ranges="yAxisRanges"
             >
               <d-progress-indicator
@@ -79,6 +75,14 @@ export default class IndicatorChart extends Vue {
 
   @Prop({ required: true })
   minHeight!: string;
+
+  get numberMinHeight(): number {
+    return parseFloat(this.minHeight.substring(0, this.minHeight.length - 2));
+  }
+
+  get yAxisHeight(): number {
+    return this.numberMinHeight - (90 + 30 * this.data.series.length);
+  }
 
   @Prop({ required: true })
   locale!: string;
