@@ -112,6 +112,38 @@ export const getLocale = (code: string): any => {
   }
 }
 
+export const getTimezone = (timeOffset: string): am5.Timezone  => {
+  let cleaned = timeOffset.replaceAll(" ", "").toLowerCase();
+  switch (cleaned) {
+    case "utc-11:00:00": return am5.Timezone.new("Pacific/Samoa");
+    case "utc-10:00:00": return am5.Timezone.new("Pacific/Honolulu");
+    case "utc-09:00:00": return am5.Timezone.new("Pacific/Gambier");
+    case "utc-08:00:00": return am5.Timezone.new("Pacific/Pitcairn");
+    case "utc-07:00:00": return am5.Timezone.new("America/Phoenix");
+    case "utc-06:00:00": return am5.Timezone.new("America/Costa_Rica");
+    case "utc-05:00:00": return am5.Timezone.new("America/Cancun");
+    case "utc-04:00:00": return am5.Timezone.new("America/Antigua");
+    case "utc-03:00:00": return am5.Timezone.new("America/Araguaina");
+    case "utc-02:00:00": return am5.Timezone.new("America/Noronha");
+    case "utc-01:00:00": return am5.Timezone.new("Atlantic/Cape_Verde");
+    case "utc+01:00:00": return am5.Timezone.new("Europe/Paris");
+    case "utc+02:00:00": return am5.Timezone.new("Africa/Cairo");
+    case "utc+03:00:00": return am5.Timezone.new("Africa/Djibouti");
+    case "utc+04:00:00": return am5.Timezone.new("Asia/Dubai");
+    case "utc+05:00:00": return am5.Timezone.new("Asia/Karachi");
+    case "utc+06:00:00": return am5.Timezone.new("Asia/Dhaka");
+    case "utc+07:00:00": return am5.Timezone.new("Asia/Jakarta");
+    case "utc+08:00:00": return am5.Timezone.new("Asia/Brunei");
+    case "utc+09:00:00": return am5.Timezone.new("Asia/Seoul");
+    case "utc+10:00:00": return am5.Timezone.new("Asia/Vladivostok");
+    case "utc+11:00:00": return am5.Timezone.new("Pacific/Bougainville");
+    case "utc+12:00:00": return am5.Timezone.new("Asia/Kamchatka");
+    case "utc+13:00:00": return am5.Timezone.new("Pacific/Apia");
+    case "utc+14:00:00": return am5.Timezone.new("Pacific/Kiritimati");
+    default: return am5.Timezone.new("UTC");
+  }
+}
+
 export interface AxisRange {
   startValue: number;
   endValue: number;

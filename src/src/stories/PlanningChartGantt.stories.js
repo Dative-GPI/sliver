@@ -96,5 +96,5 @@ Default.args = {
   yAxisCellStartLocation: 0.5,
   yAxisCellEndLocation: 0.5,
   templateWidth: undefined,
-  templateCornerRadius: 5
+  templateCornerRadius: 10
 };

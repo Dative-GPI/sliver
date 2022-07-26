@@ -18,7 +18,7 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
 import { AMROOT, CHART } from "../../literals";
 import { LayoutEnum } from "../../enums";
-import { getLocale } from "../../helpers";
+import { getLocale, getTimezone } from "../../helpers";
 
 @Component({})
 export default class DXYChart extends Vue {
@@ -30,6 +30,9 @@ export default class DXYChart extends Vue {
 
   @Prop({ required: false, default: "en-US" })
   locale!: string;
+
+  @Prop({ required: false, default: "UTC" })
+  timeOffset!: string;
 
   @Prop({ required: false, default: 1500 })
   readyTimeout!: number;
@@ -87,6 +90,7 @@ export default class DXYChart extends Vue {
     this.root = am5.Root.new((this.$refs.xychart as HTMLElement));
     this.root.setThemes([ am5themes_Animated.new(this.root) ]);
     this.root.locale = getLocale(this.locale);
+    this.root.timezone = getTimezone(this.timeOffset);
 
     // Warn the parent when the chart is ready
     let timeout: number | undefined = undefined;
