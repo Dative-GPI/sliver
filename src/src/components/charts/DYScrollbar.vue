@@ -20,6 +20,9 @@ export default class DYScrollbar extends Vue {
   @InjectReactive(CHART)
   chart!: am5xy.XYChart;
 
+  @Prop({ required: false, default: true })
+  enabled!: boolean;
+
   @Prop({ required: false, default: 5 })
   height!: number;
 
@@ -40,39 +43,49 @@ export default class DYScrollbar extends Vue {
 
   scrollbar: am5xy.XYChartScrollbar | null = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setHeight(): void {
-    this.scrollbar!.set("height", this.height);
+    if (this.enabled) {
+      this.scrollbar!.set("height", this.height);
+    }
   }
 
   setStartGripVisible(): void {
-    this.scrollbar!.startGrip.set("visible", this.startGripVisible);
+    if (this.enabled) {
+      this.scrollbar!.startGrip.set("visible", this.startGripVisible);
+    }
   }
 
   setEndGripVisible(): void {
-    this.scrollbar!.endGrip.set("visible", this.endGripVisible);
+    if (this.enabled) {
+      this.scrollbar!.endGrip.set("visible", this.endGripVisible);
+    }
   }
 
   mounted(): void {
-    // Add to chart
-    this.scrollbar = this.chart.set("scrollbarY", am5xy.XYChartScrollbar.new(this.root, {
-      orientation: "vertical"
-    }));
+    if (this.enabled) {
+      // Add to chart
+      this.scrollbar = this.chart.set("scrollbarY", am5xy.XYChartScrollbar.new(this.root, {
+        orientation: "vertical"
+      }));
 
-    this.setHeight();
-    this.setStartGripVisible();
-    this.setEndGripVisible();
+      this.setHeight();
+      this.setStartGripVisible();
+      this.setEndGripVisible();
+    }
 
     this.upAndRunning = true;
   }
 
   destroyed(): void {
-    // Remove from chart
-    this.chart!.set("scrollbarY", undefined);
+    if (this.enabled) {
+      // Remove from chart
+      this.chart!.set("scrollbarY", undefined);
 
-    // Dispose
-    this.scrollbar!.dispose();
+      // Dispose
+      this.scrollbar!.dispose();
+    }
   }
 }
 </script>
