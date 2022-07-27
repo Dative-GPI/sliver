@@ -23,6 +23,9 @@ export default class DXScrollbar extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 
+  @Watch("enabled")
+  onEnabledChange = this.setEnabled;
+
   @Prop({ required: false, default: 5 })
   height!: number;
 
@@ -46,20 +49,41 @@ export default class DXScrollbar extends Vue {
   upAndRunning: boolean = false;
 
   setHeight(): void {
-    if (this.enabled) {
+    if (this.scrollbar != null) {
       this.scrollbar!.set("height", this.height);
     }
   }
 
   setStartGripVisible(): void {
-    if (this.enabled) {
+    if (this.scrollbar != null) {
       this.scrollbar!.startGrip.set("visible", this.startGripVisible);
     }
   }
 
   setEndGripVisible(): void {
-    if (this.enabled) {
+    if (this.scrollbar != null) {
       this.scrollbar!.endGrip.set("visible", this.endGripVisible);
+    }
+  }
+
+  setEnabled(): void {
+    if (this.enabled) {
+      // Add to chart
+      this.scrollbar = this.chart.set("scrollbarX", am5xy.XYChartScrollbar.new(this.root, {
+        orientation: "horizontal"
+      }));
+
+      this.setHeight();
+      this.setStartGripVisible();
+      this.setEndGripVisible();
+    }
+    else if (this.scrollbar != null) {
+      // Remove from chart
+      this.chart!.set("scrollbarX", undefined);
+
+      // Dispose
+      this.scrollbar!.dispose();
+      this.scrollbar = null;
     }
   }
 
@@ -79,7 +103,7 @@ export default class DXScrollbar extends Vue {
   }
 
   destroyed(): void {
-    if (this.enabled) {
+    if (this.scrollbar != null) {
       // Remove from chart
       this.chart!.set("scrollbarX", undefined);
 

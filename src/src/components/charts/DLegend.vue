@@ -27,6 +27,9 @@ export default class DLegend extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 
+  @Watch("enabled")
+  onEnabledChange = this.setEnabled;
+
   @Prop({ required: false, default: false })
   singleColumn!: boolean;
 
@@ -69,10 +72,10 @@ export default class DLegend extends Vue {
   @ProvideReactive(LEGEND)
   legend: am5.Legend | null = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setLayout(): void {
-    if (this.enabled) {
+    if (this.legend != null) {
       switch (this.layout) {
         case LayoutEnum.Grid: {
           this.legend!.set("layout", this.root!.gridLayout);
@@ -91,7 +94,7 @@ export default class DLegend extends Vue {
   }
 
   setPosition(): void {
-    if (this.enabled) {
+    if (this.legend != null) {
       switch (this.position) {
         case PositionEnum.Abscissa: {
           this.legend!.set("x", undefined);
@@ -107,6 +110,129 @@ export default class DLegend extends Vue {
           this.legend!.set("centerY", undefined);
         }
       }
+    }
+  }
+
+  setEnabled(): void {
+    if (this.enabled) {
+      // Add to chart
+      if (this.singleColumn) {
+        this.legend = this.chart.children.push(am5.Legend.new(this.root, {
+          layout: am5.GridLayout.new(this.root, { maxColumns: 1 })
+        }));
+      }
+      else {
+        this.legend = this.chart.children.push(am5.Legend.new(this.root, {}));
+      }
+
+      this.legend.itemContainers.template.events.on("pointerover", (event: ISpritePointerEvent) => {
+        var itemContainer = event!.target;
+        var eventSerie = itemContainer!.dataItem!.dataContext;
+        if (this.chart! instanceof am5xy.XYChart) {
+          this.chart!.series.each((serie: am5.Series) => {
+            if (serie != eventSerie) {
+              serie.set("opacity", 0.15);
+            }
+            if (serie instanceof am5xy.LineSeries) {
+              if (serie == eventSerie) {
+                serie.strokes.template.set("strokeWidth", 2);
+              }
+              else {
+                if (serie.bullets.values.length) {
+                  switch (serie.get("userData").serie) {
+                    case SerieEnum.LineSerie: {
+                      serie.bullets.clear();
+                      serie.bullets.push(() => {
+                        return am5.Bullet.new(this.root, {
+                          sprite: am5.Circle.new(this.root, {
+                            opacity: serie.get("opacity"),
+                            fill: serie.get("fill"),
+                            radius: serie.get("userData").bulletRadius
+                          })
+                        })
+                      });
+                      break;
+                    }
+                    case SerieEnum.ScatterPlotSerie: {
+                      serie.bullets.clear();
+                      serie.bullets.push(() => {
+                        return am5.Bullet.new(this.root, {
+                          sprite: am5.Circle.new(this.root, {
+                            opacity: serie.get("opacity"),
+                              fill: serie.get("fill")
+                            },
+                            serie.get("userData").circleTemplate)
+                        });
+                      });
+                      break;
+                    }
+                    default: {
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
+
+      this.legend.itemContainers.template.events.on("pointerout", () => {
+        if (!(this.chart! instanceof am5radar.RadarChart)) {
+          this.chart!.series.each((serie: any) => {
+            serie.set("opacity", 1);
+            if (serie instanceof am5xy.LineSeries) {
+              serie.strokes.template.set("strokeWidth", 1);
+              if (serie.bullets.values.length) {
+                switch (serie.get("userData").serie) {
+                  case SerieEnum.LineSerie: {
+                    serie.bullets.clear();
+                    serie.bullets.push(() => {
+                      return am5.Bullet.new(this.root, {
+                        sprite: am5.Circle.new(this.root, {
+                          opacity: serie.get("opacity"),
+                          fill: serie.get("fill"),
+                          radius: serie.get("userData").bulletRadius
+                        })
+                      })
+                    });
+                    break;
+                  }
+                  case SerieEnum.ScatterPlotSerie: {
+                    serie.bullets.clear();
+                    serie.bullets.push(() => {
+                      return am5.Bullet.new(this.root, {
+                        sprite: am5.Circle.new(this.root, {
+                          opacity: serie.get("opacity"),
+                            fill: serie.get("fill")
+                          },
+                          serie.get("userData").circleTemplate)
+                      });
+                    });
+                    break;
+                  }
+                  default: {
+                    break;
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
+
+      if (!this.singleColumn) {
+        this.setLayout();
+      }
+      this.setPosition();
+    }
+    else if (this.legend != null) {
+      // Remove from chart
+      this.chart!.children.removeValue(this.legend!);
+
+      // Dispose
+      this.legend!.dispose();
+      this.legend = null;
     }
   }
 
@@ -228,7 +354,7 @@ export default class DLegend extends Vue {
   }
 
   destroyed(): void {
-    if (this.enabled) {
+    if (this.legend != null) {
       // Remove from chart
       this.chart!.children.removeValue(this.legend!);
 
