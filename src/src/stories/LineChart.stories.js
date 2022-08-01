@@ -92,7 +92,8 @@ Default.args = {
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   xAxisRanges: [
-    { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.2, color: "#ff00ff", label: "Don't know"}
+    { startDay: 5, startHour: 0, startMinute: 0, endDay: 0, endHour: 0, endMinute: 0, opacity: 0.2, color: "#ff00ff", label: "Week-end"},
+    { startDay: 2, startHour: 0, startMinute: 0, endDay: 3, endHour: 0, endMinute: 0, opacity: 0.2, color: "#cccccc", label: "Wednesday"}
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,

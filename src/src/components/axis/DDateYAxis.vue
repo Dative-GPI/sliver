@@ -144,19 +144,11 @@ export default class DDateYAxis extends Vue {
     }
 
     // Get axis boundaries
-    let start = this.start == null ?
-      this.axis!.positionToDate(0) :
-      this.axis!.positionToDate(0).getTime() > this.start.getTime() ?
-        this.start :
-        this.axis!.positionToDate(0);
-    let end = this.end == null ? this.axis!.positionToDate(1) :
-      this.axis!.positionToDate(1).getTime() > this.end.getTime() ?
-        this.axis!.positionToDate(1) :
-        this.end;
+    let gs = this.axis!.positionToDate(0);
+    let ge = this.axis!.positionToDate(1);
 
-    if (start == null || end == null) {
-      return;
-    }
+    gs.setDate(gs.getDate() - gs.getDay() - 6);
+    ge.setDate(ge.getDate() - ge.getDay() + 14);
 
     // Remove former ranges
     for (let i = 0; i < this.dataItems.length; i++) {
@@ -164,14 +156,13 @@ export default class DDateYAxis extends Vue {
     }
     this.dataItems = [];
 
-    // Get first monday of boundaries
-    let current = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate()));
-    current.setDate(current.getDate() - current.getDay() + 1);
+    // Get first monday of boundaries at midnight
+    let current = new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate()));
 
     // Get timezone offset
-    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate())));
+    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate())));
 
-    while (current < end) {
+    while (current < ge) {
       am5.array.each(this.ranges!, (range : TimeRange) => {
         let start = new Date(current);
         start.setDate(start.getDate() + range.startDay);
@@ -179,7 +170,12 @@ export default class DDateYAxis extends Vue {
         start.setMinutes(start.getMinutes() + range.startMinute);
 
         let end = new Date(current);
-        end.setDate(end.getDate() + range.endDay);
+        if (range.startDay > range.endDay) {
+          end.setDate(end.getDate() + range.endDay + 7);
+        }
+        else {
+          end.setDate(end.getDate() + range.endDay);
+        }
         end.setHours(end.getHours() + range.endHour);
         end.setMinutes(end.getMinutes() + range.endMinute);
 
