@@ -10,7 +10,7 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
+import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
 import { addSerie, getLineIntersection, removeSerie } from "../../helpers";
 
 @Component({})
@@ -23,6 +23,9 @@ export default class DRangeSerie extends Vue {
 
   @InjectReactive(XAXIS)
   xAxis!: am5xy.DateAxis<am5xy.AxisRendererX>;
+
+  @InjectReactive(XAXISVALIDATED)
+  xAxisValidated!: () => void;
 
   @InjectReactive(YAXIS)
   yAxis!: am5xy.ValueAxis<am5xy.AxisRendererY>;
@@ -104,7 +107,7 @@ export default class DRangeSerie extends Vue {
   subSeries: am5xy.LineSeries[] = [];
   subTooltips: am5.Tooltip[] = [];
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setName(): void {
     this.serie!.set("name", this.name);
@@ -199,6 +202,8 @@ export default class DRangeSerie extends Vue {
       valueYField: this.valueYField,
       sequencedInterpolation: true
     }));
+
+    this.serie.events.on("datavalidated", this.xAxisValidated);
 
     for (let i = 0; i < this.subNames.length; i++) {
       this.subSeries.push(this.chart.series.push(am5xy.LineSeries.new(this.root, {

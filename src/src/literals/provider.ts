@@ -3,5 +3,7 @@ export const CHART = "chart";
 export const LEGEND = "legend";
 export const CURSOR = "cursor";
 export const XAXIS = "xaxis";
+export const XAXISVALIDATED = "xaxisvalidated";
 export const YAXIS = "yaxis";
+export const YAXISVALIDATED = "yaxisvalidated";
 export const SERIE = "serie";

@@ -32,6 +32,7 @@ const Template = (args, { argTypes }) => ({
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
       :xAxisTooltipDateFormat="xAxisTooltipDateFormat"
+      :xAxisRanges="xAxisRanges"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
@@ -63,8 +64,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeHistogramSerie("Line 1", 1640815320000, 50, 120000, 5, 50 ) },
-      { ...makeHistogramSerie("Line 2", 1640815320000, 50, 120000, 5, 50 ) }
+      { ...makeHistogramSerie("Line 1", 1640815320000, 50, 2.16e+7, 5, 50 ) },
+      { ...makeHistogramSerie("Line 2", 1640815320000, 50, 2.16e+7, 5, 50 ) }
     ]
   },
   minHeight: '400px',
@@ -88,6 +89,9 @@ Default.args = {
   xAxisOpposite: false,
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
+  xAxisRanges: [
+    { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.2, color: "#ff00ff", label: "Don't know"}
+  ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#"

@@ -32,6 +32,7 @@ const Template = (args, { argTypes }) => ({
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
       :xAxisTooltipDateFormat="xAxisTooltipDateFormat"
+      :xAxisRanges="xAxisRanges"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
@@ -65,8 +66,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeLineSerie("Line 1", 1640815320000, 50, 120000, 5, 50 ) },
-      { ...makeLineSerie("Line 2", 1640815320000, 50, 120000, 5, 50 ) }
+      { ...makeLineSerie("Line 1", 1640815200000, 50, 2.16e+7, 5, 50 ) },
+      { ...makeLineSerie("Line 2", 1640815200000, 50, 2.16e+7, 5, 50 ) }
     ]
   },
   minHeight: '400px',
@@ -90,15 +91,18 @@ Default.args = {
   xAxisOpposite: false,
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
+  xAxisRanges: [
+    { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.2, color: "#ff00ff", label: "Don't know"}
+  ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#",
   yAxisRanges: [
-    { startValue: 0,   endValue: 40,  opacity: 0.5, color: "#ff3c3c", label: "Bad" },
-    { startValue: 40,  endValue: 80,  opacity: 0.5, color: "#ff8c3c", label: "Somewhat bad" },
-    { startValue: 80,  endValue: 120, opacity: 0.5, color: "#b4b4b4", label: "Just meh" },
-    { startValue: 120, endValue: 160, opacity: 0.5, color: "#aaff64", label: "Somewhat good" },
-    { startValue: 160, endValue: 200, opacity: 0.5, color: "#64ff8c", label: "Good" }
+    // { startValue: 0,   endValue: 40,  opacity: 0.5, color: "#ff3c3c", label: "Bad" },
+    // { startValue: 40,  endValue: 80,  opacity: 0.5, color: "#ff8c3c", label: "Somewhat bad" },
+    // { startValue: 80,  endValue: 120, opacity: 0.5, color: "#b4b4b4", label: "Just meh" },
+    // { startValue: 120, endValue: 160, opacity: 0.5, color: "#aaff64", label: "Somewhat good" },
+    // { startValue: 160, endValue: 200, opacity: 0.5, color: "#64ff8c", label: "Good" }
   ],
   lineSeriesBullet: true,
   lineSeriesBulletRadius: 3

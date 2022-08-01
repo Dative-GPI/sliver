@@ -10,7 +10,7 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
+import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
 import { addSerie, removeSerie } from "../../helpers";
 import { SerieEnum } from "../../enums";
 
@@ -24,6 +24,9 @@ export default class DLineSerie extends Vue {
 
   @InjectReactive(XAXIS)
   xAxis!: am5xy.DateAxis<am5xy.AxisRendererX>;
+
+  @InjectReactive(XAXISVALIDATED)
+  xAxisValidated!: () => void;
 
   @InjectReactive(YAXIS)
   yAxis!: am5xy.ValueAxis<am5xy.AxisRendererY>;
@@ -94,7 +97,7 @@ export default class DLineSerie extends Vue {
   serie: am5xy.LineSeries | null = null;
   tooltip: am5.Tooltip | null = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setName(): void {
     this.serie!.set("name", this.name);
@@ -170,6 +173,8 @@ export default class DLineSerie extends Vue {
       ...this.serie.get("userData"),
       series: "LineSerie"
     });
+
+    this.serie.events.on("datavalidated", this.xAxisValidated);
 
     // Set updatable properties
     this.setName();

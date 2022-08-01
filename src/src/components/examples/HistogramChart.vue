@@ -30,6 +30,7 @@
             :opposite="xAxisOpposite"
             :showTooltip="xAxisShowTooltip"
             :tooltipDateFormat="xAxisTooltipDateFormat"
+            :ranges="xAxisRanges"
           >
             <d-value-y-axis
               :opposite="yAxisOpposite"
@@ -60,6 +61,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
+import { TimeRange } from "../../helpers";
 
 import Spinner from "./Spinner.vue";
 
@@ -130,6 +132,9 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   xAxisTooltipDateFormat!: string;
+
+  @Prop({ required: true })
+  xAxisRanges!: TimeRange[];
 
   @Prop({ required: true })
   yAxisOpposite!: boolean;

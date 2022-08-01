@@ -10,7 +10,8 @@ import { Component, InjectReactive, Vue, Prop, ProvideReactive, Watch } from "vu
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, XAXIS } from "../../literals";
+import { AMROOT, CHART, CURSOR, XAXIS, XAXISVALIDATED } from "../../literals";
+import { textColor, TimeRange } from "../../helpers";
 
 @Component({})
 export default class DDateXAxis extends Vue {
@@ -53,12 +54,24 @@ export default class DDateXAxis extends Vue {
   @Watch("max")
   onMaxChange = this.setMax;
 
+  @Prop({ required: false, default: undefined })
+  ranges!: TimeRange[] | undefined;
+
+  @Watch("ranges", { deep: true })
+  onRangesChange = this.setRanges;
+
   @ProvideReactive(XAXIS)
   axis: any = null;
 
-  tooltip: am5.Tooltip | null = null;
+  @ProvideReactive(XAXISVALIDATED)
+  serieValidated: () => void = this.setRanges;
 
-  upAndRunning = false;
+  tooltip: am5.Tooltip | null = null;
+  start: Date | null = null;
+  end: Date | null = null;
+  dataItems: am5.DataItem<am5xy.IDateAxisDataItem>[] = [];
+
+  upAndRunning: boolean = false;
 
   setOpposite(): void {
     this.axis!.get("renderer").set("opposite", this.opposite);
@@ -117,6 +130,85 @@ export default class DDateXAxis extends Vue {
     }
     else {
       this.axis!.set("max", undefined);
+    }
+  }
+
+  setRanges(): void {
+    // If there is no more ranges, remove all and return
+    if (this.ranges == null || !this.ranges.length) {
+      for (let i = 0; i < this.dataItems.length; i++) {
+        this.dataItems[i].dispose();
+      }
+      this.dataItems = [];
+      return;
+    }
+
+    // Get axis boundaries
+    let start = this.start == null ?
+      this.axis!.positionToDate(0) :
+      this.axis!.positionToDate(0).getTime() > this.start.getTime() ?
+        this.start :
+        this.axis!.positionToDate(0);
+    let end = this.end == null ? this.axis!.positionToDate(1) :
+      this.axis!.positionToDate(1).getTime() > this.end.getTime() ?
+        this.axis!.positionToDate(1) :
+        this.end;
+
+    if (start == null || end == null) {
+      return;
+    }
+
+    // Remove former ranges
+    for (let i = 0; i < this.dataItems.length; i++) {
+      this.dataItems[i].dispose();
+    }
+    this.dataItems = [];
+
+    // Get first monday of boundaries
+    let current = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate()));
+    current.setDate(current.getDate() - current.getDay() + 1);
+
+    // Get timezone offset
+    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate())));
+
+    while (current < end) {
+      am5.array.each(this.ranges!, (range : TimeRange) => {
+        let start = new Date(current);
+        start.setDate(start.getDate() + range.startDay);
+        start.setHours(start.getHours() + range.startHour);
+        start.setMinutes(start.getMinutes() + range.startMinute);
+
+        let end = new Date(current);
+        end.setDate(end.getDate() + range.endDay);
+        end.setHours(end.getHours() + range.endHour);
+        end.setMinutes(end.getMinutes() + range.endMinute);
+
+        // Create a range
+        let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
+        axisRange.set("value", start.getTime() + (offset * 60 * 1000));
+        axisRange.set("endValue", end.getTime() + (offset * 60 * 1000));
+        axisRange.get("grid")!.set("strokeOpacity", 0);
+
+        axisRange.get("axisFill")!.setAll({
+          visible: true,
+          fillOpacity: range.opacity,
+          fill: am5.color(range.color)
+        });
+
+        if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
+          axisRange.get("label")!.setAll({
+            text: range.label,
+            inside: true,
+            centerY: 30,
+            fill: textColor(range.color)
+          });
+        }
+
+        this.dataItems.push(axisRange);
+      });
+
+      // Iterate
+      current.setDate(current.getDate() + 7);
     }
   }
 
