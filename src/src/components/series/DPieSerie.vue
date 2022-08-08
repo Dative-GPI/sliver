@@ -327,14 +327,27 @@ export default class DPieSerie extends Vue {
           chartData.splice(i, 1);
         }
       }
-      if (subPush) {
+      if (subPush && subOther[this.valueField]! > 0) {
         chartData.push(subOther);
       }
     }
 
     chartData.sort((a: any, b: any) => {
-      if (b.sortValue === a.sortValue) return b.subSortValue - a.subSortValue
-      else return b.sortValue - a.sortValue
+      if (b.sortValue === a.sortValue) {
+        if (a.parentId === b.parentId) {
+          return b.subSortValue - a.subSortValue;
+        }
+        if (a.id === "1") {
+          return -1;
+        }
+        if (b.id === "1") {
+          return 1;
+        }
+        return 0;
+      }
+      else {
+        return b.sortValue - a.sortValue;
+      }
     });
 
     this.serie!.data.setAll(chartData);

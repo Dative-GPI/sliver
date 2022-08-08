@@ -29,32 +29,19 @@ const Template = (args, { argTypes }) => ({
 const makeExplodingPieSerie = (name, categories, subCategories, rangeValue) => {
   var data = [];
   for (let i = 0; i < categories.length; i++) {
-    if (categories[i] === "X") {
-      let parentCategory = {
-        categoryX: categories[i],
-        valueY: 5,
-        subs: [{
-          categoryX:"Fraud",
-          ValueY: 5
-        }]
-      };
-      data.push(parentCategory);
+    let parentCategory = {
+      categoryX: categories[i],
+      valueY: 0,
+      subs: []
+    };
+    for (let j = 0; j < subCategories.length; j++) {
+      parentCategory.subs.push({
+        categoryX: subCategories[j],
+        valueY: Math.floor(Math.random() * rangeValue)
+      });
     }
-    else {
-      let parentCategory = {
-        categoryX: categories[i],
-        valueY: 0,
-        subs: []
-      };
-      for (let j = 0; j < subCategories.length; j++) {
-        parentCategory.subs.push({
-          categoryX: subCategories[j],
-          valueY: Math.floor(Math.random() * rangeValue)
-        });
-      }
-      parentCategory.valueY = parentCategory.subs.reduce((acc, cur) => acc + cur.valueY, 0);
-      data.push(parentCategory);
-    }
+    parentCategory.valueY = parentCategory.subs.reduce((acc, cur) => acc + cur.valueY, 0);
+    data.push(parentCategory);
   }
 
   return {
@@ -69,7 +56,7 @@ Default.args = {
     series: [
       { ...makeExplodingPieSerie(
         "Expenses",
-        ["First company", "Second company", "X"],
+        ["First company", "Second company"],
         ["Employees well-being", "Dividends", "Salaries & compensations", "Raw materials", "Wrongful terminations suing costs", "Public relations & marketing", "Miscellaneous"],
         500
       )},
@@ -86,5 +73,5 @@ Default.args = {
   legendY: 50,
   legendCenterY: 50,
   otherLabel: "Other",
-  otherThreshold: 2
+  otherThreshold: 8
 };
