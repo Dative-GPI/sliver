@@ -48,6 +48,9 @@ export default class DStackedColumnSerie extends Vue {
   @Prop({ required: false, default: "categoryX" })
   categoryXField!: string;
 
+  @Prop({ required: false, default: "categoryCodeX" })
+  categoryCodeXField!: string;
+
   @Prop({ required: false, default: "valueY" })
   valueYField!: string;
 
@@ -112,7 +115,7 @@ export default class DStackedColumnSerie extends Vue {
 
   setData(): void {
     this.xAxis.data.setAll(
-      updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
+      updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.categoryCodeXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
     );
     this.serie!.data.setAll(this.data);
   }
@@ -125,7 +128,7 @@ export default class DStackedColumnSerie extends Vue {
       xAxis: this.xAxis,
       yAxis: this.yAxis,
       stacked: true,
-      categoryXField: this.categoryXField,
+      categoryXField: this.categoryCodeXField,
       valueYField: this.valueYField,
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.StackedColumnSerie }
@@ -162,7 +165,7 @@ export default class DStackedColumnSerie extends Vue {
 
     // Remove from axis
     this.xAxis.data.setAll(
-      updateCategories(this.xAxis.data.values, [], this.categoryXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
+      updateCategories(this.xAxis.data.values, [], this.categoryXField, this.categoryCodeXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
     );
 
     // Remove from cursor

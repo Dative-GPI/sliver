@@ -26,6 +26,9 @@ export default class DCategoryYAxis extends Vue {
   @Prop({ required: false, default: "categoryY" })
   categoryField!: string;
 
+  @Prop({ required: false, default: "categoryCodeY" })
+  categoryCodeField!: string;
+
   @Prop({ required: false, default: false })
   opposite!: boolean;
 
@@ -105,8 +108,8 @@ export default class DCategoryYAxis extends Vue {
       this.tooltip = am5.Tooltip.new(this.root, {});
       this.axis!.set("tooltip", this.tooltip);
       this.axis!.get("tooltip").label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-        if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext.untouched) {
-          return target.dataItem.dataContext.untouched;
+        if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext[this.categoryField]) {
+          return target.dataItem.dataContext[this.categoryField];
         }
         return text;
       });
@@ -134,7 +137,7 @@ export default class DCategoryYAxis extends Vue {
     // Add to chart
     this.axis = this.chart.yAxes.push(am5xy.CategoryAxis.new(this.root, {
       renderer: am5xy.AxisRendererY.new(this.root, {}),
-      categoryField: this.categoryField
+      categoryField: this.categoryCodeField
     }));
 
     // Add to cursor
@@ -143,8 +146,8 @@ export default class DCategoryYAxis extends Vue {
     }
     
     this.axis!.get("renderer").labels.template.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-      if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext.untouched) {
-        return target.dataItem.dataContext.untouched;
+      if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext[this.categoryField]) {
+        return target.dataItem.dataContext[this.categoryField];
       }
       return text;
     });

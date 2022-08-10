@@ -51,13 +51,16 @@ export default class DTopSerie extends Vue {
   @Prop({ required: false, default: "categoryY" })
   categoryYField!: string;
 
+  @Prop({ required: false, default: "categoryCodeY" })
+  categoryCodeYField!: string;
+
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{untouched}: {valueX}" })
+  @Prop({ required: false, default: "{categoryY}: {valueX}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -151,21 +154,14 @@ export default class DTopSerie extends Vue {
       if (a[this.valueXField] < b[this.valueXField]) return -1;
       if (a[this.valueXField] > b[this.valueXField]) return 1;
       return 0;
-    }).map((d: any) => ({
-      ...d,
-      untouched: d[this.categoryYField],
-      [this.categoryYField]: d[this.categoryYField] + this.serieId
-    }));
-
-    // Add to axis
+    });
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, sortedData, this.categoryYField, this.valueXField, this.serieId, false, PositionEnum.Abscissa, true)
+      updateCategories(this.yAxis.data.values, sortedData, this.categoryYField, this.categoryCodeYField, this.valueXField, this.serieId, false, PositionEnum.Abscissa)
     );
-    this.serie!.data.setAll(sortedData);
-
     this.yAxis.data.setAll(
       sortValues(this.yAxis.data.values)
     );
+    this.serie!.data.setAll(sortedData);
   }
 
   mounted(): void {
@@ -176,7 +172,7 @@ export default class DTopSerie extends Vue {
       xAxis: this.xAxis,
       yAxis: this.yAxis,
       valueXField: this.valueXField,
-      categoryYField: this.categoryYField,
+      categoryYField: this.categoryCodeYField,
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.ColumnSerie }
     }));
@@ -216,7 +212,7 @@ export default class DTopSerie extends Vue {
 
     // Remove from axis
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.valueXField, this.serieId, false, PositionEnum.Abscissa, true)
+      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.categoryCodeYField, this.valueXField, this.serieId, false, PositionEnum.Abscissa)
     );
 
     // Remove from cursor

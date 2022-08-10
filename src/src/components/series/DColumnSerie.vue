@@ -48,6 +48,9 @@ export default class DColumnSerie extends Vue {
   @Prop({ required: false, default: "categoryX" })
   categoryXField!: string;
 
+  @Prop({ required: false, default: "categoryCodeX" })
+  categoryCodeXField!: string;
+
   @Prop({ required: false, default: "valueY" })
   valueYField!: string;
 
@@ -106,7 +109,7 @@ export default class DColumnSerie extends Vue {
   setData(): void {
     // Add to axis
     this.xAxis.data.setAll(
-      updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
+      updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.categoryCodeXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
     );
     this.serie!.data.setAll(this.data);
   }
@@ -155,7 +158,7 @@ export default class DColumnSerie extends Vue {
 
     // Remove from axis
     this.xAxis.data.setAll(
-      updateCategories(this.xAxis.data.values, [], this.categoryXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
+      updateCategories(this.xAxis.data.values, [], this.categoryXField, this.categoryCodeXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
     );
 
     // Remove from cursor

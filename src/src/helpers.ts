@@ -9,44 +9,30 @@ import am5locales_pt_PT from "@amcharts/amcharts5/locales/pt_PT";
 
 import { PositionEnum } from "./enums";
 
-export const updateCategories = (formers: any[], data: any[], categoryField: string, valueField: string, serieId: number, sort: boolean, position: PositionEnum, allowDuplicates: boolean = false): any[] => {
+export const updateCategories = (formers: any[], data: any[], categoryField: string, categoryCodeField: string, valueField: string, serieId: number, sort: boolean, position: PositionEnum): any[] => {
   for (let i = 0; i < formers.length; i++) {
     let serieIndex = formers[i].series.indexOf(serieId);
     while (serieIndex !== -1) {
       formers[i].series.splice(serieIndex, 1);
+      formers[i].values.splice(serieIndex, 1);
       serieIndex = formers[i].series.indexOf(serieId, serieIndex + 1);
     }
   }
-  formers = formers.filter(c => c.series.length > 0);
+  formers = formers.filter(former => former.series.length > 0);
 
-  if (!allowDuplicates) {
-    for (let i = 0; i < data.length; i++) {
-      let item = formers.find(c => c[categoryField] == data[i][categoryField]);
-      if (item == null) {
-        formers.push({
-          [categoryField]: data[i][categoryField],
-          untouched: data[i].untouched,
-          series: [serieId],
-          values: [data[i][valueField]]
-        });
-      }
-      else if (!item.series.includes(serieId)) {
-        item.series.push(serieId);
-        item.values.push(data[i][valueField]);
-      }
+  for (let i = 0; i < data.length; i++) {
+    let item = formers.find(former => former[categoryCodeField] == data[i][categoryCodeField]);
+    if (item == null) {
+      formers.push({
+        [categoryField]: data[i][categoryField],
+        [categoryCodeField]: data[i][categoryCodeField],
+        series: [serieId],
+        values: [data[i][valueField]]
+      });
     }
-  }
-  else {
-    for (let i = 0; i < data.length; i++) {
-      let item = formers.find(c => c[categoryField] == data[i][categoryField] && c.series.includes(serieId));
-      if (item == null) {
-        formers.push({
-          [categoryField]: data[i][categoryField],
-          untouched: data[i].untouched,
-          series: [serieId],
-          values: [data[i][valueField]]
-        });
-      }
+    else if (!item.series.includes(serieId)) {
+      item.series.push(serieId);
+      item.values.push(data[i][valueField]);
     }
   }
 
@@ -67,14 +53,19 @@ export const updateCategories = (formers: any[], data: any[], categoryField: str
       return 0;
     });
   }
+
   return formers;
 }
 
 export const sortValues = (former: any[]): any[] => {
-  return former.sort((a: any, b: any) => {
-    if (Math.max(a.values) > Math.max(b.values)) return 1;
+  let test =  former.slice().sort((a: any, b: any) => {
+    if (a.values[0] > b.values[0]) return 1;
     else return -1;
   });
+
+  console.log(test);
+
+  return test;
 }
 
 export const addSerie = (former: any[], serie: any): any[] => {

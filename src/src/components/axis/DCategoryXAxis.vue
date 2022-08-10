@@ -23,8 +23,11 @@ export default class DCategoryXAxis extends Vue {
   @InjectReactive(CURSOR)
   cursor!: am5xy.XYCursor | null;
 
-  @Prop({ required: false, default: "categoryX" })
+  @Prop({ required: false, default: "categoryCodeX" })
   categoryField!: string;
+
+  @Prop({ required: false, default: "categoryCodeX" })
+  categoryCodeField!: string;
 
   @Prop({ required: false, default: false })
   opposite!: boolean;
@@ -88,6 +91,12 @@ export default class DCategoryXAxis extends Vue {
       }
       this.tooltip = am5.Tooltip.new(this.root, {});
       this.axis!.set("tooltip", this.tooltip);
+      this.axis!.get("tooltip").label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
+        if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext[this.categoryField]) {
+          return target.dataItem.dataContext[this.categoryField];
+        }
+        return text;
+      });
       if (this.cursor != null && hideCursor) {
         this.cursor!.lineX.set("visible", true);
         this.cursor!.set("xAxis", this.axis!);
@@ -107,13 +116,20 @@ export default class DCategoryXAxis extends Vue {
     // Add to chart
     this.axis = this.chart.xAxes.push(am5xy.CategoryAxis.new(this.root, {
       renderer: am5xy.AxisRendererX.new(this.root, {}),
-      categoryField: this.categoryField
+      categoryField: this.categoryCodeField
     }));
 
     // Add to cursor
     if (this.cursor) {
       this.cursor!.set("xAxis", this.axis);
     }
+    
+    this.axis!.get("renderer").labels.template.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
+      if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext[this.categoryField]) {
+        return target.dataItem.dataContext[this.categoryField];
+      }
+      return text;
+    });
 
     this.setOpposite();
     this.setShowTooltip();

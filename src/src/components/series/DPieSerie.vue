@@ -35,6 +35,9 @@ export default class DPieSerie extends Vue {
   @Prop({ required: false, default: "categoryX" })
   categoryField!: string;
 
+  @Prop({ required: false, default: "categoryCodeX" })
+  categoryCodeField!: string;
+
   @Prop({ required: false, default: "valueY" })
   valueField!: string;
 

@@ -54,6 +54,9 @@ export default class DPlanningSerie extends Vue {
   @Prop({ required: false, default: "categoryY" })
   categoryYField!: string;
 
+  @Prop({ required: false, default: "categoryCodeY" })
+  categoryCodeYField!: string;
+
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
@@ -200,10 +203,8 @@ export default class DPlanningSerie extends Vue {
   }
 
   setData(): void {
-    console.log(this.data);
-    // Add to axis
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.openDateXField, this.serieId, true, PositionEnum.Ordinate)
+      updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.categoryCodeYField, this.openDateXField, this.serieId, true, PositionEnum.Ordinate)
     );
     this.serie!.data.setAll(this.data);
   }
@@ -257,7 +258,7 @@ export default class DPlanningSerie extends Vue {
 
     // Remove from axis
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, [], this.categoryYField,  this.openDateXField, this.serieId, true, PositionEnum.Ordinate)
+      updateCategories(this.yAxis.data.values, [], this.categoryYField,  this.categoryCodeYField, this.openDateXField, this.serieId, true, PositionEnum.Ordinate)
     );
 
     // Remove from cursor
