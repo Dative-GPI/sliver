@@ -137,13 +137,13 @@ export default class DHeatmapSerie extends Vue {
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
       this.xAxis.data.setAll(
-        updateCategories(this.xAxis.data.values, this.data, this.xField, this.serieId, true, PositionEnum.Abscissa)
+        updateCategories(this.xAxis.data.values, this.data, this.xField, this.yField, this.serieId, true, PositionEnum.Abscissa)
       );
     }
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
       this.yAxis.data.setAll(
-        updateCategories(this.yAxis.data.values, this.data, this.yField, this.serieId, true, PositionEnum.Ordinate)
+        updateCategories(this.yAxis.data.values, this.data, this.yField, this.xField, this.serieId, true, PositionEnum.Ordinate)
       );
     }
     this.serie!.data.setAll(this.data);
@@ -207,14 +207,14 @@ export default class DHeatmapSerie extends Vue {
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
       this.xAxis.data.setAll(
-        updateCategories(this.xAxis.data.values, [], this.xField, this.serieId, true, PositionEnum.Abscissa)
+        updateCategories(this.xAxis.data.values, [], this.xField, this.yField, this.serieId, true, PositionEnum.Abscissa)
       );
     }
 
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
       this.yAxis.data.setAll(
-        updateCategories(this.yAxis.data.values, [], this.yField, this.serieId, true, PositionEnum.Ordinate)
+        updateCategories(this.yAxis.data.values, [], this.yField, this.xField, this.serieId, true, PositionEnum.Ordinate)
       );
     }
 

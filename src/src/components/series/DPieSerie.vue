@@ -13,6 +13,7 @@ import * as am5percent from "@amcharts/amcharts5/percent";
 import { AMROOT, CHART, LEGEND } from "../../literals";
 import { SerieEnum } from "../../enums";
 import { uuidv4 } from "../../helpers";
+import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 @Component({})
 export default class DPieSerie extends Vue {
@@ -110,6 +111,7 @@ export default class DPieSerie extends Vue {
   explodingSelectedValue: number | null = null;
   zoomSelectedId: string | null = null;
   selectedId: string | null = null;
+  hiddenItems: string[] = [];
 
   upAndRunning: boolean = false;
 
@@ -354,7 +356,12 @@ export default class DPieSerie extends Vue {
 
     // Add to legend
     if (this.legend != null) {
-      this.legend.data.pushAll(this.serie!.dataItems);
+      this.serie!.dataItems.forEach((di: any) => {
+        if (this.hiddenItems.includes(di.dataContext.id)) {
+          di.hide();
+        }
+      });
+      this.legend!.data.setAll(this.serie!.dataItems);
     }
   }
 
@@ -370,6 +377,19 @@ export default class DPieSerie extends Vue {
     
     this.serie!.slices.template.events.on("click", this.handleBreakDownSlices);
     this.serie!.slices.template.set("templateField", "sliceSettings");
+
+    if (this.legend != null) {
+      this.legend!.itemContainers.template.events.on("click", (ev: ISpritePointerEvent) => {
+        var id = (ev.target!.dataItem!.dataContext as any).dataContext.id;
+        if (this.hiddenItems.includes(id)) {
+          this.hiddenItems = this.hiddenItems.filter(hi => hi !== id);
+        }
+        else {
+          this.hiddenItems.push(id);
+        }
+        this.setData();
+      });
+    }
 
     this.setName();
     this.setShowTooltip();

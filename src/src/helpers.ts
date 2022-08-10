@@ -9,22 +9,49 @@ import am5locales_pt_PT from "@amcharts/amcharts5/locales/pt_PT";
 
 import { PositionEnum } from "./enums";
 
-export const updateCategories = (former: any[], data: any[], categoryField: string, serieId: number, sort: boolean, position: PositionEnum): any[] => {
-  for (let i = 0; i < former.length; i++) {
-    former[i].series = former[i].series.filter((s: number) => s !== serieId);
+export const updateCategories = (formers: any[], data: any[], categoryField: string, valueField: string, serieId: number, sort: boolean, position: PositionEnum, allowDuplicates: boolean = false): any[] => {
+  for (let i = 0; i < formers.length; i++) {
+    let serieIndex = formers[i].series.indexOf(serieId);
+    while (serieIndex !== -1) {
+      formers[i].series.splice(serieIndex, 1);
+      serieIndex = formers[i].series.indexOf(serieId, serieIndex + 1);
+    }
   }
-  former = former.filter(c => c.series.length > 0);
+  formers = formers.filter(c => c.series.length > 0);
 
-  for (let i = 0; i < data.length; i++) {
-    if (former.filter(c => c[categoryField] == data[i][categoryField]).length === 0) {
-      former.push({ [categoryField]: data[i][categoryField], series: [serieId] });
-    }
-    else if (!former.filter(c => c[categoryField] == data[i][categoryField])[0].series.includes(serieId)) {
-      former.filter(c => c[categoryField] == data[i][categoryField])[0].series.push(serieId);
+  if (!allowDuplicates) {
+    for (let i = 0; i < data.length; i++) {
+      let item = formers.find(c => c[categoryField] == data[i][categoryField]);
+      if (item == null) {
+        formers.push({
+          [categoryField]: data[i][categoryField],
+          untouched: data[i].untouched,
+          series: [serieId],
+          values: [data[i][valueField]]
+        });
+      }
+      else if (!item.series.includes(serieId)) {
+        item.series.push(serieId);
+        item.values.push(data[i][valueField]);
+      }
     }
   }
+  else {
+    for (let i = 0; i < data.length; i++) {
+      let item = formers.find(c => c[categoryField] == data[i][categoryField] && c.series.includes(serieId));
+      if (item == null) {
+        formers.push({
+          [categoryField]: data[i][categoryField],
+          untouched: data[i].untouched,
+          series: [serieId],
+          values: [data[i][valueField]]
+        });
+      }
+    }
+  }
+
   if (sort) {
-    former.sort((c1: any, c2: any) => {
+    formers.sort((c1: any, c2: any) => {
       if (c1[categoryField] < c2[categoryField]) {
         switch (position) {
           case PositionEnum.Abscissa: return -1;
@@ -40,7 +67,14 @@ export const updateCategories = (former: any[], data: any[], categoryField: stri
       return 0;
     });
   }
-  return former;
+  return formers;
+}
+
+export const sortValues = (former: any[]): any[] => {
+  return former.sort((a: any, b: any) => {
+    if (Math.max(a.values) > Math.max(b.values)) return 1;
+    else return -1;
+  });
 }
 
 export const addSerie = (former: any[], serie: any): any[] => {

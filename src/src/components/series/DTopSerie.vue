@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
-import { updateCategories, addSerie, removeSerie } from "../../helpers";
+import { updateCategories, addSerie, removeSerie, sortValues } from "../../helpers";
 import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
@@ -51,13 +51,13 @@ export default class DTopSerie extends Vue {
   @Prop({ required: false, default: "categoryY" })
   categoryYField!: string;
 
-  @Prop({ required: false, default: false })
+  @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{name}: {valueX}" })
+  @Prop({ required: false, default: "{untouched}: {valueX}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -69,6 +69,30 @@ export default class DTopSerie extends Vue {
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
 
+  @Prop({ required: false, default: 12 })
+  columnsHeight!: number;
+
+  @Watch("columnsHeight")
+  onColumnsHeightChange = this.setColumnsHeight;
+
+  @Prop({ required: false, default: 1 })
+  columnsOpacity!: number;
+
+  @Watch("columnsOpacity")
+  onColumnsOpacityChange = this.setColumnsOpacity;
+
+  @Prop({ required: false, default: undefined })
+  templateWidth!: number | undefined;
+
+  @Watch("templateWidth")
+  onTemplateWidthChange = this.setTemplateWidth;
+
+  @Prop({ required: false, default: 5 })
+  templateCornerRadius!: number;
+
+  @Watch("templateCornerRadius")
+  onTemplateCornerRadiusChange = this.setTemplateCornerRadius;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -78,7 +102,7 @@ export default class DTopSerie extends Vue {
   serie: am5xy.ColumnSeries | null = null;
   tooltip: am5.Tooltip | null = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setName(): void {
     this.serie!.set("name", this.name);
@@ -103,17 +127,45 @@ export default class DTopSerie extends Vue {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
   }
 
+  setColumnsHeight(): void {
+    this.serie!.columns.template.set("height", this.columnsHeight);
+  }
+
+  setColumnsOpacity(): void {
+    this.serie!.columns.template.set("opacity", this.columnsOpacity);
+  }
+
+  setTemplateWidth(): void {
+    this.serie!.columns.template.set("width", this.templateWidth);
+  }
+
+  setTemplateCornerRadius(): void {
+    this.serie!.columns.template.setAll({
+      cornerRadiusTR: this.templateCornerRadius,
+      cornerRadiusBR: this.templateCornerRadius
+    });
+  }
+
   setData(): void {
     let sortedData = this.data.slice().sort((a: any, b: any) => {
       if (a[this.valueXField] < b[this.valueXField]) return -1;
       if (a[this.valueXField] > b[this.valueXField]) return 1;
       return 0;
-    });
+    }).map((d: any) => ({
+      ...d,
+      untouched: d[this.categoryYField],
+      [this.categoryYField]: d[this.categoryYField] + this.serieId
+    }));
+
     // Add to axis
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, sortedData, this.categoryYField, this.serieId, false, PositionEnum.Abscissa)
+      updateCategories(this.yAxis.data.values, sortedData, this.categoryYField, this.valueXField, this.serieId, false, PositionEnum.Abscissa, true)
     );
     this.serie!.data.setAll(sortedData);
+
+    this.yAxis.data.setAll(
+      sortValues(this.yAxis.data.values)
+    );
   }
 
   mounted(): void {
@@ -128,10 +180,14 @@ export default class DTopSerie extends Vue {
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.ColumnSerie }
     }));
-
     // Set updatable properties
     this.setName();
     this.setShowTooltip();
+
+    this.setColumnsHeight();
+    this.setColumnsOpacity();
+    this.setTemplateWidth();
+    this.setTemplateCornerRadius();
 
     // Add to legend
     if (this.legend != null) {
@@ -160,7 +216,7 @@ export default class DTopSerie extends Vue {
 
     // Remove from axis
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.serieId, false, PositionEnum.Abscissa)
+      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.valueXField, this.serieId, false, PositionEnum.Abscissa, true)
     );
 
     // Remove from cursor

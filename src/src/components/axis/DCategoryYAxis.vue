@@ -104,6 +104,13 @@ export default class DCategoryYAxis extends Vue {
       }
       this.tooltip = am5.Tooltip.new(this.root, {});
       this.axis!.set("tooltip", this.tooltip);
+      this.axis!.get("tooltip").label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
+        if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext.untouched) {
+          return target.dataItem.dataContext.untouched;
+        }
+        return text;
+      });
+
       if (this.cursor != null && hideCursor) {
         this.cursor!.lineY.set("visible", true);
         this.cursor!.set("yAxis", this.axis!);
@@ -134,6 +141,13 @@ export default class DCategoryYAxis extends Vue {
     if (this.cursor) {
       this.cursor!.set("yAxis", this.axis);
     }
+    
+    this.axis!.get("renderer").labels.template.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
+      if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext.untouched) {
+        return target.dataItem.dataContext.untouched;
+      }
+      return text;
+    });
 
     this.setOpposite();
     this.setLabelsVisible();

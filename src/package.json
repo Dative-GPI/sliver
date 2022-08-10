@@ -1,6 +1,6 @@
 {
   "name": "@dative-gpi/sliver",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "private": false,
   "main": "src/index.ts",
   "scripts": {
@@ -48,7 +48,6 @@
     "vue-template-compiler": "^2.6.11"
   },
   "dependencies": {
-    "@amcharts/amcharts5": "^5.1.10",
-    "lodash": "^4.17.21"
+    "@amcharts/amcharts5": "^5.1.10"
   }
 }

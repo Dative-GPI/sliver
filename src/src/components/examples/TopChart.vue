@@ -34,6 +34,8 @@
             <d-category-y-axis
               :opposite="yAxisOpposite"
               :showTooltip="yAxisShowTooltip"
+              :cellStartLocation="yAxisCellStartLocation"
+              :cellEndLocation="yAxisCellEndLocation"
               :labelsOversizedBehavior="yAxisLabelsOversizedBehavior"
               :labelsMaxWidth="yAxisLabelsMaxWidth"
               :labelsTooltipText="yAxisLabelsTooltipText"
@@ -132,6 +134,12 @@ export default class BarsChart extends Vue {
 
   @Prop({ required: true })
   yAxisShowTooltip!: boolean;
+
+  @Prop({ required: true })
+  yAxisCellStartLocation!: number;
+
+  @Prop({ required: true })
+  yAxisCellEndLocation!: number;
 
   @Prop({ required: true })
   yAxisLabelsOversizedBehavior!: "none" | "hide" | "fit" | "wrap" | "truncate";

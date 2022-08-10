@@ -1,7 +1,7 @@
 import TopChart from '../components/examples/TopChart.vue';
 
 export default {
-  title: 'Example/TopChart',
+  title: 'Example/TopChart/Series',
   component: TopChart,
 };
 
@@ -61,7 +61,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeColumnSerie("Line 1", ["Donald Duck", "Riri Duck", "Fifi Duck", "Loulou Duck", "Balthazar Picsou", "Della Duck", "Gontran Bonheur", "Daisy Duck", "Archibald Gripsou", "Geo Trouvetou", "Rapetou", "Fantomiald", "Miss Tick", "Miss Frappe", "Matilda Picsou", "Hortense Picsou", "Gustave Bonheur", "Daphnée Duck"], 100 ) }
+      { ...makeColumnSerie("Delta", ["Marcus Phoenix", "Dominic Santiago", "Augustus Cole", "Damon Baird"], 100 ) },
+      { ...makeColumnSerie("Charlie", ["Marcus Phoenix", "Anthony Carmine", "Benjamin Carmine", "Clay Carmine"], 100 ) }
     ]
   },
   minHeight: '400px',
