@@ -42,9 +42,6 @@ export default class DColumnSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
-  @Prop({ required: false, default: true })
-  snapToSeries!: boolean;
-
   @Prop({ required: false, default: "categoryX" })
   categoryXField!: string;
 
@@ -60,7 +57,7 @@ export default class DColumnSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{name}: {valueY}" })
+  @Prop({ required: false, default: "{name}: {dataItem.dataContext.valueY}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -135,11 +132,6 @@ export default class DColumnSerie extends Vue {
     if (this.legend != null) {
       this.legend.data.push(this.serie);
     }
-
-    // Add to cursor
-    if (this.cursor != null && this.snapToSeries) {
-      this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
-    }
     
     // Set data
     this.setData();
@@ -160,11 +152,6 @@ export default class DColumnSerie extends Vue {
     this.xAxis.data.setAll(
       updateCategories(this.xAxis.data.values, [], this.categoryXField, this.categoryCodeXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
     );
-
-    // Remove from cursor
-    if (this.cursor) {
-      this.cursor.set("snapToSeries", removeSerie(this.cursor.get("snapToSeries")!, this.serie));
-    }
 
     // Dispose
     this.serie!.dispose();

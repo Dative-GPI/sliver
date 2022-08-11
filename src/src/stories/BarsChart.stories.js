@@ -45,6 +45,7 @@ const makeColumnSerie = (name, categories, rangeValue) => {
   for (let i = 0; i < categories.length; i++) {
     data.push({
       categoryX: categories[i],
+      categoryCodeX: categories[i],
       valueY: Math.floor(Math.random() * rangeValue)
     });
   }

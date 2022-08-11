@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
-import { updateCategories, addSerie, removeSerie } from "../../helpers";
+import { updateCategories } from "../../helpers";
 import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
@@ -42,9 +42,6 @@ export default class DStackedColumnSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
-  @Prop({ required: false, default: true })
-  snapToSeries!: boolean;
-
   @Prop({ required: false, default: "categoryX" })
   categoryXField!: string;
 
@@ -60,11 +57,11 @@ export default class DStackedColumnSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{name}: {valueY}" })
+  @Prop({ required: false, default: "{name}: {dataItem.dataContext.valueY}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
-  onTooltipTextChange = this.setTooltipText;
+  onTooltipTextChange = this.setShowTooltip;
 
   @Prop({ required: false, default: "" })
   legendLabelText!: string;
@@ -79,9 +76,8 @@ export default class DStackedColumnSerie extends Vue {
   onDataChange = this.setData;
 
   serie: am5xy.ColumnSeries | null = null;
-  tooltip: am5.Tooltip | null = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setName(): void {
     this.serie!.set("name", this.name);
@@ -89,23 +85,15 @@ export default class DStackedColumnSerie extends Vue {
   }
 
   setShowTooltip(): void {
-    if (!this.showTooltip) {
-      if (this.tooltip != null) {
-        this.tooltip!.dispose();
-        this.serie!.set("tooltip", undefined);
-        this.tooltip = null;
-      }
+    if (this.showTooltip) {
+      this.serie!.columns.template.setAll({
+        tooltipText: this.tooltipText
+      });
     }
     else {
-      this.tooltip = am5.Tooltip.new(this.root, {});
-      this.serie!.set("tooltip", this.tooltip);
-      this.setTooltipText();
-    }
-  }
-
-  setTooltipText(): void {
-    if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText);
+      this.serie!.columns.template.setAll({
+        tooltipText: undefined
+      });      
     }
   }
 
@@ -130,6 +118,8 @@ export default class DStackedColumnSerie extends Vue {
       stacked: true,
       categoryXField: this.categoryCodeXField,
       valueYField: this.valueYField,
+      tooltipX: am5.percent(100),
+      tooltipY: am5.percent(100),
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.StackedColumnSerie }
     }));
@@ -141,11 +131,6 @@ export default class DStackedColumnSerie extends Vue {
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
-    }
-
-    // Add to cursor
-    if (this.cursor != null && this.snapToSeries) {
-      this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     
     // Set data
@@ -167,11 +152,6 @@ export default class DStackedColumnSerie extends Vue {
     this.xAxis.data.setAll(
       updateCategories(this.xAxis.data.values, [], this.categoryXField, this.categoryCodeXField, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
     );
-
-    // Remove from cursor
-    if (this.cursor) {
-      this.cursor.set("snapToSeries", removeSerie(this.cursor.get("snapToSeries")!, this.serie));
-    }
 
     // Dispose
     this.serie!.dispose();

@@ -31,15 +31,18 @@ const Template = (args, { argTypes }) => ({
       :scrollbarEndGripVisible="scrollbarEndGripVisible"
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
+      :xAxisTooltipText="xAxisTooltipText"
       :xAxisTooltipNumberFormat="xAxisTooltipNumberFormat"
       :xAxisLabelsOversizedBehavior="xAxisLabelsOversizedBehavior"
       :xAxisLabelsMaxWidth="xAxisLabelsMaxWidth"
-      :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
+      :yAxisTooltipText="yAxisTooltipText"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
-      :yAxisCellStartLocation="yAxisCellStartLocation"
-      :yAxisCellEndLocation="yAxisCellEndLocation"
+      :yAxisLabelsOversizedBehavior="yAxisLabelsOversizedBehavior"
+      :yAxisLabelsMaxWidth="yAxisLabelsMaxWidth"
+      :serieShowTooltip="serieShowTooltip"
+      :serieTooltipText="serieTooltipText"
     />`,
 });
 
@@ -50,7 +53,9 @@ const makeScatterPlotSerie = (name, categoriesX, categoriesY, minRange, maxRange
     let categoryYRandom = Math.floor(Math.random() * categoriesY.length);
     data.push({
       categoryX: categoriesX[categoryXRandom],
+      categoryCodeX: categoriesX[categoryXRandom],
       categoryY: categoriesY[categoryYRandom],
+      categoryCodeY: categoriesY[categoryYRandom],
       valueZ: Math.floor(Math.random() * (maxRange - minRange)) + minRange
     });
   }
@@ -89,13 +94,14 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisTooltipNumberFormat: "#",
+  xAxisTooltipText: "{categoryX}",
   xAxisLabelsOversizedBehavior: "truncate",
   xAxisLabelsMaxWidth: 100,
-  xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#",
-  yAxisCellStartLocation: 0.5,
-  yAxisCellEndLocation: 0.5
+  yAxisTooltipText: "{categoryY}",
+  yAxisLabelsOversizedBehavior: "truncate",
+  yAxisLabelsMaxWidth: 100,
+  serieShowTooltip: true,
+  serieTooltipText: "{name}: {dataItem.dataContext.valueZ}"
 };

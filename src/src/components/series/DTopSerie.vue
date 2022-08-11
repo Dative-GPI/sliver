@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
-import { updateCategories, addSerie, removeSerie, sortValues } from "../../helpers";
+import { updateCategories, sortValues } from "../../helpers";
 import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
@@ -42,9 +42,6 @@ export default class DTopSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
-  @Prop({ required: false, default: true })
-  snapToSeries!: boolean;
-
   @Prop({ required: false, default: "valueX" })
   valueXField!: string;
 
@@ -60,7 +57,7 @@ export default class DTopSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{categoryY}: {valueX}" })
+  @Prop({ required: false, default: "{dataItem.dataContext.categoryY}: {dataItem.dataContext.valueX}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -103,7 +100,6 @@ export default class DTopSerie extends Vue {
   onDataChange = this.setData;
 
   serie: am5xy.ColumnSeries | null = null;
-  tooltip: am5.Tooltip | null = null;
 
   upAndRunning: boolean = false;
 
@@ -115,7 +111,6 @@ export default class DTopSerie extends Vue {
   setShowTooltip(): void {
     if (this.showTooltip) {
       this.serie!.columns.template.setAll({
-        tooltipY: am5.percent(0),
         tooltipText: this.tooltipText
       });
     }
@@ -124,6 +119,10 @@ export default class DTopSerie extends Vue {
         tooltipText: undefined
       });      
     }
+  }
+  
+  setSnapTooltip(): void {
+    this.serie!.set("snapTooltip", true);
   }
 
   setLegendLabelText(): void {
@@ -179,6 +178,7 @@ export default class DTopSerie extends Vue {
     // Set updatable properties
     this.setName();
     this.setShowTooltip();
+    this.setSnapTooltip();
 
     this.setColumnsHeight();
     this.setColumnsOpacity();
@@ -188,11 +188,6 @@ export default class DTopSerie extends Vue {
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
-    }
-
-    // Add to cursor
-    if (this.cursor != null && this.snapToSeries) {
-      this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     
     // Set data
@@ -214,11 +209,6 @@ export default class DTopSerie extends Vue {
     this.yAxis.data.setAll(
       updateCategories(this.yAxis.data.values, [], this.categoryYField, this.categoryCodeYField, this.valueXField, this.serieId, false, PositionEnum.Abscissa)
     );
-
-    // Remove from cursor
-    if (this.cursor) {
-      this.cursor.set("snapToSeries", removeSerie(this.cursor.get("snapToSeries")!, this.serie));
-    }
 
     // Dispose
     this.serie!.dispose();

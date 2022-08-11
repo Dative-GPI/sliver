@@ -42,35 +42,35 @@ export default class DScatterPlotSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
-  @Prop({ required: false, default: true })
+  @Prop({ required: false, default: false })
   snapToSeries!: boolean;
 
   @Prop({ required: false, default: "valueX" })
   xField!: string;
 
   @Prop({ required: false, default: "categoryCodeX" })
-  categoryCodeXField!: string;
+  codeXField!: string;
 
   @Prop({ required: false, default: "valueY" })
   yField!: string;
 
   @Prop({ required: false, default: "categoryCodeY" })
-  categoryCodeYField!: string;
+  codeYField!: string;
 
   @Prop({ required: false, default: "valueZ" })
-  sizeField!: string;
+  zField!: string;
 
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
   @Watch("showTooltip")
-  onShowTooltipChange = this.setShowTooltip;
+  onShowTooltipChange = this.setBullets;
 
-  @Prop({ required: false, default: "" })
+  @Prop({ required: false, default: "{name}: {dataItem.dataContext.valueZ}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
-  onTooltipTextChange = this.setTooltipText;
+  onTooltipTextChange = this.setBullets;
 
   @Prop({ required: false, default: "" })
   legendLabelText!: string;
@@ -82,7 +82,7 @@ export default class DScatterPlotSerie extends Vue {
   bulletRadius!: number;
 
   @Watch("bulletRadius")
-  onBulletRadiusChange = this.setBulletRadius;
+  onBulletRadiusChange = this.setBullets;
 
   @Prop({ required: false, default: 5 })
   heatRulesMin!: number;
@@ -103,41 +103,19 @@ export default class DScatterPlotSerie extends Vue {
   onDataChange = this.setData;
 
   serie: am5xy.LineSeries | null = null;
-  tooltip: am5.Tooltip | null = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setName(): void {
     this.serie!.set("name", this.name);
     this.setLegendLabelText();
   }
 
-  setShowTooltip(): void {
-    if (!this.showTooltip) {
-      if (this.tooltip != null) {
-        this.tooltip!.dispose();
-        this.serie!.set("tooltip", undefined);
-        this.tooltip = null;
-      }
-    }
-    else {
-      this.tooltip = am5.Tooltip.new(this.root, {});
-      this.serie!.set("tooltip", this.tooltip);
-      this.setTooltipText();
-    }
-  }
-
-  setTooltipText(): void {
-    if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : `{name}`);
-    }
-  }
-
   setLegendLabelText(): void {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
   }
 
-  setBulletRadius(): void {
+  setBullets(): void {
     this.serie!.bullets.clear();
 
     this.serie!.set("userData", {
@@ -147,7 +125,10 @@ export default class DScatterPlotSerie extends Vue {
 
     this.serie!.bullets.push(() => {
       return am5.Bullet.new(this.root, {
-        sprite: am5.Circle.new(this.root, { fill: this.serie!.get("fill") }, this.serie!.get("userData").circleTemplate)
+        sprite: am5.Circle.new(this.root, {
+          tooltipText: this.showTooltip ? this.tooltipText : undefined,
+          fill: this.serie!.get("fill")
+        }, this.serie!.get("userData").circleTemplate)
       });
     });
     
@@ -168,13 +149,13 @@ export default class DScatterPlotSerie extends Vue {
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
       this.xAxis.data.setAll(
-        updateCategories(this.xAxis.data.values, this.data, this.xField, this.categoryCodeXField, this.yField, this.serieId, true, PositionEnum.Abscissa)
+        updateCategories(this.xAxis.data.values, this.data, this.xField, this.codeXField, this.yField, this.serieId, true, PositionEnum.Abscissa)
       );
     }
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
       this.yAxis.data.setAll(
-        updateCategories(this.yAxis.data.values, this.data, this.yField, this.categoryCodeYField, this.xField, this.serieId, true, PositionEnum.Ordinate)
+        updateCategories(this.yAxis.data.values, this.data, this.yField, this.codeYField, this.xField, this.serieId, true, PositionEnum.Ordinate)
       );
     }
     this.serie!.data.setAll(this.data);
@@ -191,7 +172,7 @@ export default class DScatterPlotSerie extends Vue {
       valueXField: this.xField,
       categoryYField: this.yField,
       valueYField: this.yField,
-      valueField: this.sizeField,
+      valueField: this.zField,
       calculateAggregates: true,
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.ScatterPlotSerie }
@@ -200,8 +181,7 @@ export default class DScatterPlotSerie extends Vue {
 
     // Set updatable properties
     this.setName();
-    this.setShowTooltip();
-    this.setBulletRadius();
+    this.setBullets();
     
     // Add to legend
     if (this.legend != null) {
@@ -231,14 +211,15 @@ export default class DScatterPlotSerie extends Vue {
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
       this.xAxis.data.setAll(
-        updateCategories(this.xAxis.data.values, [], this.xField, this.categoryCodeXField, this.yField, this.serieId, true, PositionEnum.Abscissa)
+        updateCategories(this.xAxis.data.values, [], this.xField, this.codeXField
+    , this.yField, this.serieId, true, PositionEnum.Abscissa)
       );
     }
 
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
       this.yAxis.data.setAll(
-        updateCategories(this.yAxis.data.values, [], this.yField, this.categoryCodeYField, this.xField, this.serieId, true, PositionEnum.Ordinate)
+        updateCategories(this.yAxis.data.values, [], this.yField, this.codeYField, this.xField, this.serieId, true, PositionEnum.Ordinate)
       );
     }
 

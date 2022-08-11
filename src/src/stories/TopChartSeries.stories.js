@@ -34,11 +34,13 @@ const Template = (args, { argTypes }) => ({
       :xAxisTooltipNumberFormat="xAxisTooltipNumberFormat"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
+      :yAxisTooltipText="yAxisTooltipText"
       :yAxisCellStartLocation="yAxisCellStartLocation"
       :yAxisCellEndLocation="yAxisCellEndLocation"
       :yAxisLabelsOversizedBehavior="yAxisLabelsOversizedBehavior"
       :yAxisLabelsMaxWidth="yAxisLabelsMaxWidth"
-      :yAxisLabelsTooltipText="yAxisLabelsTooltipText"
+      :serieShowTooltip="serieShowTooltip"
+      :serieTooltipText="serieTooltipText"
     />`,
 });
 
@@ -89,9 +91,11 @@ Default.args = {
   xAxisTooltipNumberFormat: "#",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
+  yAxisTooltipText: "{categoryY}",
   yAxisCellStartLocation: 0.5,
   yAxisCellEndLocation: 0.5,
   yAxisLabelsOversizedBehavior: "truncate",
   yAxisLabelsMaxWidth: 100,
-  yAxisLabelsTooltipText: "{categoryX}"
+  serieShowTooltip: true,
+  serieTooltipText: "{dataItem.dataContext.categoryY}: {dataItem.dataContext.valueX}"
 };

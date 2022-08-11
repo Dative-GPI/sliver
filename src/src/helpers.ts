@@ -62,9 +62,6 @@ export const sortValues = (former: any[]): any[] => {
     if (a.values[0] > b.values[0]) return 1;
     else return -1;
   });
-
-  console.log(test);
-
   return test;
 }
 

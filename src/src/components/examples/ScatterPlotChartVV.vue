@@ -41,6 +41,8 @@
                 :key="index"
                 :name="serie.serie"
                 :data="serie.data"
+                :showTooltip="serieShowTooltip"
+                :tooltipText="serieTooltipText"
               />
             </d-value-y-axis>
           </d-value-x-axis>
@@ -139,6 +141,12 @@ export default class ScatterPlotChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  serieShowTooltip!: boolean;
+
+  @Prop({ required: true })
+  serieTooltipText!: string;
 
   ready: boolean = false;
 }

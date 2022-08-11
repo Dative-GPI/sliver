@@ -78,7 +78,8 @@ const makePlanningSerie = (name, tZero, elapsedTime, categories, values) => {
       data.push({
         timestampX: tZero,
         closeTimestampX: tZero + elapsedTime,
-        categoryY: categoryRandom
+        categoryY: categoryRandom,
+        categoryCodeY: categoryRandom
       });
     }
 
@@ -100,14 +101,16 @@ const makeEventSerie = (name, tZero, elapsedTime, categories, values) => {
       data.push({
         timestampX: tZero,
         closeTimestampX: tZero,
-        categoryY: categoryRandom
+        categoryY: categoryRandom,
+        categoryCodeY: categoryRandom
       });
     }
     else if (categoryRandom != data[data.length - 1].categoryY) {
       data.push({
         timestampX: tZero,
         closeTimestampX: tZero,
-        categoryY: categoryRandom
+        categoryY: categoryRandom,
+        categoryCodeY: categoryRandom
       });
     }
 

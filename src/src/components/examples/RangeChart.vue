@@ -41,6 +41,9 @@
                 :data="serie.data"
                 :subNames="subSeries.map(ss => ss.serie)"
                 :subDatas="subSeries.map(ss => ss.data)"
+                :showTooltip="serieShowTooltip"
+                :tooltipText="serieTooltipText"
+                :subTooltipText="serieSubTooltipText"
               />
             </d-value-y-axis>
           </d-date-x-axis>
@@ -142,6 +145,15 @@ export default class RangeChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  serieShowTooltip!: boolean;
+
+  @Prop({ required: true })
+  serieTooltipText!: string;
+
+  @Prop({ required: true })
+  serieSubTooltipText!: string;
   
   ready: boolean = false;
 }

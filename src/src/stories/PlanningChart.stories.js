@@ -48,7 +48,8 @@ const makePlanningSerie = (name, tZero, categories, values) => {
     data.push({
       timestampX: tZero,
       closeTimestampX: tZero,
-      categoryY: categories[categoryRandom]
+      categoryY: categories[categoryRandom],
+      categoryCodeY: name + "-" + categories[categoryRandom]
     });
     tZero += 60000
   }

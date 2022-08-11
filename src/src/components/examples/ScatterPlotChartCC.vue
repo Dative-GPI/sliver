@@ -29,15 +29,16 @@
           <d-category-x-axis
             :opposite="xAxisOpposite"
             :showTooltip="xAxisShowTooltip"
+            :tooltipText="xAxisTooltipText"
             :labelsOversizedBehavior="xAxisLabelsOversizedBehavior"
             :labelsMaxWidth="xAxisLabelsMaxWidth"
-            :labelsTooltipText="xAxisLabelsTooltipText"
           >
             <d-category-y-axis
               :opposite="yAxisOpposite"
               :showTooltip="yAxisShowTooltip"
-              :cellStartLocation="yAxisCellStartLocation"
-              :cellEndLocation="yAxisCellEndLocation"
+              :tooltipText="yAxisTooltipText"
+              :labelsOversizedBehavior="yAxisLabelsOversizedBehavior"
+              :labelsMaxWidth="yAxisLabelsMaxWidth"
             >
               <d-scatter-plot-serie
                 v-for="(serie, index) in data.series"
@@ -46,6 +47,8 @@
                 :data="serie.data"
                 :xField="'categoryX'"
                 :yField="'categoryY'"
+                :showTooltip="serieShowTooltip"
+                :tooltipText="serieTooltipText"
               />
             </d-category-y-axis>
           </d-category-x-axis>
@@ -134,13 +137,13 @@ export default class ScatterPlotChart extends Vue {
   xAxisShowTooltip!: boolean;
 
   @Prop({ required: true })
+  xAxisTooltipText!: string;
+
+  @Prop({ required: true })
   xAxisLabelsOversizedBehavior!: "none" | "hide" | "fit" | "wrap" | "truncate";
 
   @Prop({ required: true })
   xAxisLabelsMaxWidth!: number;
-
-  @Prop({ required: true })
-  xAxisLabelsTooltipText!: string;
 
   @Prop({ required: true })
   yAxisOpposite!: boolean;
@@ -149,13 +152,19 @@ export default class ScatterPlotChart extends Vue {
   yAxisShowTooltip!: boolean;
 
   @Prop({ required: true })
-  yAxisTooltipNumberFormat!: string;
+  yAxisTooltipText!: string;
 
   @Prop({ required: true })
-  yAxisCellStartLocation!: number;
+  yAxisLabelsOversizedBehavior!: "none" | "hide" | "fit" | "wrap" | "truncate";
 
   @Prop({ required: true })
-  yAxisCellEndLocation!: number;
+  yAxisLabelsMaxWidth!: number;
+
+  @Prop({ required: true })
+  serieShowTooltip!: boolean;
+
+  @Prop({ required: true })
+  serieTooltipText!: string;
 
   ready: boolean = false;
 }

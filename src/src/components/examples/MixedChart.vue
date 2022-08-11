@@ -59,7 +59,7 @@
                 :bulletRadius="0"
                 :columnsHeight="20"
                 :columnsOpacity="0.6"
-                :showTooltip="false"
+                :showTooltip="true"
                 :showLabel="true"
               />
             </d-category-y-axis>

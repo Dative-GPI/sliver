@@ -125,22 +125,23 @@ export default class DPieSerie extends Vue {
 
   setShowTooltip(): void {
     if (!this.showTooltip) {
-      if (this.tooltip != null) {
+      if (this.tooltip != null && !this.tooltip.isDisposed()) {
         this.tooltip!.dispose();
         this.serie!.set("tooltip", undefined);
         this.tooltip = null;
       }
     }
     else {
-      this.tooltip = am5.Tooltip.new(this.root, {});
+      this.tooltip = am5.Tooltip.new(this.root, {
+        tooltipText: this.tooltipText
+      });
       this.serie!.set("tooltip", this.tooltip);
-      this.setTooltipText();
     }
   }
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText ? this.tooltipText : "{" + this.valueField + "}");
+      this.serie!.get("tooltip")!.set("tooltipText", this.tooltipText);
     }
   }
 

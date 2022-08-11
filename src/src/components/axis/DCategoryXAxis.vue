@@ -23,7 +23,7 @@ export default class DCategoryXAxis extends Vue {
   @InjectReactive(CURSOR)
   cursor!: am5xy.XYCursor | null;
 
-  @Prop({ required: false, default: "categoryCodeX" })
+  @Prop({ required: false, default: "categoryX" })
   categoryField!: string;
 
   @Prop({ required: false, default: "categoryCodeX" })
@@ -40,6 +40,12 @@ export default class DCategoryXAxis extends Vue {
 
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
+
+  @Prop({ required: false, default: "{categoryX}" })
+  tooltipText!: string;
+
+  @Watch("tooltipText")
+  onTooltipTextChange = this.setTooltipText;
 
   @Prop({ required: false, default: "truncate" })
   labelsOversizedBehavior!: "none" | "hide" | "fit" | "wrap" | "truncate";
@@ -58,7 +64,7 @@ export default class DCategoryXAxis extends Vue {
 
   tooltip: am5.Tooltip | null = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setOpposite(): void {
     this.axis!.get("renderer").set("opposite", this.opposite);
@@ -93,7 +99,9 @@ export default class DCategoryXAxis extends Vue {
       this.axis!.set("tooltip", this.tooltip);
       this.axis!.get("tooltip").label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
         if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext[this.categoryField]) {
-          return target.dataItem.dataContext[this.categoryField];
+          return this.tooltipText
+            .replace(`{${this.categoryField}}`, target.dataItem.dataContext[this.categoryField])
+            .replace(`{${this.categoryCodeField}}`, target.dataItem.dataContext[this.categoryCodeField]);
         }
         return text;
       });
@@ -101,6 +109,20 @@ export default class DCategoryXAxis extends Vue {
         this.cursor!.lineX.set("visible", true);
         this.cursor!.set("xAxis", this.axis!);
       }
+    }
+  }
+
+  setTooltipText(): void {
+    if (this.tooltip != null) {
+      this.axis!.get("tooltip")!.label.adapters.remove("text");
+      this.axis!.get("tooltip")!.label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
+        if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext[this.categoryField]) {
+          return this.tooltipText
+            .replace(`{${this.categoryField}}`, target.dataItem.dataContext[this.categoryField])
+            .replace(`{${this.categoryCodeField}}`, target.dataItem.dataContext[this.categoryCodeField]);
+        }
+        return text;
+      });
     }
   }
 
@@ -157,6 +179,11 @@ export default class DCategoryXAxis extends Vue {
     // Remove from chart
     this.chart.xAxes.removeValue(this.axis!);
 
+    // Dispose tooltip
+    if (this.tooltip != null) {
+      this.tooltip!.dispose();
+    }
+    
     // Dispose
     this.axis!.dispose();
   }

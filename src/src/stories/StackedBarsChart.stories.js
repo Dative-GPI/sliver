@@ -31,12 +31,15 @@ const Template = (args, { argTypes }) => ({
       :scrollbarEndGripVisible="scrollbarEndGripVisible"
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
+      :xAxisTooltipText="xAxisTooltipText"
       :xAxisLabelsOversizedBehavior="xAxisLabelsOversizedBehavior"
       :xAxisLabelsMaxWidth="xAxisLabelsMaxWidth"
       :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :serieShowTooltip="serieShowTooltip"
+      :serieTooltipText="serieTooltipText"
     />`,
 });
 
@@ -85,10 +88,13 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
+  xAxisTooltipText: "{categoryX}",
   xAxisLabelsOversizedBehavior: "truncate",
   xAxisLabelsMaxWidth: 100,
   xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#"
+  yAxisTooltipNumberFormat: "#",
+  serieShowTooltip: true,
+  serieTooltipText: "{name}: {dataItem.dataContext.valueY}"
 };

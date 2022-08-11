@@ -31,12 +31,14 @@ const Template = (args, { argTypes }) => ({
       :scrollbarEndGripVisible="scrollbarEndGripVisible"
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
+      :xAxisTooltipText="xAxisTooltipText"
       :xAxisLabelsOversizedBehavior="xAxisLabelsOversizedBehavior"
       :xAxisLabelsMaxWidth="xAxisLabelsMaxWidth"
-      :xAxisLabelsTooltipText="xAxisLabelsTooltipText"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :serieShowTooltip="serieShowTooltip"
+      :serieTooltipText="serieTooltipText"
     />`,
 });
 
@@ -46,6 +48,7 @@ const makeScatterPlotSerie = (name, categories, minRange, maxRange, values) => {
     let categoryRandom = Math.floor(Math.random() * categories.length);
     data.push({
       categoryX: categories[categoryRandom],
+      categoryCodeX: categories[categoryRandom],
       valueY: Math.floor(Math.random() * (maxRange - minRange)) + minRange,
       valueZ: (Math.floor(Math.random() * (maxRange - minRange)) + minRange) * 10
     });
@@ -61,7 +64,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeScatterPlotSerie("", ["Croissants", "Baguettes", "Pains", "Gauffres", "Miches"], 5, 30, 500 ) }
+      { ...makeScatterPlotSerie("Recettes", ["Croissants", "Baguettes", "Pains", "Gauffres", "Miches"], 5, 200, 150 ) }
     ]
   },
   minHeight: '400px',
@@ -84,10 +87,12 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
+  xAxisTooltipText: "{categoryX}",
   xAxisLabelsOversizedBehavior: "truncate",
   xAxisLabelsMaxWidth: 100,
-  xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#"
+  yAxisTooltipNumberFormat: "#",
+  serieShowTooltip: true,
+  serieTooltipText: "{dataItem.dataContext.categoryX}: {dataItem.dataContext.valueZ}"
 };

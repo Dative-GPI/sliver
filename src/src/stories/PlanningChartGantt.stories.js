@@ -49,7 +49,8 @@ const makePlanningSerie = (name, tZero, timeRange, categories, values) => {
     data.push({
       timestampX: tZero,
       closeTimestampX: tZero + timeOffset,
-      categoryY: categories[categoryRandom]
+      categoryY: categories[categoryRandom],
+      categoryCodeY: categories[categoryRandom]
     });
     tZero += timeOffset;
   }

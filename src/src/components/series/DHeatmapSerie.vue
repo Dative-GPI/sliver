@@ -69,7 +69,7 @@ export default class DHeatmapSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{name}: {valueZ}" })
+  @Prop({ required: false, default: "{name}: {dataItem.dataContext.valueZ}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -113,8 +113,6 @@ export default class DHeatmapSerie extends Vue {
   setShowTooltip(): void {
     if (this.showTooltip) {
       this.serie!.columns.template.setAll({
-        tooltipY: am5.percent(50),
-        tooltipX: am5.percent(50),
         tooltipText: this.tooltipText
       });
     }
@@ -170,6 +168,8 @@ export default class DHeatmapSerie extends Vue {
       categoryXField: this.xField,
       categoryYField: this.yField,
       valueField: this.sizeField,
+      tooltipY: am5.percent(50),
+      tooltipX: am5.percent(50),
       userData: { serie: SerieEnum.HeatmapSerie }
     }));
 

@@ -31,6 +31,7 @@ const makeExplodingPieSerie = (name, categories, subCategories, rangeValue) => {
   for (let i = 0; i < categories.length; i++) {
     let parentCategory = {
       categoryX: categories[i],
+      categoryCodeX: name + "-" + categories[i],
       valueY: 0,
       subs: []
     };

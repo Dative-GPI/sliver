@@ -81,7 +81,7 @@ export default class DClockHand extends Vue {
   clockHand: am5radar.ClockHand | null = null;
   axisDataItem: any = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setName(): void {
     // Remove from legend

@@ -43,9 +43,6 @@ export default class DLineSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
-  @Prop({ required: false, default: false })
-  snapToSeries!: boolean;
-
   @Prop({ required: false, default: "timestampX" })
   dateXField!: string;
 
@@ -75,18 +72,6 @@ export default class DLineSerie extends Vue {
 
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
-
-  @Prop({ required: false, default: true })
-  bullet!: boolean;
-
-  @Watch("bullet")
-  onBulletChange = this.setBullet;
-
-  @Prop({ required: false, default: 3 })
-  bulletRadius!: number;
-
-  @Watch("bulletRadius")
-  onBulletRadiusChange = this.setBullet;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -133,27 +118,6 @@ export default class DLineSerie extends Vue {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
   }
 
-  setBullet(): void {
-    this.serie!.bullets.clear();
-
-    if (this.bullet) {
-      this.serie!.set("userData", {
-        ...this.serie!.get("userData"),
-        bulletRadius: this.bulletRadius
-      });
-
-      this.serie!.bullets.push(() => 
-        am5.Bullet.new(this.root, {
-          sprite: am5.Circle.new(this.root, {
-            opacity: this.serie!.get("opacity"),
-            fill: this.serie!.get("fill"),
-            radius: this.bulletRadius
-          })
-        })
-      );
-    }
-  }
-
   setData(): void {
     this.serie!.data.setAll(this.data);
   }
@@ -178,14 +142,8 @@ export default class DLineSerie extends Vue {
 
     // Set updatable properties
     this.setName();
-    this.setBullet();
     this.setShowTooltip();
     this.setSnapTooltip();
-
-    // Add to cursor
-    if (this.cursor != null && this.snapToSeries) {
-      this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
-    }
 
     // Add to legend
     if (this.legend != null) {
@@ -205,11 +163,6 @@ export default class DLineSerie extends Vue {
     // Remove from legend
     if (this.legend) {
       this.legend.data.removeValue(this.serie);
-    }
-
-    // Remove from cursor
-    if (this.cursor) {
-      this.cursor.set("snapToSeries", removeSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
 
     // Dispose

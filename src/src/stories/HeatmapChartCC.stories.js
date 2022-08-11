@@ -51,7 +51,9 @@ const makeHeatmapSerie = (name, categoriesX, categoriesY, range) => {
     for (let j = 0; j < categoriesY.length; j++) {
         data.push({
           categoryX: categoriesX[i],
+          categoryCodeX: categoriesX[i],
           categoryY: categoriesY[j],
+          categoryCodeY: categoriesY[j],
           valueZ: Math.floor(Math.random() * range)
         });
     }

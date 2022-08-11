@@ -63,7 +63,7 @@ export default class DPlanningSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{name}: {categoryY}" })
+  @Prop({ required: false, default: "{name}: {dataItem.dataContext.categoryY}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -148,8 +148,6 @@ export default class DPlanningSerie extends Vue {
   setShowTooltip(): void {
     if (this.showTooltip) {
       this.serie!.columns.template.setAll({
-        tooltipX: am5.percent(50),
-        tooltipY: am5.percent(50),
         tooltipText: this.tooltipText
       });
     }
@@ -217,7 +215,9 @@ export default class DPlanningSerie extends Vue {
       yAxis: this.yAxis,
       openValueXField: this.openDateXField,
       valueXField: this.closeDateXField,
-      categoryYField: this.categoryYField,
+      categoryYField: this.categoryCodeYField,
+      tooltipX: am5.percent(50),
+      tooltipY: am5.percent(50),
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.PlanningSerie }
     }));

@@ -34,17 +34,19 @@
             <d-category-y-axis
               :opposite="yAxisOpposite"
               :showTooltip="yAxisShowTooltip"
+              :tooltipText="yAxisTooltipText"
               :cellStartLocation="yAxisCellStartLocation"
               :cellEndLocation="yAxisCellEndLocation"
               :labelsOversizedBehavior="yAxisLabelsOversizedBehavior"
               :labelsMaxWidth="yAxisLabelsMaxWidth"
-              :labelsTooltipText="yAxisLabelsTooltipText"
             >
               <d-top-serie
                 v-for="(serie, index) in data.series"
                 :key="index"
                 :name="serie.serie"
                 :data="serie.data"
+                :showTooltip="serieShowTooltip"
+                :tooltipText="serieTooltipText"
               />
             </d-category-y-axis>
           </d-value-x-axis>
@@ -136,6 +138,9 @@ export default class BarsChart extends Vue {
   yAxisShowTooltip!: boolean;
 
   @Prop({ required: true })
+  yAxisTooltipText!: string;
+
+  @Prop({ required: true })
   yAxisCellStartLocation!: number;
 
   @Prop({ required: true })
@@ -148,7 +153,10 @@ export default class BarsChart extends Vue {
   yAxisLabelsMaxWidth!: number;
 
   @Prop({ required: true })
-  yAxisLabelsTooltipText!: string;
+  serieShowTooltip!: boolean;
+
+  @Prop({ required: true })
+  serieTooltipText!: string;
 
   ready: boolean = false;
 }

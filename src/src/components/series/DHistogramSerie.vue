@@ -45,9 +45,6 @@ export default class DHistogramSerie extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
-  @Prop({ required: false, default: false })
-  snapToSeries!: boolean;
-
   @Prop({ required: false, default: "timestampX" })
   openDateXField!: string;
 
@@ -138,8 +135,6 @@ export default class DHistogramSerie extends Vue {
       userData: { serie: SerieEnum.HistogramSerie }
     }));
 
-    this.serie!.columns.template.set("width", am5.percent(80));
-
     this.serie.events.on("datavalidated", this.xAxisValidated);
 
     // Set updatable properties
@@ -150,11 +145,6 @@ export default class DHistogramSerie extends Vue {
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
-    }
-
-    // Add to cursor
-    if (this.cursor != null && this.snapToSeries) {
-      this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     
     // Set data
@@ -170,11 +160,6 @@ export default class DHistogramSerie extends Vue {
     // Remove from legend
     if (this.legend) {
       this.legend.data.removeValue(this.serie);
-    }
-
-    // Remove from cursor
-    if (this.cursor) {
-      this.cursor.set("snapToSeries", removeSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
 
     // Dispose
