@@ -53,7 +53,7 @@ const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
     let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
 
     tZero += elapsedTime;
-    vZero += (Math.random() * rangeValue * plusOrMinus)
+    vZero += Math.floor((Math.random() * rangeValue * plusOrMinus))
   }
 
   return {

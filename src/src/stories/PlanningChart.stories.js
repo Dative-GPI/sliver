@@ -64,7 +64,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePlanningSerie("Line 1", 1577836800000, ["Production", "Idle", "Cooling", "Warming"], 10 ) }
+      { ...makePlanningSerie("Line 1", 1577836800000, ["", "Idle", "Cooling", "Warming"], 10 ) }
     ]
   },
   minHeight: '400px',

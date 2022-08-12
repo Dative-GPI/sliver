@@ -56,13 +56,13 @@ export default class DPieSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{category}: {value} ({valuePercentTotal.formatNumber('0.00')}%)" })
+  @Prop({ required: false, default: "{dataItem.dataContext.categoryX}: {dataItem.dataContext.valueY} ({valuePercentTotal.formatNumber('0.00')}%)" })
   tooltipText!: string;
 
   @Watch("tooltipText")
-  onTooltipTextChange = this.setTooltipText;
+  onTooltipTextChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{category}" })
+  @Prop({ required: false, default: "{dataItem.dataContext.categoryX}" })
   legendLabelText!: string;
 
   @Watch("legendLabelText")
@@ -124,24 +124,15 @@ export default class DPieSerie extends Vue {
   }
 
   setShowTooltip(): void {
-    if (!this.showTooltip) {
-      if (this.tooltip != null && !this.tooltip.isDisposed()) {
-        this.tooltip!.dispose();
-        this.serie!.set("tooltip", undefined);
-        this.tooltip = null;
-      }
-    }
-    else {
-      this.tooltip = am5.Tooltip.new(this.root, {
+    if (this.showTooltip) {
+      this.serie!.slices.template.setAll({
         tooltipText: this.tooltipText
       });
-      this.serie!.set("tooltip", this.tooltip);
     }
-  }
-
-  setTooltipText(): void {
-    if (this.tooltip != null) {
-      this.serie!.get("tooltip")!.set("tooltipText", this.tooltipText);
+    else {
+      this.serie!.slices.template.setAll({
+        tooltipText: undefined
+      });      
     }
   }
 

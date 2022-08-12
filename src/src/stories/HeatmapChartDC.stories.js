@@ -50,6 +50,7 @@ const makeHeatmapSerie = (name, tZero, elapsedTime, categoriesY, rangeValue, val
         timestampX: tZero,
         closeTimestampX: tZero + elapsedTime,
         categoryY: categoriesY[j],
+        categoryCodeY: name + "-" + categoriesY[j],
         valueZ: Math.floor(Math.random() * rangeValue)
       });
     }

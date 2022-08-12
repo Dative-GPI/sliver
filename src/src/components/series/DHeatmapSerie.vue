@@ -103,7 +103,7 @@ export default class DHeatmapSerie extends Vue {
   tooltip: am5.Tooltip | null = null;
   circleTemplate: am5.Template<am5.Circle> | null = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setName(): void {
     this.serie!.set("name", this.name);
@@ -165,8 +165,8 @@ export default class DHeatmapSerie extends Vue {
       yAxis: this.yAxis,
       openValueXField: this.xField,
       valueXField: this.closeXField,
-      categoryXField: this.xField,
-      categoryYField: this.yField,
+      categoryXField: this.codeXField,
+      categoryYField: this.codeYField,
       valueField: this.sizeField,
       tooltipY: am5.percent(50),
       tooltipX: am5.percent(50),

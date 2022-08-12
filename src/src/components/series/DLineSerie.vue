@@ -11,7 +11,6 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
-import { addSerie, removeSerie } from "../../helpers";
 import { SerieEnum } from "../../enums";
 
 @Component({})
@@ -91,7 +90,7 @@ export default class DLineSerie extends Vue {
 
   setShowTooltip(): void {
     if (!this.showTooltip) {
-      if (this.tooltip != null) {
+      if (this.tooltip != null && !this.tooltip.isDisposed()) {
         this.tooltip!.dispose();
         this.serie!.set("tooltip", undefined);
         this.tooltip = null;
@@ -100,13 +99,30 @@ export default class DLineSerie extends Vue {
     else {
       this.tooltip = am5.Tooltip.new(this.root, {});
       this.serie!.set("tooltip", this.tooltip);
-      this.setTooltipText();
+      this.serie!.get("tooltip")!.label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
+        if (target.dataItem && target.dataItem.dataContext) {
+          return this.tooltipText
+            .replace(`{${this.dateXField}}`, target.dataItem.dataContext[this.dateXField])
+            .replace(`{${this.valueYField}}`, target.dataItem.dataContext[this.valueYField])
+            .replace(`{${this.name}}`, this.name);
+        }
+        return text;
+      });
     }
   }
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText);
+      this.serie!.get("tooltip")!.label.adapters.remove("text");
+      this.serie!.get("tooltip")!.label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
+        if (target.dataItem && target.dataItem.dataContext) {
+          return this.tooltipText
+            .replace(`{${this.dateXField}}`, target.dataItem.dataContext[this.dateXField])
+            .replace(`{${this.valueYField}}`, target.dataItem.dataContext[this.valueYField])
+            .replace(`{${this.name}}`, this.name);
+        }
+        return text;
+      });
     }
   }
 

@@ -24,7 +24,7 @@ export const updateCategories = (formers: any[], data: any[], categoryField: str
     let item = formers.find(former => former[categoryCodeField] == data[i][categoryCodeField]);
     if (item == null) {
       formers.push({
-        [categoryField]: data[i][categoryField],
+        [categoryField]: " " + data[i][categoryField] + " ",
         [categoryCodeField]: data[i][categoryCodeField],
         series: [serieId],
         values: [data[i][valueField]]
@@ -54,6 +54,8 @@ export const updateCategories = (formers: any[], data: any[], categoryField: str
     });
   }
 
+  console.log(data);
+  console.log(formers);
   return formers;
 }
 
