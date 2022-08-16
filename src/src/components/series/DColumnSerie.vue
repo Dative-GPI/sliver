@@ -118,7 +118,7 @@ export default class DColumnSerie extends Vue {
     this.serie = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
       xAxis: this.xAxis,
       yAxis: this.yAxis,
-      categoryXField: this.categoryXField,
+      categoryXField: this.categoryCodeXField,
       valueYField: this.valueYField,
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.ColumnSerie }

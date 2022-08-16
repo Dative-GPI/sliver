@@ -23,8 +23,10 @@ export const updateCategories = (formers: any[], data: any[], categoryField: str
   for (let i = 0; i < data.length; i++) {
     let item = formers.find(former => former[categoryCodeField] == data[i][categoryCodeField]);
     if (item == null) {
+      let notEmpty = (data[i][categoryField] == null || data[i][categoryField].match(/^ *$/) !== null) ?
+        " " : data[i][categoryField];
       formers.push({
-        [categoryField]: " " + data[i][categoryField] + " ",
+        [categoryField]: notEmpty,
         [categoryCodeField]: data[i][categoryCodeField],
         series: [serieId],
         values: [data[i][valueField]]
@@ -53,9 +55,6 @@ export const updateCategories = (formers: any[], data: any[], categoryField: str
       return 0;
     });
   }
-
-  console.log(data);
-  console.log(formers);
   return formers;
 }
 
