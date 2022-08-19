@@ -72,6 +72,24 @@ export default class DLineSerie extends Vue {
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
 
+  @Prop({ required: false, default: true })
+  connect!: boolean;
+
+  @Watch("connect")
+  onConnectChange = this.setConnect;
+
+  @Prop({ required: false, default: false })
+  showBullets!: boolean;
+
+  @Watch("showBullets")
+  onShowBulletsChange = this.setShowBullets;
+
+  @Prop({ required: false, default: 5 })
+  bulletsRadius!: number;
+
+  @Watch("bulletsRadius")
+  onBulletsRadiusChange = this.setBulletsRadius;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -80,6 +98,7 @@ export default class DLineSerie extends Vue {
 
   serie: am5xy.LineSeries | null = null;
   tooltip: am5.Tooltip | null = null;
+  bullets: am5.Bullet | null = null;
 
   upAndRunning: boolean = false;
 
@@ -134,6 +153,40 @@ export default class DLineSerie extends Vue {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
   }
 
+  setConnect(): void {
+    this.serie!.set("connect", this.connect);
+  }
+
+  setShowBullets(): void {
+    this.serie!.bullets.clear();
+
+    if (this.showBullets) {
+      this.serie!.bullets.push((root: am5.Root): am5.Bullet => {
+        return am5.Bullet.new(root, {
+          sprite: am5.Circle.new(root, {
+            radius: this.bulletsRadius,
+            fill: this.serie!.get("fill")
+          })
+        });
+      });
+    }
+  }
+
+  setBulletsRadius(): void {
+    this.serie!.bullets.clear();
+
+    if (this.showBullets) {
+      this.serie!.bullets.push((root: am5.Root): am5.Bullet => {
+        return am5.Bullet.new(root, {
+          sprite: am5.Circle.new(root, {
+            radius: this.bulletsRadius,
+            fill: this.serie!.get("fill")
+          })
+        });
+      });
+    }
+  }
+
   setData(): void {
     this.serie!.data.setAll(this.data);
   }
@@ -146,7 +199,8 @@ export default class DLineSerie extends Vue {
       valueXField: this.dateXField,
       valueYField: this.valueYField,
       sequencedInterpolation: true,
-      userData: { serie: SerieEnum.LineSerie }
+      userData: { serie: SerieEnum.LineSerie },
+      connect: false
     }));
 
     this.serie.set("userData", {
@@ -160,6 +214,8 @@ export default class DLineSerie extends Vue {
     this.setName();
     this.setShowTooltip();
     this.setSnapTooltip();
+    this.setConnect();
+    this.setShowBullets();
 
     // Add to legend
     if (this.legend != null) {
