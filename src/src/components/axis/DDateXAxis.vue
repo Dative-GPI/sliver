@@ -148,7 +148,7 @@ export default class DDateXAxis extends Vue {
     let ge = this.axis!.positionToDate(1);
 
     gs.setDate(gs.getDate() - gs.getDay() - 6);
-    ge.setDate(ge.getDate() - ge.getDay() + 14);
+    ge.setDate(ge.getDate() - ge.getDay() + 7);
 
     // Remove former ranges
     for (let i = 0; i < this.dataItems.length; i++) {
@@ -157,14 +157,15 @@ export default class DDateXAxis extends Vue {
     this.dataItems = [];
 
     // Get first monday of boundaries at midnight
-    let current = new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate()));
+    let current = new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate()));
 
     // Get timezone offset
-    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate())));
+    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate())));
 
     while (current < ge) {
       am5.array.each(this.ranges!, (range : TimeRange) => {
         let start = new Date(current);
+
         start.setDate(start.getDate() + range.startDay);
         start.setHours(start.getHours() + range.startHour);
         start.setMinutes(start.getMinutes() + range.startMinute);

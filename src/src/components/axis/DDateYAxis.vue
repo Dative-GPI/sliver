@@ -157,10 +157,10 @@ export default class DDateYAxis extends Vue {
     this.dataItems = [];
 
     // Get first monday of boundaries at midnight
-    let current = new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate()));
+    let current = new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate()));
 
     // Get timezone offset
-    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate())));
+    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate())));
 
     while (current < ge) {
       am5.array.each(this.ranges!, (range : TimeRange) => {
