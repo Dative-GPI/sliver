@@ -47,7 +47,7 @@ export default class DCategoryYAxis extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{categoryY}" })
+  @Prop({ required: false, default: "{dataItem.dataContext.categoryY}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -111,17 +111,10 @@ export default class DCategoryYAxis extends Vue {
         this.cursor!.set("yAxis", undefined);
         hideCursor = true;
       }
-      this.tooltip = am5.Tooltip.new(this.root, {});
-      this.axis!.set("tooltip", this.tooltip);
-      this.axis!.get("tooltip").label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-        if (target.dataItem && target.dataItem.dataContext) {
-          return this.tooltipText
-            .replace(`{${this.categoryField}}`, target.dataItem.dataContext[this.categoryField])
-            .replace(`{${this.categoryCodeField}}`, target.dataItem.dataContext[this.categoryCodeField]);
-        }
-        return text;
+      this.tooltip = am5.Tooltip.new(this.root, {
+        labelText: this.tooltipText
       });
-
+      this.axis!.set("tooltip", this.tooltip);
       if (this.cursor != null && hideCursor) {
         this.cursor!.lineY.set("visible", true);
         this.cursor!.set("yAxis", this.axis!);
@@ -131,15 +124,7 @@ export default class DCategoryYAxis extends Vue {
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.axis!.get("tooltip")!.label.adapters.remove("text");
-      this.axis!.get("tooltip")!.label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-        if (target.dataItem && target.dataItem.dataContext) {
-          return this.tooltipText
-            .replace(`{${this.categoryField}}`, target.dataItem.dataContext[this.categoryField])
-            .replace(`{${this.categoryCodeField}}`, target.dataItem.dataContext[this.categoryCodeField]);
-        }
-        return text;
-      });
+      this.axis!.get("tooltip").set("labelText", this.tooltipText);
     }
   }
 

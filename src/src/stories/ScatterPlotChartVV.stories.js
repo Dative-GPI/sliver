@@ -84,10 +84,10 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisTooltipNumberFormat: "#",
+  xAxisTooltipNumberFormat: "#,###.###### a",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#",
+  yAxisTooltipNumberFormat: "#,###.###### a",
   serieShowTooltip: true,
   serieTooltipText: "{name}: {dataItem.dataContext.valueZ}"
 };

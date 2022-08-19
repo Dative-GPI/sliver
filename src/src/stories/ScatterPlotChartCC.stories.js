@@ -32,13 +32,11 @@ const Template = (args, { argTypes }) => ({
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
       :xAxisTooltipText="xAxisTooltipText"
-      :xAxisTooltipNumberFormat="xAxisTooltipNumberFormat"
       :xAxisLabelsOversizedBehavior="xAxisLabelsOversizedBehavior"
       :xAxisLabelsMaxWidth="xAxisLabelsMaxWidth"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipText="yAxisTooltipText"
-      :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisLabelsOversizedBehavior="yAxisLabelsOversizedBehavior"
       :yAxisLabelsMaxWidth="yAxisLabelsMaxWidth"
       :serieShowTooltip="serieShowTooltip"
@@ -56,7 +54,7 @@ const makeScatterPlotSerie = (name, categoriesX, categoriesY, minRange, maxRange
       categoryCodeX: categoriesX[categoryXRandom],
       categoryY: categoriesY[categoryYRandom],
       categoryCodeY: categoriesY[categoryYRandom],
-      valueZ: Math.floor(Math.random() * (maxRange - minRange)) + minRange
+      valueZ: (Math.random() * (maxRange - minRange)) + minRange
     });
   }
 
@@ -94,14 +92,14 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisTooltipText: "{categoryX}",
+  xAxisTooltipText: "{dataItem.dataContext.categoryX}",
   xAxisLabelsOversizedBehavior: "truncate",
   xAxisLabelsMaxWidth: 100,
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipText: "{categoryY}",
+  yAxisTooltipText: "{dataItem.dataContext.categoryY}",
   yAxisLabelsOversizedBehavior: "truncate",
   yAxisLabelsMaxWidth: 100,
   serieShowTooltip: true,
-  serieTooltipText: "{name}: {dataItem.dataContext.valueZ}"
+  serieTooltipText: "{dataItem.dataContext.categoryX}: {dataItem.dataContext.valueZ}"
 };

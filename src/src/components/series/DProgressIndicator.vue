@@ -8,7 +8,6 @@
 import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decorator";
 
 import * as am5 from "@amcharts/amcharts5";
-import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, XAXIS } from "../../literals";

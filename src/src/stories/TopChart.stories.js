@@ -87,7 +87,7 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisTooltipNumberFormat: "#",
+  xAxisTooltipNumberFormat: "#,###.###### a",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipText: "{categoryY}",

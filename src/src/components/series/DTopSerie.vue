@@ -110,14 +110,10 @@ export default class DTopSerie extends Vue {
 
   setShowTooltip(): void {
     if (this.showTooltip) {
-      this.serie!.columns.template.setAll({
-        tooltipText: this.tooltipText
-      });
+      this.serie!.columns.template.set("tooltipText", this.tooltipText);
     }
     else {
-      this.serie!.columns.template.setAll({
-        tooltipText: undefined
-      });      
+      this.serie!.columns.template.set("tooltipText", undefined);    
     }
   }
   
@@ -175,6 +171,12 @@ export default class DTopSerie extends Vue {
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.ColumnSerie }
     }));
+
+    this.serie.columns.template.setAll({
+      tooltipX: am5.percent(100),
+      tooltipY: am5.percent(0)
+    });
+
     // Set updatable properties
     this.setName();
     this.setShowTooltip();

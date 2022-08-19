@@ -37,8 +37,8 @@ const Template = (args, { argTypes }) => ({
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisRanges="yAxisRanges"
-      :lineSeriesBullet="lineSeriesBullet"
-      :lineSeriesBulletRadius="lineSeriesBulletRadius"
+      :serieShowBullets="serieShowBullets"
+      :serieBulletsRadius="serieBulletsRadius"
     />`,
 });
 
@@ -53,7 +53,7 @@ const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
     let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
 
     tZero += elapsedTime;
-    vZero += Math.floor((Math.random() * rangeValue * plusOrMinus))
+    vZero += (Math.random() * rangeValue * plusOrMinus);
   }
 
   return {
@@ -66,8 +66,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeLineSerie("Line 1", 1660860000000 + 86400000, 50, 2.16e+7, 5, 25 ) },
-      { ...makeLineSerie("Line 2", 1660860000000 + 86400000, 50, 2.16e+7, 5, 25 ) }
+      { ...makeLineSerie("Line 1", 1660860000000 + 86400000, 1, 2.16e+7, 1, 25 ) },
+      { ...makeLineSerie("Line 2", 1660860000000 + 86400000, 1, 2.16e+7, 1, 25 ) }
     ]
   },
   minHeight: '400px',
@@ -85,7 +85,7 @@ Default.args = {
   cursorXVisible: true,
   cursorYVisible: true,
   scrollbar: true,
-  scrollbarHeight: 5,
+  scrollbarHeight: 2,
   scrollbarStartGripVisible: true,
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
@@ -97,8 +97,8 @@ Default.args = {
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#",
+  yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisRanges: [],
-  lineSeriesBullet: true,
-  lineSeriesBulletRadius: 3
+  serieShowBullets: false,
+  serieBulletsRadius: 5
 };

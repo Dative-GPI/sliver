@@ -36,6 +36,9 @@ const Template = (args, { argTypes }) => ({
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :yAxisMin="yAxisMin"
+      :yAxisMax="yAxisMax"
+      :serieStacked="serieStacked"
     />`,
 });
 
@@ -94,5 +97,8 @@ Default.args = {
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#"
+  yAxisTooltipNumberFormat: "#,###.###### a",
+  yAxisMin: 0,
+  yAxisMax: undefined,
+  serieStacked: false
 };

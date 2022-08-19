@@ -38,7 +38,7 @@
               :tooltipDateFormat="xAxisTooltipDateFormat"
               :ranges="xAxisRanges"
             >
-              <d-line-serie
+              <d-step-line-serie
                 v-for="(serie, index) in data.series"
                 :key="index"
                 :name="serie.serie"

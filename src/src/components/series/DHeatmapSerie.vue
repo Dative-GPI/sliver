@@ -112,14 +112,10 @@ export default class DHeatmapSerie extends Vue {
 
   setShowTooltip(): void {
     if (this.showTooltip) {
-      this.serie!.columns.template.setAll({
-        tooltipText: this.tooltipText
-      });
+      this.serie!.columns.template.set("tooltipText", this.tooltipText);
     }
     else {
-      this.serie!.columns.template.setAll({
-        tooltipText: undefined
-      });      
+      this.serie!.columns.template.set("tooltipText", undefined);    
     }
   }
 
@@ -168,8 +164,6 @@ export default class DHeatmapSerie extends Vue {
       categoryXField: this.codeXField,
       categoryYField: this.codeYField,
       valueField: this.sizeField,
-      tooltipY: am5.percent(50),
-      tooltipX: am5.percent(50),
       userData: { serie: SerieEnum.HeatmapSerie }
     }));
 

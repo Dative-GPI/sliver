@@ -89,7 +89,7 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisTooltipNumberFormat: "#",
+  xAxisTooltipNumberFormat: "#,###.###### a",
   xAxisMin: 0,
   xAxisMax: 200,
   xAxisRanges: [
@@ -101,7 +101,7 @@ Default.args = {
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#",
+  yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisMin: 0,
   yAxisMax: 10,
   yAxisRanges: [

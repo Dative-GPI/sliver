@@ -93,6 +93,14 @@ export default class DYScrollbar extends Vue {
       this.scrollbar = this.chart.set("scrollbarY", am5xy.XYChartScrollbar.new(this.root, {
         orientation: "vertical"
       }));
+      
+      this.scrollbar.startGrip.set("width", 10);
+      this.scrollbar.startGrip.set("height", 20);
+      this.scrollbar.startGrip.set("icon", undefined);
+      
+      this.scrollbar.endGrip.set("width", 10);
+      this.scrollbar.endGrip.set("height", 20);
+      this.scrollbar.endGrip.set("icon", undefined);
 
       this.setHeight();
       this.setStartGripVisible();

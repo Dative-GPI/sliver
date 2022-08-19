@@ -147,14 +147,10 @@ export default class DPlanningSerie extends Vue {
 
   setShowTooltip(): void {
     if (this.showTooltip) {
-      this.serie!.columns.template.setAll({
-        tooltipText: this.tooltipText
-      });
+      this.serie!.columns.template.set("tooltipText", this.tooltipText);
     }
     else {
-      this.serie!.columns.template.setAll({
-        tooltipText: undefined
-      });      
+      this.serie!.columns.template.set("tooltipText", undefined);    
     }
   }
 
@@ -216,11 +212,13 @@ export default class DPlanningSerie extends Vue {
       openValueXField: this.openDateXField,
       valueXField: this.closeDateXField,
       categoryYField: this.categoryCodeYField,
-      tooltipX: am5.percent(50),
-      tooltipY: am5.percent(50),
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.PlanningSerie }
     }));
+
+    this.serie.columns.template.setAll({
+      tooltipY: am5.percent(0)
+    })
 
     this.setName();
     this.setShowTooltip();

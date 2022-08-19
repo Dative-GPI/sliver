@@ -25,6 +25,7 @@ import DProgressIndicator from "./components/series/DProgressIndicator.vue";
 import DRangeSerie from "./components/series/DRangeSerie.vue";
 import DScatterPlotSerie from "./components/series/DScatterPlotSerie.vue";
 import DStackedColumnSerie from "./components/series/DStackedColumnSerie.vue";
+import DStepLineSerie from "./components/series/DStepLineSerie.vue";
 import DTopSerie from "./components/series/DTopSerie.vue";
 
 import { LayoutEnum, PositionEnum } from "./enums";
@@ -56,6 +57,7 @@ const Sliver = {
     vue.component("d-range-serie", DRangeSerie);
     vue.component("d-scatter-plot-serie", DScatterPlotSerie)
     vue.component("d-stacked-column-serie", DStackedColumnSerie);
+    vue.component("d-step-line-serie", DStepLineSerie);
     vue.component("d-top-serie", DTopSerie);
   }
 };

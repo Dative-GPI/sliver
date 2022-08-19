@@ -36,12 +36,15 @@
               :opposite="yAxisOpposite"
               :showTooltip="yAxisShowTooltip"
               :tooltipNumberFormat="yAxisTooltipNumberFormat"
+              :min="yAxisMin"
+              :max="yAxisMax"
             >
               <d-histogram-serie
                 v-for="(serie, index) in data.series"
                 :key="index"
                 :name="serie.serie"
                 :data="serie.data"
+                :stacked="serieStacked"
               />
             </d-value-y-axis>
           </d-date-x-axis>
@@ -144,6 +147,15 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: false })
+  yAxisMin!: number | undefined;
+
+  @Prop({ required: false })
+  yAxisMax!: number | undefined;
+
+  @Prop({ required: true })
+  serieStacked!: boolean;
 
   ready: boolean = false;
 }

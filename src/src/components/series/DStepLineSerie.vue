@@ -14,7 +14,7 @@ import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../
 import { SerieEnum } from "../../enums";
 
 @Component({})
-export default class DLineSerie extends Vue {
+export default class DStepLineSerie extends Vue {
   @InjectReactive(AMROOT)
   root!: am5.Root;
 
@@ -177,19 +177,14 @@ export default class DLineSerie extends Vue {
 
   mounted(): void {
     // Add to chart
-    this.serie = this.chart.series.push(am5xy.LineSeries.new(this.root, {
+    this.serie = this.chart.series.push(am5xy.StepLineSeries.new(this.root, {
       xAxis: this.xAxis,
       yAxis: this.yAxis,
       valueXField: this.dateXField,
       valueYField: this.valueYField,
       sequencedInterpolation: true,
-      userData: { serie: SerieEnum.LineSerie }
+      userData: { serie: SerieEnum.StepLineSerie }
     }));
-
-    this.serie.set("userData", {
-      ...this.serie.get("userData"),
-      series: "LineSerie"
-    });
 
     this.serie.events.on("datavalidated", this.xAxisValidated);
 

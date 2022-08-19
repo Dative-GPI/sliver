@@ -1,15 +1,15 @@
-import TopChart from '../components/examples/TopChart.vue';
+import StepLineChart from '../components/examples/StepLineChart.vue';
 
 export default {
-  title: 'Example/TopChart/Series',
-  component: TopChart,
+  title: 'Example/StepLineChart',
+  component: StepLineChart,
 };
 
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
-  components: { TopChart },
+  components: { StepLineChart },
   template:
-    `<top-chart
+    `<step-line-chart
       :data="data"
       :minHeight="minHeight"
       :locale="locale"
@@ -31,27 +31,29 @@ const Template = (args, { argTypes }) => ({
       :scrollbarEndGripVisible="scrollbarEndGripVisible"
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
-      :xAxisTooltipNumberFormat="xAxisTooltipNumberFormat"
+      :xAxisTooltipDateFormat="xAxisTooltipDateFormat"
+      :xAxisRanges="xAxisRanges"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
-      :yAxisTooltipText="yAxisTooltipText"
-      :yAxisCellStartLocation="yAxisCellStartLocation"
-      :yAxisCellEndLocation="yAxisCellEndLocation"
-      :yAxisLabelsOversizedBehavior="yAxisLabelsOversizedBehavior"
-      :yAxisLabelsMaxWidth="yAxisLabelsMaxWidth"
-      :serieShowTooltip="serieShowTooltip"
-      :serieTooltipText="serieTooltipText"
+      :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :yAxisRanges="yAxisRanges"
+      :serieShowBullets="serieShowBullets"
+      :serieBulletsRadius="serieBulletsRadius"
     />`,
 });
 
-const makeColumnSerie = (name, categories, rangeValue) => {
+const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
   var data = [];
-  for (let i = 0; i < categories.length; i++) {
+  for (let i = 0; i < values; i++) {
     data.push({
-      categoryY: categories[i],
-      categoryCodeY: name + "-" + categories[i],
-      valueX: +(Math.random() * rangeValue)
+      timestampX: tZero,
+      valueY: vZero
     });
+
+    let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+
+    tZero += elapsedTime;
+    vZero += Math.floor((Math.random() * rangeValue * plusOrMinus))
   }
 
   return {
@@ -64,8 +66,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeColumnSerie("Delta", ["Marcus Phoenix", "Dominic Santiago", "Augustus Cole", "Damon Baird"], 0.001 ) },
-      { ...makeColumnSerie("Charlie", ["Marcus Phoenix", "Anthony Carmine", "Benjamin Carmine", "Clay Carmine"], 0.001 ) }
+      { ...makeLineSerie("Line 1", 1660860000000 + 86400000, 50, 2.16e+7, 5, 25 ) },
+      { ...makeLineSerie("Line 2", 1660860000000 + 86400000, 50, 2.16e+7, 5, 25 ) }
     ]
   },
   minHeight: '400px',
@@ -88,14 +90,15 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisTooltipNumberFormat: "#,###.###### a",
+  xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
+  xAxisRanges: [
+    { startDay: 5, startHour: 0, startMinute: 0, endDay: 0, endHour: 0, endMinute: 0, opacity: 0.2, color: "#ff00ff", label: "Week-end"},
+    { startDay: 2, startHour: 0, startMinute: 0, endDay: 3, endHour: 0, endMinute: 0, opacity: 0.2, color: "#cccccc", label: "Wednesday"}
+  ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipText: "{categoryY}",
-  yAxisCellStartLocation: 0.5,
-  yAxisCellEndLocation: 0.5,
-  yAxisLabelsOversizedBehavior: "truncate",
-  yAxisLabelsMaxWidth: 100,
-  serieShowTooltip: true,
-  serieTooltipText: "{dataItem.dataContext.categoryY}: {dataItem.dataContext.valueX}"
+  yAxisTooltipNumberFormat: "#,###.###### a",
+  yAxisRanges: [],
+  serieShowBullets: false,
+  serieBulletsRadius: 5
 };

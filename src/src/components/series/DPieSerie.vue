@@ -125,14 +125,10 @@ export default class DPieSerie extends Vue {
 
   setShowTooltip(): void {
     if (this.showTooltip) {
-      this.serie!.slices.template.setAll({
-        tooltipText: this.tooltipText
-      });
+      this.serie!.slices.template.set("tooltipText", this.tooltipText);
     }
     else {
-      this.serie!.slices.template.setAll({
-        tooltipText: undefined
-      });      
+      this.serie!.slices.template.set("tooltipText", undefined);    
     }
   }
 
@@ -369,9 +365,14 @@ export default class DPieSerie extends Vue {
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.PieSerie }
     }));
+
+    this.serie.slices.template.setAll({
+      templateField: "sliceSettings",
+      tooltipX: am5.percent(75),
+      tooltipY: am5.percent(75)
+    });
     
-    this.serie!.slices.template.events.on("click", this.handleBreakDownSlices);
-    this.serie!.slices.template.set("templateField", "sliceSettings");
+    this.serie.slices.template.events.on("click", this.handleBreakDownSlices);
 
     if (this.legend != null) {
       this.legend!.itemContainers.template.events.on("click", (ev: ISpritePointerEvent) => {

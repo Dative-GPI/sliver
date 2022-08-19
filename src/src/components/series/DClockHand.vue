@@ -137,11 +137,11 @@ export default class DClockHand extends Vue {
   }
 
   setHandTooltipText(): void {
-      this.clockHand!.hand.set("tooltipText", this.handTooltipText);
+    this.clockHand!.hand.set("tooltipText", this.handTooltipText);
   }
 
   setHandTooltipX(): void {
-      this.clockHand!.hand.set("tooltipX", am5.percent(this.handTooltipX));
+    this.clockHand!.hand.set("tooltipX", am5.percent(this.handTooltipX));
   }
 
   mounted(): void {

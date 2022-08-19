@@ -68,6 +68,11 @@ export default class DPieChart extends Vue {
     this.root.setThemes([ am5themes_Animated.new(this.root) ]);
     this.root.locale = getLocale(this.locale);
 
+    this.root.numberFormatter.setAll({
+      numberFormat: "#,###.###### a",
+      smallNumberThreshold: 0.001
+    });
+
     // Warn the parent when the chart is ready
     let timeout: number | undefined = undefined;
     let chartReady = () => {

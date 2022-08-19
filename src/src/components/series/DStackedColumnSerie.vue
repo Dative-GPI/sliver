@@ -81,19 +81,15 @@ export default class DStackedColumnSerie extends Vue {
 
   setName(): void {
     this.serie!.set("name", this.name);
-    this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+    this.setLegendLabelText();
   }
 
   setShowTooltip(): void {
     if (this.showTooltip) {
-      this.serie!.columns.template.setAll({
-        tooltipText: this.tooltipText
-      });
+      this.serie!.columns.template.set("tooltipText", this.tooltipText);
     }
     else {
-      this.serie!.columns.template.setAll({
-        tooltipText: undefined
-      });      
+      this.serie!.columns.template.set("tooltipText", undefined);    
     }
   }
 
@@ -118,11 +114,13 @@ export default class DStackedColumnSerie extends Vue {
       stacked: true,
       categoryXField: this.categoryCodeXField,
       valueYField: this.valueYField,
-      tooltipX: am5.percent(100),
-      tooltipY: am5.percent(100),
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.StackedColumnSerie }
     }));
+
+    this.serie.columns.template.setAll({
+      tooltipY: am5.percent(0)
+    });
 
     // Set updatable properties
     this.setName();

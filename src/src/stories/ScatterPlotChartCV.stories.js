@@ -92,7 +92,7 @@ Default.args = {
   xAxisLabelsMaxWidth: 100,
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#",
+  yAxisTooltipNumberFormat: "#,###.###### a",
   serieShowTooltip: true,
   serieTooltipText: "{dataItem.dataContext.categoryX}: {dataItem.dataContext.valueZ}"
 };

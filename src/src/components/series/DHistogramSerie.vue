@@ -78,6 +78,12 @@ export default class DHistogramSerie extends Vue {
   @Watch("fillOpacity")
   onFillOpacityChange = this.setFillOpacity;
 
+  @Prop({ required: false, default: false })
+  stacked!: boolean;
+
+  @Watch("stacked")
+  onStackedChange = this.setStacked;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -96,16 +102,10 @@ export default class DHistogramSerie extends Vue {
 
   setShowTooltip(): void {
     if (this.showTooltip) {
-      this.serie!.columns.template.setAll({
-        tooltipY: am5.percent(0),
-        tooltipX: am5.percent(50),
-        tooltipText: this.tooltipText
-      });
+      this.serie!.columns.template.set("tooltipText", this.tooltipText);
     }
     else {
-      this.serie!.columns.template.setAll({
-        tooltipText: undefined
-      });      
+      this.serie!.columns.template.set("tooltipText", undefined);    
     }
   }
 
@@ -115,6 +115,10 @@ export default class DHistogramSerie extends Vue {
 
   setFillOpacity(): void {
     this.serie!.columns.template.set("fillOpacity", this.fillOpacity);
+  }
+
+  setStacked(): void {
+    this.serie!.set("stacked", this.stacked);
   }
 
   setData(): void {
@@ -135,12 +139,17 @@ export default class DHistogramSerie extends Vue {
       userData: { serie: SerieEnum.HistogramSerie }
     }));
 
+    this.serie.columns.template.setAll({
+      tooltipY: am5.percent(0)
+    });
+
     this.serie.events.on("datavalidated", this.xAxisValidated);
 
     // Set updatable properties
     this.setName();
     this.setShowTooltip();
     this.setFillOpacity();
+    this.setStacked();
 
     // Add to legend
     if (this.legend != null) {

@@ -136,65 +136,30 @@ export default class DRangeSerie extends Vue {
       this.subTooltips = [];
     }
     else {
-      this.tooltip = am5.Tooltip.new(this.root, {});
-      this.serie!.set("tooltip", this.tooltip);
-      this.serie!.get("tooltip")!.label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-        if (target.dataItem && target.dataItem.dataContext) {
-          return this.tooltipText
-            .replace(`{${this.dateXField}}`, target.dataItem.dataContext[this.dateXField])
-            .replace(`{${this.valueYField}}`, target.dataItem.dataContext[this.valueYField])
-            .replace(`{${this.closeValueYField}}`, target.dataItem.dataContext[this.closeValueYField])
-            .replace(`{${this.name}}`, this.name);
-        }
-        return text;
+      this.tooltip = am5.Tooltip.new(this.root, {
+        labelText: this.tooltipText
       });
+      this.serie!.set("tooltip", this.tooltip);
+
       for (let i = 0; i < this.subSeries.length; i++) {
-        this.subTooltips.push(am5.Tooltip.new(this.root, {}));
-        this.subSeries[i].set("tooltip", this.subTooltips[i]);
-        this.subSeries[i]!.get("tooltip")!.label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-          if (target.dataItem && target.dataItem.dataContext) {
-            return this.subTooltipText
-              .replace(`{${this.dateXField}}`, target.dataItem.dataContext[this.dateXField])
-              .replace(`{${this.valueYField}}`, target.dataItem.dataContext[this.valueYField])
-              .replace(`{${this.closeValueYField}}`, target.dataItem.dataContext[this.closeValueYField])
-              .replace(`{${this.name}}`, this.name);
-          }
-          return text;
-        });
+        this.subTooltips.push(am5.Tooltip.new(this.root, {
+          labelText: this.subTooltipText
+        }));
+        this;this.subSeries[i].set("tooltip", this.subTooltips[i]);
       }
     }
   }
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.serie!.get("tooltip")!.label.adapters.remove("text");
-      this.serie!.get("tooltip")!.label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-        if (target.dataItem && target.dataItem.dataContext) {
-          return this.tooltipText
-            .replace(`{${this.dateXField}}`, target.dataItem.dataContext[this.dateXField])
-            .replace(`{${this.valueYField}}`, target.dataItem.dataContext[this.valueYField])
-            .replace(`{${this.closeValueYField}}`, target.dataItem.dataContext[this.closeValueYField])
-            .replace(`{${this.name}}`, this.name);
-        }
-        return text;
-      });
+      this.tooltip!.set("labelText", this.tooltipText);
     }
   }
 
   setSubTooltipText(): void {
     for (let i = 0; i < this.subTooltips.length; i++) {
       if (this.subTooltips[i] != null) {
-        this.subSeries[i]!.get("tooltip")!.label.adapters.remove("text");
-        this.subSeries[i]!.get("tooltip")!.label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-          if (target.dataItem && target.dataItem.dataContext) {
-            return this.subTooltipText
-              .replace(`{${this.dateXField}}`, target.dataItem.dataContext[this.dateXField])
-              .replace(`{${this.valueYField}}`, target.dataItem.dataContext[this.valueYField])
-              .replace(`{${this.closeValueYField}}`, target.dataItem.dataContext[this.closeValueYField])
-              .replace(`{${this.name}}`, this.name);
-          }
-          return text;
-        });
+        this.subTooltips[i].set("labelText", this.subTooltipText);
       }
     }
   }

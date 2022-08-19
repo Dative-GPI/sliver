@@ -53,7 +53,7 @@ const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
     let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
 
     tZero += elapsedTime;
-    vZero += (Math.floor(Math.random() * rangeValue) * plusOrMinus)
+    vZero += (Math.random() * rangeValue) * plusOrMinus
   }
 
   return {
@@ -94,8 +94,8 @@ Default.args = {
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#",
+  yAxisTooltipNumberFormat: "#,###.###### a",
   serieShowTooltip: true,
-  serieTooltipText: "{name}: {valueY}",
-  serieSubTooltipText: "{name}: {valueY}"
+  serieTooltipText: "{name}: {dataItem.dataContext.valueY}",
+  serieSubTooltipText: "{name}: {dataItem.dataContext.valueY}"
 };

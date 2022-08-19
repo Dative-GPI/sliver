@@ -41,7 +41,7 @@ export default class DCategoryXAxis extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{categoryX}" })
+  @Prop({ required: false, default: "{dataItem.dataContext.categoryX}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -53,7 +53,7 @@ export default class DCategoryXAxis extends Vue {
   @Watch("labelsOversizedBehavior")
   onLabelsOversizedBehaviorChange = this.setLabelsOversizedBehavior;
 
-  @Prop({ required: false, default: "{categoryX}" })
+  @Prop({ required: false, default: "{dataItem.dataContext.categoryX}" })
   labelsTooltipText!: string;
 
   @Watch("labelsTooltipText")
@@ -95,16 +95,10 @@ export default class DCategoryXAxis extends Vue {
         this.cursor!.set("xAxis", undefined);
         hideCursor = true;
       }
-      this.tooltip = am5.Tooltip.new(this.root, {});
-      this.axis!.set("tooltip", this.tooltip);
-      this.axis!.get("tooltip").label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-        if (target.dataItem && target.dataItem.dataContext) {
-          return this.tooltipText
-            .replace(`{${this.categoryField}}`, target.dataItem.dataContext[this.categoryField])
-            .replace(`{${this.categoryCodeField}}`, target.dataItem.dataContext[this.categoryCodeField]);
-        }
-        return text;
+      this.tooltip = am5.Tooltip.new(this.root, {
+        labelText: this.tooltipText
       });
+      this.axis!.set("tooltip", this.tooltip);
       if (this.cursor != null && hideCursor) {
         this.cursor!.lineX.set("visible", true);
         this.cursor!.set("xAxis", this.axis!);
@@ -114,15 +108,7 @@ export default class DCategoryXAxis extends Vue {
 
   setTooltipText(): void {
     if (this.tooltip != null) {
-      this.axis!.get("tooltip")!.label.adapters.remove("text");
-      this.axis!.get("tooltip")!.label.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
-        if (target.dataItem && target.dataItem.dataContext) {
-          return this.tooltipText
-            .replace(`{${this.categoryField}}`, target.dataItem.dataContext[this.categoryField])
-            .replace(`{${this.categoryCodeField}}`, target.dataItem.dataContext[this.categoryCodeField]);
-        }
-        return text;
-      });
+      this.tooltip.set("labelText", this.tooltipText);
     }
   }
 

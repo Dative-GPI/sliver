@@ -92,6 +92,11 @@ export default class DXYChart extends Vue {
     this.root.locale = getLocale(this.locale);
     this.root.timezone = getTimezone(this.timeOffset);
 
+    this.root.numberFormatter.setAll({
+      numberFormat: "#,###.###### a",
+      smallNumberThreshold: 0.001
+    });
+
     // Warn the parent when the chart is ready
     let timeout: number | undefined = undefined;
     let chartReady = () => {

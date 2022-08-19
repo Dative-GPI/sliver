@@ -118,10 +118,15 @@ export default class DValueTAxis extends Vue {
   @Watch("ranges")
   onRangesChange = this.setRanges;
 
+  @Prop({ required: false, default: undefined })
+  unit!: string | undefined;
+
   @ProvideReactive(XAXIS)
   axis: am5xy.ValueAxis<am5radar.AxisRendererCircular> | any | null = null;
 
-  upAndRunning = false;
+  debugLabel: number = 0;
+
+  upAndRunning: boolean = false;
 
   setMin(): void {
     this.axis!.set("min", this.min);
@@ -217,11 +222,23 @@ export default class DValueTAxis extends Vue {
       });
     }
   }
+
+  setUnit(): void {
+    if (this.unit != null) {
+      this.axis.get("renderer").labels.template.adapters.remove("text");
+      this.axis.get("renderer").labels.template.adapters.add("text", (value?: string) => {
+        if (value != null && value.length > 0 && this.unit != null) {
+          this.debugLabel = Math.max(this.debugLabel, value.length);
+          return value + this.unit;
+        }
+        return value;
+      });
+    }
+  }
   
   mounted(): void {
     this.axis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
-      renderer: am5radar.AxisRendererCircular.new(this.root, {}),
-      numberFormat: "#a"
+      renderer: am5radar.AxisRendererCircular.new(this.root, {})
     }));
 
     this.setMin();
@@ -245,6 +262,7 @@ export default class DValueTAxis extends Vue {
     this.setLabelsInside();
 
     this.setRanges();
+    this.setUnit();
 
     this.upAndRunning = true;
   }

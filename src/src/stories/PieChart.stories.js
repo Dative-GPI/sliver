@@ -45,7 +45,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePieSerie("Categories", ["Pineapple", "Orange", "Cherry", "Strawberry", "Watermelon", "Canteloup", "Blueberry", "Apple", "Peach", "Pear", "Cherry", "Cramberry"], 500 ) }
+      { ...makePieSerie("Categories", ["Pineapple", "Orange", "Cherry", "Strawberry", "Watermelon", "Canteloup", "Blueberry", "Apple", "Peach", "Pear", "Cherry", "Cramberry"], 250000 ) }
     ]
   },
   minHeight: '400px',

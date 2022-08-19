@@ -68,7 +68,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeHeatmapSerie("Occupancy", 1640815320000, 120000, ["Dawn", "Morning", "Afternoon", "Evening", "Night"], 100, 3) }
+      { ...makeHeatmapSerie("Occupancy", 1640815320000, 120000, ["Dawn", "Morning", "Afternoon", "Evening", "Night"], 150000, 3) }
     ]
   },
   minHeight: '400px',
@@ -94,7 +94,7 @@ Default.args = {
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#",
+  yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisCellStartLocation: 0,
   yAxisCellEndLocation: 1,
   minColor: "#00ffff",

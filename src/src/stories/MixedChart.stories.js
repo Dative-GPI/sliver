@@ -164,7 +164,7 @@ Default.args = {
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#",
+  yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisBisOpposite: true,
   yAxisBisShowTooltip: true,
   yAxisBisCellStartLocation: 0.5,

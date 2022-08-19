@@ -54,12 +54,6 @@ export default class DValueYAxis extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "#" })
-  tooltipNumberFormat!: string;
-
-  @Watch("tooltipNumberFormat")
-  onTooltipNumberFormatChange = this.setTooltipNumberFormat;
-
   @Prop({ required: false, default: undefined })
   min!: number | undefined;
 
@@ -90,12 +84,19 @@ export default class DValueYAxis extends Vue {
   @Watch("ranges")
   onRangesChange = this.setRanges;
 
+  @Prop({ required: false, default: undefined })
+  unit!: string | undefined;
+
+  @Watch("unit")
+  onUnitChange = this.setUnit;
+
   @ProvideReactive(YAXIS)
   axis: any = null;
 
   tooltip: am5.Tooltip | null = null;
+  debugLabel: number = 0;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setOpposite(): void {
     this.axis!.get("renderer").set("opposite", this.opposite);
@@ -148,10 +149,6 @@ export default class DValueYAxis extends Vue {
         this.cursor!.set("yAxis", this.axis!);
       }
     }
-  }
-
-  setTooltipNumberFormat(): void {
-    this.axis!.set("tooltipNumberFormat", this.tooltipNumberFormat);
   }
 
   setMin(): void {
@@ -216,11 +213,34 @@ export default class DValueYAxis extends Vue {
     }
   }
 
+  setUnit(): void {
+    if (this.unit != null) {
+      if (this.tooltip != null) {
+        this.tooltip.label.adapters.remove("text");
+        this.tooltip.label.adapters.add("text", (value?: string) => {
+          if (this.unit != null) {
+            return value + this.unit;
+          }
+          return value;
+        });
+      }
+      this.axis.get("renderer").labels.template.adapters.remove("text");
+      this.axis.get("renderer").labels.template.adapters.add("text", (value?: string) => {
+        if (value != null && value.length > 0 && this.unit != null) {
+          this.debugLabel = Math.max(this.debugLabel, value.length);
+          return value + this.unit;
+        }
+        else {
+          return "".padStart(this.debugLabel, "X") + this.unit;
+        }
+      });
+    }
+  }
+
   mounted(): void {
     // Add to chart
     this.axis = this.chart.yAxes.push(am5xy.ValueAxis.new(this.root, {
-      renderer: am5xy.AxisRendererY.new(this.root, {}),
-      numberFormat: "#a"
+      renderer: am5xy.AxisRendererY.new(this.root, {})
     }));
 
     // Add to cursor
@@ -233,12 +253,12 @@ export default class DValueYAxis extends Vue {
     this.setShowGrid();
     this.setShowLabels();
     this.setShowTooltip();
-    this.setTooltipNumberFormat();
     this.setMin();
     this.setMax();
     this.setStrictMinMax();
     this.setHeight();
     this.setRanges();
+    this.setUnit();
 
     this.upAndRunning = true;
   }

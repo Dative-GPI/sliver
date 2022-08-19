@@ -54,12 +54,6 @@ export default class DValueXAxis extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "#" })
-  tooltipNumberFormat!: string;
-
-  @Watch("tooltipNumberFormat")
-  onTooltipNumberFormatChange = this.setTooltipNumberFormat;
-
   @Prop({ required: false, default: undefined })
   min!: number | undefined;
 
@@ -96,13 +90,17 @@ export default class DValueXAxis extends Vue {
   @Watch("strokeWidth")
   onStrokeWidthChange = this.setStrokeWidth;
 
-  @Prop({ required: false, default: true })
-  gridForceHidden!: boolean;
+  @Prop({ required: false, default: undefined })
+  unit!: string | undefined;
+
+  @Watch("unit")
+  onUnitChange = this.setUnit;
 
   @ProvideReactive(XAXIS)
-  axis: any = null;
+  axis: any | null = null;
 
   tooltip: am5.Tooltip | null = null;
+  debugLabel: number = 0;
 
   upAndRunning = false;
 
@@ -114,6 +112,9 @@ export default class DValueXAxis extends Vue {
     this.axis!.set("logarithmic", this.logarithmic);
     if (this.logarithmic) {
       this.axis!.set("treatZeroAs", 0.0000001);
+    }
+    else {
+      this.axis!.set("treatZeroAs", 0);
     }
   }
 
@@ -157,10 +158,6 @@ export default class DValueXAxis extends Vue {
         this.cursor!.set("xAxis", this.axis!);
       }
     }
-  }
-
-  setTooltipNumberFormat(): void {
-    this.axis!.set("tooltipNumberFormat", this.tooltipNumberFormat);
   }
 
   setMin(): void {
@@ -207,7 +204,7 @@ export default class DValueXAxis extends Vue {
             text: range.label,
             inside: true,
             centerY: 30,
-            radius: 10,
+            // radius: 10,
             fill: textColor(range.color)
           });
         }
@@ -228,11 +225,34 @@ export default class DValueXAxis extends Vue {
     this.axis!.get("renderer").set("strokeWidth", this.strokeWidth);
   }
 
+  setUnit(): void {
+    if (this.unit != null) {
+      if (this.tooltip != null) {
+        this.tooltip.label.adapters.remove("text");
+        this.tooltip.label.adapters.add("text", (value?: string) => {
+          if (this.unit != null) {
+            return value + this.unit;
+          }
+          return value;
+        });
+      }
+      this.axis.get("renderer").labels.template.adapters.remove("text");
+      this.axis.get("renderer").labels.template.adapters.add("text", (value?: string) => {
+        if (value != null && value.length > 0 && this.unit != null) {
+          this.debugLabel = Math.max(this.debugLabel, value.length);
+          return value + this.unit;
+        }
+        else {
+          return "".padStart(this.debugLabel, "X") + this.unit;
+        }
+      });
+    }
+  }
+
   mounted(): void {
     // Add to chart
     this.axis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
-      renderer: am5xy.AxisRendererX.new(this.root, {}),
-      numberFormat: "#a"
+      renderer: am5xy.AxisRendererX.new(this.root, {})
     }));
 
     // Add to cursor
@@ -245,13 +265,13 @@ export default class DValueXAxis extends Vue {
     this.setShowGrid();
     this.setShowLabels();
     this.setShowTooltip();
-    this.setTooltipNumberFormat();
     this.setMin();
     this.setMax();
     this.setStrictMinMax();
     this.setRanges();
     this.setStrokeOpacity();
     this.setStrokeWidth();
+    this.setUnit();
 
     this.upAndRunning = true;
   }

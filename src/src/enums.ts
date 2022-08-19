@@ -17,6 +17,10 @@ export enum SerieEnum {
   LineSerie = 4,
   PieSerie = 5,
   PlanningSerie = 6,
-  ScatterPlotSerie = 7,
-  StackedColumnSerie = 8
+  ProgressIndicator = 7,
+  RangeSerie = 8,
+  ScatterPlotSerie = 9,
+  StackedColumnSerie = 10,
+  StepLineSerie = 11,
+  TopSerie = 12
 }

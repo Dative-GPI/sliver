@@ -94,7 +94,7 @@ Default.args = {
   xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#",
+  yAxisTooltipNumberFormat: "#,###.###### a",
   serieShowTooltip: true,
   serieTooltipText: "{name}: {dataItem.dataContext.valueY}"
 };
