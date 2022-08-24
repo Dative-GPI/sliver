@@ -9,7 +9,7 @@ import am5locales_pt_PT from "@amcharts/amcharts5/locales/pt_PT";
 
 import { PositionEnum } from "./enums";
 
-export const updateCategories = (formers: any[], data: any[], categoryField: string, categoryCodeField: string, valueField: string, serieId: number, sort: boolean, position: PositionEnum): any[] => {
+export const updateCategories = (formers: any[], data: any[], categoryField: string, categoryCodeField: string, openValueField: string | null, valueField: string, serieId: number, sort: boolean, position: PositionEnum): any[] => {
   for (let i = 0; i < formers.length; i++) {
     let serieIndex = formers[i].series.indexOf(serieId);
     while (serieIndex !== -1) {
@@ -29,12 +29,12 @@ export const updateCategories = (formers: any[], data: any[], categoryField: str
         [categoryField]: notEmpty,
         [categoryCodeField]: data[i][categoryCodeField],
         series: [serieId],
-        values: [data[i][valueField]]
+        values: openValueField == null ? [data[i][valueField]] : [(data[i][valueField] as number) - data[i][openValueField]]
       });
     }
     else if (!item.series.includes(serieId)) {
       item.series.push(serieId);
-      item.values.push(data[i][valueField]);
+      item.values.push(openValueField == null ? data[i][valueField] : data[i][valueField] - data[i][openValueField]);
     }
   }
 
@@ -60,7 +60,10 @@ export const updateCategories = (formers: any[], data: any[], categoryField: str
 
 export const sortValues = (former: any[]): any[] => {
   let test =  former.slice().sort((a: any, b: any) => {
-    if (a.values[0] > b.values[0]) return 1;
+    if (
+      a.values.reduce((value: any, current: any) => parseFloat(value) + parseFloat(current), 0) >
+      b.values.reduce((value: any, current: any) => parseFloat(value) + parseFloat(current), 0)
+    ) return 1;
     else return -1;
   });
   return test;

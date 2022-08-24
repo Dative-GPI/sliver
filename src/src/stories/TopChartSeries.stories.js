@@ -49,8 +49,8 @@ const makeColumnSerie = (name, categories, rangeValue) => {
   for (let i = 0; i < categories.length; i++) {
     data.push({
       categoryY: categories[i],
-      categoryCodeY: name + "-" + categories[i],
-      valueX: +(Math.random() * rangeValue)
+      categoryCodeY: categories[i],
+      valueX: Math.floor((Math.random() * rangeValue)) + 2
     });
   }
 
@@ -60,13 +60,43 @@ const makeColumnSerie = (name, categories, rangeValue) => {
   };
 }
 
+const processColumnSeries = (series) => {
+  series = series.sort((a, b) => a.serie > b.serie ? 1 : -1);
+  series[0].data.forEach(data => {
+    data.selfValueX = data.valueX
+    data.closeValueX = data.valueX;
+    data.valueX = 0;
+  });
+
+  if (series.length > 1) {
+    for (let i = 1; i < series.length; i++) {
+      series[i].data.forEach(data => {
+        let previous = series[i - 1].data.find(d => d.categoryCodeY == data.categoryCodeY);
+        if (previous != null) {
+          data.selfValueX = data.valueX;
+          data.closeValueX = data.valueX + previous.closeValueX;
+          data.valueX = previous.closeValueX;
+        }
+        else {
+          data.selfValueX = data.valueX
+          data.closeValueX = data.valueX;
+          data.valueX = 0;
+        }
+      });
+    }
+  }
+  return series;
+}
+
 export const Default = Template.bind({});
 Default.args = {
   data: {
-    series: [
-      { ...makeColumnSerie("Delta", ["Marcus Phoenix", "Dominic Santiago", "Augustus Cole", "Damon Baird"], 0.001 ) },
-      { ...makeColumnSerie("Charlie", ["Marcus Phoenix", "Anthony Carmine", "Benjamin Carmine", "Clay Carmine"], 0.001 ) }
-    ]
+    series:
+      processColumnSeries([
+        { ...makeColumnSerie("Delta", ["Marcus Phoenix", "Dominic Santiago"], 5 ) },
+        { ...makeColumnSerie("Epsilon", ["Marcus Phoenix", "Dominic Santiago"], 5 ) },
+        // { ...makeColumnSerie("Charlie", ["Anthony Carmine", "Benjamin Carmine", "Clay Carmine"], 5 ) }
+      ])
   },
   minHeight: '400px',
   locale: "fr-FR",
@@ -97,5 +127,5 @@ Default.args = {
   yAxisLabelsOversizedBehavior: "truncate",
   yAxisLabelsMaxWidth: 100,
   serieShowTooltip: true,
-  serieTooltipText: "{dataItem.dataContext.categoryY}: {dataItem.dataContext.valueX}"
+  serieTooltipText: "{dataItem.dataContext.categoryY}: {dataItem.dataContext.selfValueX}"
 };

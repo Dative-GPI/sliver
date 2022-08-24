@@ -43,7 +43,13 @@ export default class DTopSerie extends Vue {
   onNameChange = this.setName;
 
   @Prop({ required: false, default: "valueX" })
+  openValueXField!: string;
+
+  @Prop({ required: false, default: "closeValueX" })
   valueXField!: string;
+
+  @Prop({ required: false, default: "selfValueX" })
+  closeValueXField!: string;
 
   @Prop({ required: false, default: "categoryY" })
   categoryYField!: string;
@@ -57,7 +63,7 @@ export default class DTopSerie extends Vue {
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{dataItem.dataContext.categoryY}: {dataItem.dataContext.valueX}" })
+  @Prop({ required: false, default: "{dataItem.dataContext.categoryY}: {dataItem.dataContext.selfValueX}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -86,12 +92,6 @@ export default class DTopSerie extends Vue {
 
   @Watch("templateWidth")
   onTemplateWidthChange = this.setTemplateWidth;
-
-  @Prop({ required: false, default: 5 })
-  templateCornerRadius!: number;
-
-  @Watch("templateCornerRadius")
-  onTemplateCornerRadiusChange = this.setTemplateCornerRadius;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -137,21 +137,14 @@ export default class DTopSerie extends Vue {
     this.serie!.columns.template.set("width", this.templateWidth);
   }
 
-  setTemplateCornerRadius(): void {
-    this.serie!.columns.template.setAll({
-      cornerRadiusTR: this.templateCornerRadius,
-      cornerRadiusBR: this.templateCornerRadius
-    });
-  }
-
   setData(): void {
     let sortedData = this.data.slice().sort((a: any, b: any) => {
-      if (a[this.valueXField] < b[this.valueXField]) return -1;
-      if (a[this.valueXField] > b[this.valueXField]) return 1;
+      if (a[this.closeValueXField] < b[this.closeValueXField]) return -1;
+      if (a[this.closeValueXField] > b[this.closeValueXField]) return 1;
       return 0;
     });
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, sortedData, this.categoryYField, this.categoryCodeYField, this.valueXField, this.serieId, false, PositionEnum.Abscissa)
+      updateCategories(this.yAxis.data.values, sortedData, this.categoryYField, this.categoryCodeYField, this.openValueXField, this.valueXField, this.serieId, false, PositionEnum.Abscissa)
     );
     this.yAxis.data.setAll(
       sortValues(this.yAxis.data.values)
@@ -166,7 +159,7 @@ export default class DTopSerie extends Vue {
     this.serie = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
       xAxis: this.xAxis,
       yAxis: this.yAxis,
-      stacked: true,
+      openValueXField: this.openValueXField,
       valueXField: this.valueXField,
       categoryYField: this.categoryCodeYField,
       sequencedInterpolation: true,
@@ -186,7 +179,6 @@ export default class DTopSerie extends Vue {
     this.setColumnsHeight();
     this.setColumnsOpacity();
     this.setTemplateWidth();
-    this.setTemplateCornerRadius();
 
     // Add to legend
     if (this.legend != null) {
@@ -210,7 +202,7 @@ export default class DTopSerie extends Vue {
 
     // Remove from axis
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.categoryCodeYField, this.valueXField, this.serieId, false, PositionEnum.Abscissa)
+      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.categoryCodeYField, this.valueXField, this.closeValueXField, this.serieId, false, PositionEnum.Abscissa)
     );
 
     // Dispose

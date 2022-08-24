@@ -47,10 +47,13 @@ const Template = (args, { argTypes }) => ({
 const makeColumnSerie = (name, categories, rangeValue) => {
   var data = [];
   for (let i = 0; i < categories.length; i++) {
+    let value = Math.floor(Math.random() * rangeValue) + 1;
     data.push({
       categoryY: categories[i],
-      categoryCodeY: name + "-" + categories[i],
-      valueX: Math.floor(Math.random() * rangeValue)
+      categoryCodeY: categories[i],
+      valueX: 0,
+      closeValueX: value,
+      selfValueX: value
     });
   }
 
@@ -96,5 +99,5 @@ Default.args = {
   yAxisLabelsOversizedBehavior: "truncate",
   yAxisLabelsMaxWidth: 100,
   serieShowTooltip: true,
-  serieTooltipText: "{dataItem.dataContext.categoryY}: {dataItem.dataContext.valueX}"
+  serieTooltipText: "{dataItem.dataContext.categoryY}: {dataItem.dataContext.selfValueX}"
 };
