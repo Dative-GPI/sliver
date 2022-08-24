@@ -166,6 +166,7 @@ export default class DTopSerie extends Vue {
     this.serie = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
       xAxis: this.xAxis,
       yAxis: this.yAxis,
+      stacked: true,
       valueXField: this.valueXField,
       categoryYField: this.categoryCodeYField,
       sequencedInterpolation: true,
