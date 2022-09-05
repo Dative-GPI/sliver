@@ -9,11 +9,12 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 
 import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
+import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 import { AMROOT, CHART, LEGEND } from "../../literals";
+import { ColorSets, GetColors } from "../../colors";
 import { SerieEnum } from "../../enums";
 import { uuidv4 } from "../../helpers";
-import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 @Component({})
 export default class DPieSerie extends Vue {
@@ -43,6 +44,9 @@ export default class DPieSerie extends Vue {
 
   @Prop({ required: false, default: "subs" })
   subField!: string;
+
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
 
   @Prop({ required: false, default: false })
   alignLabels!: boolean;
@@ -371,6 +375,10 @@ export default class DPieSerie extends Vue {
       tooltipX: am5.percent(75),
       tooltipY: am5.percent(75)
     });
+
+    if (![ColorSets.Default].includes(this.colorSet)) {
+      this.serie.get("colors")!.set("colors", GetColors(this.colorSet));
+    }
     
     this.serie.slices.template.events.on("click", this.handleBreakDownSlices);
 

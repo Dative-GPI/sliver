@@ -77,7 +77,6 @@ export default class DClockHand extends Vue {
   @Watch("handTooltipX")
   onHandTooltipXChange = this.setHandTooltipX;
 
-  colorSet: am5.ColorSet | null = null;
   clockHand: am5radar.ClockHand | null = null;
   axisDataItem: any = null;
 
@@ -107,7 +106,7 @@ export default class DClockHand extends Vue {
   }
 
   setColorIndex(): void {
-    let color = this.colorSet!.getIndex(this.colorIndex);
+    let color = this.chart!.get("colors")!.getIndex(this.colorIndex);
 
     this.clockHand!.pin.set("fill", color);
     this.clockHand!.hand.set("fill", color);
@@ -145,8 +144,6 @@ export default class DClockHand extends Vue {
   }
 
   mounted(): void {
-    this.colorSet = am5.ColorSet.new(this.root, {});
-
     this.clockHand = am5radar.ClockHand.new(this.root, {
       userData: { serie: SerieEnum.ClockHand }
     });
@@ -183,9 +180,12 @@ export default class DClockHand extends Vue {
     this.xAxis.axisRanges.removeValue(this.axisDataItem!);
 
     // Dispose
-    this.xAxis!.disposeDataItem(this.axisDataItem!);
-    this.clockHand!.dispose();
-    this.colorSet!.dispose();
+    if (this.axisDataItem != null && !this.axisDataItem!.isDisposed()) {
+      this.xAxis!.disposeDataItem(this.axisDataItem!);
+    }
+    if (this.clockHand != null && !this.clockHand!.isDisposed()) {
+      this.clockHand!.dispose();
+    }
   }
 }
 </script>

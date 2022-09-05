@@ -43,7 +43,7 @@ export default class DPieChart extends Vue {
   @Watch("layout")
   onLayoutChange = this.setLayout;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setLayout(): void {
     switch(this.layout) {

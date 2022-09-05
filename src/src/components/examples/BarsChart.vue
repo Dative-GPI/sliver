@@ -8,6 +8,7 @@
       :min-height="minHeight"
       :layout="chartLayout"
       :locale="locale"
+      :colorSet="colorSet"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -54,6 +55,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
+import { ColorSets } from "../../colors";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
 
@@ -69,6 +71,9 @@ export default class BarsChart extends Vue {
 
   @Prop({ required: true })
   locale!: string;
+
+  @Prop({ required: true })
+  colorSet!: ColorSets;
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

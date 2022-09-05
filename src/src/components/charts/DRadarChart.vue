@@ -19,6 +19,7 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { AMROOT, CHART } from "../../literals";
 import { LayoutEnum } from "../../enums";
 import { getLocale } from "../../helpers";
+import { ColorSets, GetColors } from "../../colors";
 
 @Component({})
 export default class DRadarChart extends Vue {
@@ -36,6 +37,9 @@ export default class DRadarChart extends Vue {
 
   @Prop({ required: false, default: '400px' })
   minHeight!: string;
+
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
 
   @Prop({ required: false, default: LayoutEnum.Vertical })
   layout!: LayoutEnum;
@@ -138,6 +142,10 @@ export default class DRadarChart extends Vue {
 
     // Add chart to root
     this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {}));
+
+    if (![ColorSets.Default].includes(this.colorSet)) {
+      this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
+    }
 
     this.setLayout();
     this.setPanX();

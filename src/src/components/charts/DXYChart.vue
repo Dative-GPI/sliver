@@ -16,8 +16,9 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
-import { AMROOT, CHART } from "../../literals";
+import { ColorSets, GetColors } from "../../colors";
 import { LayoutEnum } from "../../enums";
+import { AMROOT, CHART } from "../../literals";
 import { getLocale, getTimezone } from "../../helpers";
 
 @Component({})
@@ -40,6 +41,9 @@ export default class DXYChart extends Vue {
   @Prop({ required: false, default: '400px' })
   minHeight!: string;
 
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
   @Prop({ required: false, default: LayoutEnum.Vertical })
   layout!: LayoutEnum;
 
@@ -58,7 +62,7 @@ export default class DXYChart extends Vue {
   @Watch("wheelY")
   onWheelYChange = this.setWheelY;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setLayout(): void {
     switch(this.layout) {
@@ -115,6 +119,10 @@ export default class DXYChart extends Vue {
       maxTooltipDistance: 0
     }));
 
+    if (![ColorSets.Default].includes(this.colorSet)) {
+      this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
+    }
+
     // Hack to bypass the cursor behavior when clicking the zoom out button
     this.chart.zoomOutButton.events.on("click", () => {
       let cursor = this.chart!.get("cursor");
@@ -137,8 +145,12 @@ export default class DXYChart extends Vue {
     this.root!.container.children.removeValue(this.chart!);
     
     // Dispose
-    this.chart!.dispose();
-    this.root!.dispose();
+    if (this.chart != null && !this.chart!.isDisposed()) {
+      this.chart!.dispose();
+    }
+    if (this.root != null && !this.root!.isDisposed()) {
+      this.root!.dispose();
+    }
   }
 }
 </script>

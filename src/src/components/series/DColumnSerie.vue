@@ -153,7 +153,9 @@ export default class DColumnSerie extends Vue {
     );
 
     // Dispose
-    this.serie!.dispose();
+    if (this.serie != null && !this.serie.isDisposed()) {
+      this.serie!.dispose();
+    }
   }
 }
 </script>

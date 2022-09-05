@@ -48,10 +48,9 @@ export default class DProgressIndicator extends Vue {
   @Watch("colorIndex")
   onColorIndexChange = this.setColorIndex;
 
-  colorSet: am5.ColorSet | null = null;
   progressIndicator: any = null;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setName(): void {
     // Remove from legend
@@ -82,7 +81,7 @@ export default class DProgressIndicator extends Vue {
       this.legend.data.removeValue(this.progressIndicator!);
     }
 
-    let color = this.colorSet!.getIndex(this.colorIndex);
+    let color = this.chart!.get("colors")!.getIndex(this.colorIndex);
 
     this.progressIndicator!.set("fill", color);
     this.progressIndicator!.get("bullet").get("sprite").set("fill", color);
@@ -94,8 +93,6 @@ export default class DProgressIndicator extends Vue {
   }
 
   mounted(): void {
-    this.colorSet = am5.ColorSet.new(this.root, {});
-
     // Add to axis
     this.progressIndicator = this.xAxis.makeDataItem({
       bullet: am5xy.AxisBullet.new(this.root, {
@@ -134,7 +131,9 @@ export default class DProgressIndicator extends Vue {
     this.xAxis.axisRanges.removeValue(this.progressIndicator!);
 
     // Dispose
-    this.xAxis!.disposeDataItem(this.progressIndicator!);
+    if (this.progressIndicator != null && !this.progressIndicator!.isDisposed()) {
+      this.xAxis!.disposeDataItem(this.progressIndicator!);
+    }
   }
 }
 </script>
