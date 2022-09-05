@@ -103,6 +103,7 @@ export default class DScatterPlotSerie extends Vue {
   onDataChange = this.setData;
 
   serie: am5xy.LineSeries | null = null;
+  tooltip: am5.Tooltip | null = null;
 
   upAndRunning: boolean = false;
 
@@ -123,14 +124,37 @@ export default class DScatterPlotSerie extends Vue {
       circleTemplate: am5.Template.new<am5.Circle>({ radius: this.bulletRadius })
     });
 
-    this.serie!.bullets.push(() => {
-      return am5.Bullet.new(this.root, {
-        sprite: am5.Circle.new(this.root, {
-          tooltipText: this.showTooltip ? this.tooltipText : undefined,
-          fill: this.serie!.get("fill")
-        }, this.serie!.get("userData").circleTemplate)
+    if (!this.showTooltip) {
+      if (this.tooltip != null && !this.tooltip.isDisposed()) {
+        this.tooltip!.dispose();
+        this.tooltip = null;
+      }
+      this.serie!.bullets.push(() => {
+        return am5.Bullet.new(this.root, {
+          sprite: am5.Circle.new(this.root, {
+            fill: this.serie!.get("fill")
+          }, this.serie!.get("userData").circleTemplate)
+        });
       });
-    });
+    }
+    else {
+      this.tooltip = am5.Tooltip.new(this.root, {
+        autoTextColor: false
+      });
+      this.tooltip.label.set("fill", am5.color("#000000"));
+      this.tooltip.get("background")!.setAll({
+        fillOpacity: 0.25
+      });
+      this.serie!.bullets.push(() => {
+        return am5.Bullet.new(this.root, {
+          sprite: am5.Circle.new(this.root, {
+            tooltipText: this.tooltipText || undefined,
+            tooltip: this.tooltip || undefined,
+            fill: this.serie!.get("fill")
+          }, this.serie!.get("userData").circleTemplate)
+        });
+      });
+    }
     
     this.setHeatRules();
   }
@@ -228,7 +252,12 @@ export default class DScatterPlotSerie extends Vue {
     }
 
     // Dispose
-    this.serie!.dispose();
+    if (this.tooltip != null && !this.tooltip!.isDisposed()) {
+      this.tooltip!.dispose();
+    }
+    if (this.serie != null && !this.serie!.isDisposed()) {
+      this.serie!.dispose();
+    }
   }
 }
 </script>

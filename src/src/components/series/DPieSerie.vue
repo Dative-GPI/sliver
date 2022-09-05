@@ -31,7 +31,7 @@ export default class DPieSerie extends Vue {
   name!: string;
 
   @Watch("name")
-  onNameCHange = this.setName;
+  onNameChange = this.setName;
 
   @Prop({ required: false, default: "categoryX" })
   categoryField!: string;

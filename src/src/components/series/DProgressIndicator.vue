@@ -49,6 +49,7 @@ export default class DProgressIndicator extends Vue {
   onColorIndexChange = this.setColorIndex;
 
   progressIndicator: any = null;
+  tooltip: am5.Tooltip | null = null;
 
   upAndRunning: boolean = false;
 
@@ -93,17 +94,21 @@ export default class DProgressIndicator extends Vue {
   }
 
   mounted(): void {
+    this.tooltip = am5.Tooltip.new(this.root, {
+      autoTextColor: false
+    });
+    this.tooltip.label.set("fill", am5.color("#000000"));
+    this.tooltip.get("background")!.setAll({
+      fill: this.chart!.get("colors")!.getIndex(this.colorIndex)
+    });
+
     // Add to axis
     this.progressIndicator = this.xAxis.makeDataItem({
       bullet: am5xy.AxisBullet.new(this.root, {
         sprite: am5.Graphics.new(this.root, {
-          tooltipY: 0,
+          tooltip: this.tooltip!,
           tooltipText: "{name}: [bold]{value}[/]",
-          tooltip: am5.Tooltip.new(this.root, {
-            getFillFromSprite: true,
-            getStrokeFromSprite: true,
-            autoTextColor: false
-          }),
+          tooltipY: 0,
           centerY: 85,
           centerX: am5.p50,
           svgPath: "M40.8 20.4C40.8 9.1 31.7 0 20.4 0C9.1 0 0 9.1 0 20.4C0 31.7 20.4 52.8 20.4 52.8C20.4 52.8 40.8 31.7 40.8 20.4Z"
@@ -131,6 +136,9 @@ export default class DProgressIndicator extends Vue {
     this.xAxis.axisRanges.removeValue(this.progressIndicator!);
 
     // Dispose
+    if(this.tooltip != null && !this.tooltip!.isDisposed()) {
+      this.tooltip!.dispose();
+    }
     if (this.progressIndicator != null && !this.progressIndicator!.isDisposed()) {
       this.xAxis!.disposeDataItem(this.progressIndicator!);
     }

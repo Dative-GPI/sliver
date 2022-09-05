@@ -76,6 +76,7 @@ export default class DStackedColumnSerie extends Vue {
   onDataChange = this.setData;
 
   serie: am5xy.ColumnSeries | null = null;
+  tooltip: am5.Tooltip | null = null;
 
   upAndRunning: boolean = false;
 
@@ -85,11 +86,27 @@ export default class DStackedColumnSerie extends Vue {
   }
 
   setShowTooltip(): void {
-    if (this.showTooltip) {
-      this.serie!.columns.template.set("tooltipText", this.tooltipText);
+    if (!this.showTooltip) {
+      if (this.tooltip != null && !this.tooltip.isDisposed()) {
+        this.tooltip!.dispose();
+        this.serie!.columns.template.set("tooltip", undefined);
+        this.serie!.columns.template.set("tooltipText", undefined);
+        this.tooltip = null;
+      }
     }
     else {
-      this.serie!.columns.template.set("tooltipText", undefined);    
+      this.tooltip = am5.Tooltip.new(this.root, {
+        autoTextColor: false,
+        labelText: this.tooltipText
+      });
+      this.tooltip.label.set("fill", am5.color("#000000"));
+      this.tooltip.get("background")!.set("fillOpacity", 0.25);
+      
+      this.serie!.columns.template.setAll({
+        tooltip: this.tooltip,
+        tooltipText: this.tooltipText,
+        tooltipY: am5.percent(0)
+      });
     }
   }
 
@@ -117,10 +134,6 @@ export default class DStackedColumnSerie extends Vue {
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.StackedColumnSerie }
     }));
-
-    this.serie.columns.template.setAll({
-      tooltipY: am5.percent(0)
-    });
 
     // Set updatable properties
     this.setName();
@@ -152,7 +165,12 @@ export default class DStackedColumnSerie extends Vue {
     );
 
     // Dispose
-    this.serie!.dispose();
+    if (this.tooltip != null && !this.tooltip!.isDisposed()) {
+      this.tooltip!.dispose();
+    }
+    if (this.serie != null && !this.serie!.isDisposed()) {
+      this.serie!.dispose();
+    }
   }
 }
 </script>

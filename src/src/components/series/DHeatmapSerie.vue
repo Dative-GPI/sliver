@@ -100,8 +100,6 @@ export default class DHeatmapSerie extends Vue {
   onDataChange = this.setData;
 
   serie: am5xy.ColumnSeries | null = null;
-  tooltip: am5.Tooltip | null = null;
-  circleTemplate: am5.Template<am5.Circle> | null = null;
 
   upAndRunning: boolean = false;
 
@@ -224,7 +222,9 @@ export default class DHeatmapSerie extends Vue {
     }
 
     // Dispose
-    this.serie!.dispose();
+    if (this.serie != null && !this.serie!.isDisposed()) {
+      this.serie!.dispose();
+    }
   }
 }
 </script>

@@ -117,8 +117,12 @@ export default class DLineSerie extends Vue {
     }
     else {
       this.tooltip = am5.Tooltip.new(this.root, {
+        autoTextColor: false,
         labelText: this.tooltipText
       });
+      this.tooltip.label.set("fill", am5.color("#000000"));
+      this.tooltip.get("background")!.set("fillOpacity", 0.25);
+      
       this.serie!.set("tooltip", this.tooltip);
     }
   }
@@ -221,7 +225,12 @@ export default class DLineSerie extends Vue {
     }
 
     // Dispose
-    this.serie!.dispose();
+    if (this.tooltip != null && !this.tooltip!.isDisposed()) {
+      this.tooltip!.dispose();
+    }
+    if (this.serie != null && !this.serie!.isDisposed()) {
+      this.serie!.dispose();
+    }
   }
 }
 </script>

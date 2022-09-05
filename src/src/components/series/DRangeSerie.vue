@@ -137,15 +137,23 @@ export default class DRangeSerie extends Vue {
     }
     else {
       this.tooltip = am5.Tooltip.new(this.root, {
+        autoTextColor: false,
         labelText: this.tooltipText
       });
+      this.tooltip.label.set("fill", am5.color("#000000"));
+      this.tooltip.get("background")!.set("fillOpacity", 0.25);
+
       this.serie!.set("tooltip", this.tooltip);
 
       for (let i = 0; i < this.subSeries.length; i++) {
         this.subTooltips.push(am5.Tooltip.new(this.root, {
+          autoTextColor: false,
           labelText: this.subTooltipText
         }));
-        this;this.subSeries[i].set("tooltip", this.subTooltips[i]);
+        this.subTooltips[i].label.set("fill", am5.color("#000000"));
+        this.subTooltips[i].get("background")!.set("fillOpacity", 0.25);
+
+        this.subSeries[i].set("tooltip", this.subTooltips[i]);
       }
     }
   }
@@ -331,20 +339,22 @@ export default class DRangeSerie extends Vue {
       }
     }
 
-    // Dispose tooltips
-    if (this.tooltip != null) {
+    // Dispose
+    if (this.tooltip != null && !this.tooltip!.isDisposed()) {
       this.tooltip.dispose();
     }
     for (let i = 0; i < this.subTooltips.length; i++) {
-      if (this.subTooltips[i] != null) {
+      if (this.subTooltips[i] != null && !this.subTooltips[i]!.isDisposed()) {
         this.subTooltips[i].dispose();
       }
     }
-
-    // Dispose
-    this.serie!.dispose();
+    if (this.serie != null && !this.serie!.isDisposed()) {
+      this.serie!.dispose();
+    }
     for (let i = 0; i < this.subSeries.length; i++) {
-      this.subSeries[i].dispose();
+      if (this.subSeries[i] != null && !this.subSeries[i]!.isDisposed()) {
+        this.subSeries[i].dispose();
+      }
     }
   }
 }
