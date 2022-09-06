@@ -110,21 +110,30 @@ export default class DTopSerie extends Vue {
   }
 
   setShowTooltip(): void {
+    console.log("Serie " + this.serieId + " setShowTooltip");
     if (!this.showTooltip) {
+
+      console.log("Serie " + this.serieId + " showTooltip false");
+
       if (this.tooltip != null && !this.tooltip.isDisposed()) {
         this.tooltip!.dispose();
         this.serie!.columns.template.set("tooltip", undefined);
         this.serie!.columns.template.set("tooltipText", undefined);
         this.tooltip = null;
+
+        console.log("Serie " + this.serieId + " tooltip disposed");
       }
     }
     else {
+      console.log("Serie " + this.serieId + " showTooltip true");
+
       this.tooltip = am5.Tooltip.new(this.root, {
         autoTextColor: false,
         labelText: this.tooltipText
       });
       this.tooltip.label.set("fill", am5.color("#000000"));
       this.tooltip.get("background")!.set("fillOpacity", 0.25);
+      console.log("Serie " + this.serieId + " tooltip created");
       
       this.serie!.columns.template.setAll({
         tooltip: this.tooltip,
@@ -132,27 +141,33 @@ export default class DTopSerie extends Vue {
         tooltipX: am5.percent(100),
         tooltipY: am5.percent(0)
       });
+      console.log("Serie " + this.serieId + " tooltip set");
     }
   }
   
   setSnapTooltip(): void {
     this.serie!.set("snapTooltip", true);
+    console.log("Serie " + this.serieId + " snapTooltip set");
   }
 
   setLegendLabelText(): void {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
+    console.log("Serie " + this.serieId + " legendLabelText set");
   }
 
   setColumnsHeight(): void {
     this.serie!.columns.template.set("height", this.columnsHeight);
+    console.log("Serie " + this.serieId + " columnsHeight set");
   }
 
   setColumnsOpacity(): void {
     this.serie!.columns.template.set("opacity", this.columnsOpacity);
+    console.log("Serie " + this.serieId + " columnsOpacity set");
   }
 
   setTemplateWidth(): void {
     this.serie!.columns.template.set("width", this.templateWidth);
+    console.log("Serie " + this.serieId + " templateWidth set");
   }
 
   setData(): void {
@@ -168,10 +183,12 @@ export default class DTopSerie extends Vue {
       sortValues(this.yAxis.data.values)
     );
     this.serie!.data.setAll(sortedData);
+    console.log("Serie " + this.serieId + " data set");
   }
 
   mounted(): void {
     this.serieId = Math.random();
+    console.log("Mounting d-top-serie: " + this.serieId);
     
     // Add to chart
     this.serie = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
@@ -183,6 +200,7 @@ export default class DTopSerie extends Vue {
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.ColumnSerie }
     }));
+    console.log("Serie " + this.serieId + " added to chart");
 
     // Set updatable properties
     this.setName();
@@ -196,34 +214,42 @@ export default class DTopSerie extends Vue {
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
+      console.log("Serie " + this.serieId + " added to legend");
     }
     
     // Set data
     this.setData();
     
     this.upAndRunning = true;
+    console.log("Serie " + this.serieId + " up and running");
   }
 
   destroyed(): void {
+    console.log("Destroying d-top-serie: " + this.serieId);
     // Remove from chart
     this.chart.series.removeValue(this.serie!);
+    console.log("Serie " + this.serieId + " removed from chart");
 
     // Remove from legend
     if (this.legend) {
       this.legend.data.removeValue(this.serie);
+      console.log("Serie " + this.serieId + " removed from legend");
     }
 
     // Remove from axis
     this.yAxis.data.setAll(
       updateCategories(this.yAxis.data.values, [], this.categoryYField, this.categoryCodeYField, this.valueXField, this.closeValueXField, this.serieId, false, PositionEnum.Abscissa)
     );
+    console.log("Serie " + this.serieId + " removed from axis");
 
     // Dispose
     if (this.tooltip != null && !this.tooltip!.isDisposed()) {
       this.tooltip!.dispose();
+      console.log("Serie " + this.serieId + " tooltip disposed");
     }
     if (this.serie != null && !this.serie!.isDisposed()) {
       this.serie!.dispose();
+      console.log("Serie " + this.serieId + " disposed");
     }
   }
 }
