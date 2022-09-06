@@ -89,7 +89,7 @@ export default class DLineSerie extends Vue {
   bulletsRadius!: number;
 
   @Watch("bulletsRadius")
-  onBulletsRadiusChange = this.setBulletsRadius;
+  onBulletsRadiusChange = this.setShowBullets;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -144,21 +144,10 @@ export default class DLineSerie extends Vue {
     this.serie!.bullets.clear();
 
     if (this.showBullets) {
-      this.serie!.bullets.push((root: am5.Root): am5.Bullet => {
-        return am5.Bullet.new(root, {
-          sprite: am5.Circle.new(root, {
-            radius: this.bulletsRadius,
-            fill: this.serie!.get("fill")
-          })
-        });
+      this.serie!.set("userData", {
+        ...this.serie!.get("userData"),
+        bulletRadius: this.bulletsRadius
       });
-    }
-  }
-
-  setBulletsRadius(): void {
-    this.serie!.bullets.clear();
-
-    if (this.showBullets) {
       this.serie!.bullets.push((root: am5.Root): am5.Bullet => {
         return am5.Bullet.new(root, {
           sprite: am5.Circle.new(root, {
@@ -185,11 +174,6 @@ export default class DLineSerie extends Vue {
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.LineSerie }
     }));
-
-    this.serie.set("userData", {
-      ...this.serie.get("userData"),
-      series: "LineSerie"
-    });
 
     this.serie.events.on("datavalidated", this.xAxisValidated);
 

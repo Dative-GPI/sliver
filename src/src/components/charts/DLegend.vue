@@ -176,6 +176,33 @@ export default class DLegend extends Vue {
                 }
               }
             }
+            else if (serie instanceof am5xy.StepLineSeries) {
+              if (serie == eventSerie) {
+                serie.strokes.template.set("strokeWidth", 2);
+              }
+              else {
+                if (serie.bullets.values.length) {
+                  switch (serie.get("userData").serie) {
+                    case SerieEnum.StepLineSerie: {
+                      serie.bullets.clear();
+                      serie.bullets.push(() => {
+                        return am5.Bullet.new(this.root, {
+                          sprite: am5.Circle.new(this.root, {
+                            opacity: serie.get("opacity"),
+                            fill: serie.get("fill"),
+                            radius: serie.get("userData").bulletRadius
+                          })
+                        })
+                      });
+                      break;
+                    }
+                    default: {
+                      break;
+                    }
+                  }
+                }
+              }
+            }
           });
         }
       });
@@ -211,6 +238,29 @@ export default class DLegend extends Vue {
                           },
                           serie.get("userData").circleTemplate)
                       });
+                    });
+                    break;
+                  }
+                  default: {
+                    break;
+                  }
+                }
+              }
+            }
+            else if (serie instanceof am5xy.StepLineSeries) {
+              serie.strokes.template.set("strokeWidth", 1);
+              if (serie.bullets.values.length) {
+                switch (serie.get("userData").serie) {
+                  case SerieEnum.StepLineSerie: {
+                    serie.bullets.clear();
+                    serie.bullets.push(() => {
+                      return am5.Bullet.new(this.root, {
+                        sprite: am5.Circle.new(this.root, {
+                          opacity: serie.get("opacity"),
+                          fill: serie.get("fill"),
+                          radius: serie.get("userData").bulletRadius
+                        })
+                      })
                     });
                     break;
                   }
@@ -299,6 +349,33 @@ export default class DLegend extends Vue {
                 }
               }
             }
+            else if (serie instanceof am5xy.StepLineSeries) {
+              if (serie == eventSerie) {
+                serie.strokes.template.set("strokeWidth", 2);
+              }
+              else {
+                if (serie.bullets.values.length) {
+                  switch (serie.get("userData").serie) {
+                    case SerieEnum.StepLineSerie: {
+                      serie.bullets.clear();
+                      serie.bullets.push(() => {
+                        return am5.Bullet.new(this.root, {
+                          sprite: am5.Circle.new(this.root, {
+                            opacity: serie.get("opacity"),
+                            fill: serie.get("fill"),
+                            radius: serie.get("userData").bulletRadius
+                          })
+                        })
+                      });
+                      break;
+                    }
+                    default: {
+                      break;
+                    }
+                  }
+                }
+              }
+            }
           });
         }
       });
@@ -334,6 +411,29 @@ export default class DLegend extends Vue {
                           },
                           serie.get("userData").circleTemplate)
                       });
+                    });
+                    break;
+                  }
+                  default: {
+                    break;
+                  }
+                }
+              }
+            }
+            else if (serie instanceof am5xy.StepLineSeries) {
+              serie.strokes.template.set("strokeWidth", 1);
+              if (serie.bullets.values.length) {
+                switch (serie.get("userData").serie) {
+                  case SerieEnum.StepLineSerie: {
+                    serie.bullets.clear();
+                    serie.bullets.push(() => {
+                      return am5.Bullet.new(this.root, {
+                        sprite: am5.Circle.new(this.root, {
+                          opacity: serie.get("opacity"),
+                          fill: serie.get("fill"),
+                          radius: serie.get("userData").bulletRadius
+                        })
+                      })
                     });
                     break;
                   }

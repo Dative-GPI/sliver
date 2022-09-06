@@ -32,7 +32,7 @@ export default class DXYChart extends Vue {
   @Prop({ required: false, default: "en-US" })
   locale!: string;
 
-  @Prop({ required: false, default: "UTC+02:00:00" })
+  @Prop({ required: false, default: "UTC" })
   timeOffset!: string;
 
   @Prop({ required: false, default: 1500 })

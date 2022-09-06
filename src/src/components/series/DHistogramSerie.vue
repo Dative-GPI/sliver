@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
-import { addSerie, removeSerie, textColor } from "../../helpers";
+import { textColor } from "../../helpers";
 import { SerieEnum } from "../../enums";
 
 @Component({})

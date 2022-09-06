@@ -141,18 +141,18 @@ export const getLocale = (code: string): any => {
 export const getTimezone = (timeOffset: string): am5.Timezone  => {
   let cleaned = timeOffset.replaceAll(" ", "").toLowerCase();
   switch (cleaned) {
-    case "utc-11:00:00": return am5.Timezone.new("Pacific/Samoa");
-    case "utc-10:00:00": return am5.Timezone.new("Pacific/Honolulu");
+    case "utc-11:00:00": return am5.Timezone.new("Pacific/Niue");
+    case "utc-10:00:00": return am5.Timezone.new("Pacific/Tahiti");
     case "utc-09:00:00": return am5.Timezone.new("Pacific/Gambier");
     case "utc-08:00:00": return am5.Timezone.new("Pacific/Pitcairn");
     case "utc-07:00:00": return am5.Timezone.new("America/Phoenix");
     case "utc-06:00:00": return am5.Timezone.new("America/Costa_Rica");
     case "utc-05:00:00": return am5.Timezone.new("America/Cancun");
-    case "utc-04:00:00": return am5.Timezone.new("America/Antigua");
+    case "utc-04:00:00": return am5.Timezone.new("America/Caracas");
     case "utc-03:00:00": return am5.Timezone.new("America/Araguaina");
     case "utc-02:00:00": return am5.Timezone.new("America/Noronha");
     case "utc-01:00:00": return am5.Timezone.new("Atlantic/Cape_Verde");
-    case "utc+01:00:00": return am5.Timezone.new("Europe/Paris");
+    case "utc+01:00:00": return am5.Timezone.new("Africa/Tunis");
     case "utc+02:00:00": return am5.Timezone.new("Africa/Cairo");
     case "utc+03:00:00": return am5.Timezone.new("Africa/Djibouti");
     case "utc+04:00:00": return am5.Timezone.new("Asia/Dubai");
