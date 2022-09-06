@@ -93,9 +93,9 @@ Default.args = {
   data: {
     series:
       processColumnSeries([
-        { ...makeColumnSerie("Delta", ["Marcus Phoenix", "Dominic Santiago"], 5 ) },
+        { ...makeColumnSerie("Delta", ["Marcus Phoenix", "Dominic Santiago", "Damon Baird", "Augustus Cole"], 5 ) },
         { ...makeColumnSerie("Epsilon", ["Marcus Phoenix", "Dominic Santiago"], 5 ) },
-        // { ...makeColumnSerie("Charlie", ["Anthony Carmine", "Benjamin Carmine", "Clay Carmine"], 5 ) }
+        { ...makeColumnSerie("Charlie", ["Anthony Carmine", "Benjamin Carmine", "Clay Carmine"], 5 ) }
       ])
   },
   minHeight: '400px',

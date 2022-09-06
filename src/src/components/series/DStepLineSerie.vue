@@ -12,6 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
 import { SerieEnum } from "../../enums";
+import { textColor } from "../../helpers";
 
 @Component({})
 export default class DStepLineSerie extends Vue {
@@ -58,7 +59,7 @@ export default class DStepLineSerie extends Vue {
   tooltipText!: string;
 
   @Watch("tooltipText")
-  onTooltipTextChange = this.setTooltipText;
+  onTooltipTextChange = this.setShowTooltip;
 
   @Prop({ required: false, default: true })
   snapTooltip!: boolean;
@@ -120,16 +121,10 @@ export default class DStepLineSerie extends Vue {
         autoTextColor: false,
         labelText: this.tooltipText
       });
-      this.tooltip.label.set("fill", am5.color("#000000"));
-      this.tooltip.get("background")!.set("fillOpacity", 0.25);
+      this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
+      this.tooltip.get("background")!.set("fillOpacity", 0.50);
       
       this.serie!.set("tooltip", this.tooltip);
-    }
-  }
-
-  setTooltipText(): void {
-    if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText);
     }
   }
 

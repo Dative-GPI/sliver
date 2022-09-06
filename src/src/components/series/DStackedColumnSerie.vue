@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
-import { updateCategories } from "../../helpers";
+import { textColor, updateCategories } from "../../helpers";
 import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
@@ -99,8 +99,8 @@ export default class DStackedColumnSerie extends Vue {
         autoTextColor: false,
         labelText: this.tooltipText
       });
-      this.tooltip.label.set("fill", am5.color("#000000"));
-      this.tooltip.get("background")!.set("fillOpacity", 0.25);
+      this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
+      this.tooltip.get("background")!.set("fillOpacity", 0.50);
       
       this.serie!.columns.template.setAll({
         tooltip: this.tooltip,
@@ -119,6 +119,7 @@ export default class DStackedColumnSerie extends Vue {
       updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.categoryCodeXField, null, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
     );
     this.serie!.data.setAll(this.data);
+    this.setShowTooltip();
   }
 
   mounted(): void {
@@ -137,7 +138,6 @@ export default class DStackedColumnSerie extends Vue {
 
     // Set updatable properties
     this.setName();
-    this.setShowTooltip();
 
     // Add to legend
     if (this.legend != null) {

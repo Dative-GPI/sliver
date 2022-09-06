@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
-import { updateCategories, addSerie, removeSerie } from "../../helpers";
+import { updateCategories, addSerie, removeSerie, textColor } from "../../helpers";
 import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
@@ -158,8 +158,8 @@ export default class DPlanningSerie extends Vue {
       this.tooltip = am5.Tooltip.new(this.root, {
         autoTextColor: false
       });
-      this.tooltip.label.set("fill", am5.color("#000000"));
-      this.tooltip.get("background")!.set("fillOpacity", 0.25);
+      this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
+      this.tooltip.get("background")!.set("fillOpacity", 0.50);
       
       this.serie!.columns.template.setAll({
         tooltip: this.tooltip,
@@ -216,6 +216,7 @@ export default class DPlanningSerie extends Vue {
       updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.categoryCodeYField, null, this.openDateXField, this.serieId, true, PositionEnum.Ordinate)
     );
     this.serie!.data.setAll(this.data);
+    this.setShowTooltip();
   }
 
   mounted(): void {
@@ -232,8 +233,6 @@ export default class DPlanningSerie extends Vue {
     }));
 
     this.setName();
-    this.setShowTooltip();
-    
     this.setBullet();
     this.setColumnsHeight();
     this.setColumnsOpacity();

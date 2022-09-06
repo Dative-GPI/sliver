@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
-import { addSerie, removeSerie } from "../../helpers";
+import { addSerie, removeSerie, textColor } from "../../helpers";
 import { SerieEnum } from "../../enums";
 
 @Component({})
@@ -114,8 +114,8 @@ export default class DHistogramSerie extends Vue {
         autoTextColor: false,
         labelText: this.tooltipText
       });
-      this.tooltip.label.set("fill", am5.color("#000000"));
-      this.tooltip.get("background")!.set("fillOpacity", 0.25);
+      this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
+      this.tooltip.get("background")!.set("fillOpacity", 0.50);
       
       this.serie!.columns.template.setAll({
         tooltip: this.tooltip,
@@ -139,6 +139,7 @@ export default class DHistogramSerie extends Vue {
 
   setData(): void {
     this.serie!.data.setAll(this.data);
+    this.setShowTooltip();
   }
 
   mounted(): void {
@@ -159,7 +160,6 @@ export default class DHistogramSerie extends Vue {
 
     // Set updatable properties
     this.setName();
-    this.setShowTooltip();
     this.setFillOpacity();
     this.setStacked();
 

@@ -61,8 +61,9 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeColumnSerie("Line 1", ["Grapefruit", "Coconut", "Passion fruit with a really long name", "Banana"], 250000 ) },
-      { ...makeColumnSerie("Line 2", ["Grapefruit", "Apple", "Peach", "Pear"], 350000 ) }
+      { ...makeColumnSerie("Line 1", ["Grapefruit", "Coconut", "Passion fruit", "Banana"], 250000 ) },
+      { ...makeColumnSerie("Line 2", ["Grapefruit", "Apple", "Peach", "Pear"], 350000 ) },
+      { ...makeColumnSerie("Line 3", ["Grapefruit", "Pomelo", "Lime", "Lemon"], 350000 ) }
     ]
   },
   minHeight: '400px',

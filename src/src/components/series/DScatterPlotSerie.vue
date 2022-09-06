@@ -10,8 +10,8 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
-import { updateCategories, addSerie, removeSerie } from "../../helpers";
+import { AMROOT, CHART, CURSOR, LEGEND, LEGEND_DEBUG, XAXIS, YAXIS } from "../../literals";
+import { updateCategories, addSerie, removeSerie, textColor } from "../../helpers";
 import { PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
@@ -35,6 +35,12 @@ export default class DScatterPlotSerie extends Vue {
 
   @InjectReactive(LEGEND)
   legend!: am5.Legend | null;
+
+  @InjectReactive(LEGEND_DEBUG)
+  legendDebug!: number;
+
+  @Watch("legendDebug")
+  onLegendDebugChange = this.setBullets;
 
   @Prop({ required: true })
   name!: string;
@@ -124,6 +130,7 @@ export default class DScatterPlotSerie extends Vue {
       circleTemplate: am5.Template.new<am5.Circle>({ radius: this.bulletRadius })
     });
 
+    // Quelqu'un m'explique pourquoi les tooltips disparaissent lorsque la légende est survolée ?
     if (!this.showTooltip) {
       if (this.tooltip != null && !this.tooltip.isDisposed()) {
         this.tooltip!.dispose();
@@ -141,15 +148,14 @@ export default class DScatterPlotSerie extends Vue {
       this.tooltip = am5.Tooltip.new(this.root, {
         autoTextColor: false
       });
-      this.tooltip.label.set("fill", am5.color("#000000"));
-      this.tooltip.get("background")!.setAll({
-        fillOpacity: 0.25
-      });
+      this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
+      this.tooltip.get("background")!.set("fillOpacity", 0.50);
+      
       this.serie!.bullets.push(() => {
         return am5.Bullet.new(this.root, {
           sprite: am5.Circle.new(this.root, {
-            tooltipText: this.tooltipText || undefined,
-            tooltip: this.tooltip || undefined,
+            tooltip: this.tooltip!,
+            tooltipText: this.tooltipText,
             fill: this.serie!.get("fill")
           }, this.serie!.get("userData").circleTemplate)
         });
@@ -207,6 +213,9 @@ export default class DScatterPlotSerie extends Vue {
     this.setName();
     this.setBullets();
     
+    // Set data
+    this.setData();
+    
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
@@ -216,9 +225,6 @@ export default class DScatterPlotSerie extends Vue {
     if (this.cursor != null && this.snapToSeries) {
       this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
-    
-    // Set data
-    this.setData();
     
     this.upAndRunning = true;
   }

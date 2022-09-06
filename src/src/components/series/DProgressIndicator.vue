@@ -11,6 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, XAXIS } from "../../literals";
+import { textColor } from "../../helpers";
 
 
 @Component({})
@@ -97,10 +98,8 @@ export default class DProgressIndicator extends Vue {
     this.tooltip = am5.Tooltip.new(this.root, {
       autoTextColor: false
     });
-    this.tooltip.label.set("fill", am5.color("#000000"));
-    this.tooltip.get("background")!.setAll({
-      fill: this.chart!.get("colors")!.getIndex(this.colorIndex)
-    });
+      this.tooltip.label.set("fill", textColor(this.chart!.get("colors")!.getIndex(this.colorIndex).toCSSHex()));
+    this.tooltip.get("background")!.set("fill", this.chart!.get("colors")!.getIndex(this.colorIndex));
 
     // Add to axis
     this.progressIndicator = this.xAxis.makeDataItem({

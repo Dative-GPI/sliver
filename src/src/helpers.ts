@@ -86,13 +86,13 @@ export const textColor = (backgroundHexColor: string): am5.Color => {
     let g = parseInt(result[2], 16);
     let b = parseInt(result[3], 16);
 
-    if (Math.max(r, g, b) < 127) {
+    if (Math.max(r, g, b) < 132) {
       return am5.color("#ffffff");
     }
-    else if (Math.max(r, g) < 127) {
+    else if (Math.max(r, g) < 132) {
       return am5.color("#ffffff");
     }
-    else if (Math.max(g, b) < 127) {
+    else if (Math.max(g, b) < 132) {
       return am5.color("#ffffff");
     }
   }

@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
-import { addSerie, getLineIntersection, removeSerie } from "../../helpers";
+import { addSerie, getLineIntersection, removeSerie, textColor } from "../../helpers";
 
 @Component({})
 export default class DRangeSerie extends Vue {
@@ -67,13 +67,13 @@ export default class DRangeSerie extends Vue {
   tooltipText!: string;
 
   @Watch("tooltipText")
-  onTooltipTextChange = this.setTooltipText;
+  onTooltipTextChange = this.setShowTooltip;
 
   @Prop({ required: false, default: "{name}: {valueY}" })
   subTooltipText!: string;
 
   @Watch("subTooltipText")
-  onSubTooltipTextChange = this.setSubTooltipText;
+  onSubTooltipTextChange = this.setShowTooltip;
 
   @Prop({ required: false, default: true })
   snapTooltip!: boolean;
@@ -140,8 +140,8 @@ export default class DRangeSerie extends Vue {
         autoTextColor: false,
         labelText: this.tooltipText
       });
-      this.tooltip.label.set("fill", am5.color("#000000"));
-      this.tooltip.get("background")!.set("fillOpacity", 0.25);
+      this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
+      this.tooltip.get("background")!.set("fillOpacity", 0.50);
 
       this.serie!.set("tooltip", this.tooltip);
 
@@ -150,24 +150,10 @@ export default class DRangeSerie extends Vue {
           autoTextColor: false,
           labelText: this.subTooltipText
         }));
-        this.subTooltips[i].label.set("fill", am5.color("#000000"));
-        this.subTooltips[i].get("background")!.set("fillOpacity", 0.25);
+        this.tooltip.label.set("fill", textColor(this.subSeries[i]!.get("fill")!.toCSSHex()));
+        this.tooltip.get("background")!.set("fillOpacity", 0.50);
 
         this.subSeries[i].set("tooltip", this.subTooltips[i]);
-      }
-    }
-  }
-
-  setTooltipText(): void {
-    if (this.tooltip != null) {
-      this.tooltip!.set("labelText", this.tooltipText);
-    }
-  }
-
-  setSubTooltipText(): void {
-    for (let i = 0; i < this.subTooltips.length; i++) {
-      if (this.subTooltips[i] != null) {
-        this.subTooltips[i].set("labelText", this.subTooltipText);
       }
     }
   }
@@ -189,6 +175,7 @@ export default class DRangeSerie extends Vue {
 
   setData(): void {
     this.serie!.data.setAll(this.data);
+    this.setShowTooltip();
   }
 
   getClosedSubData(subData: any[]): any[] {
@@ -201,6 +188,7 @@ export default class DRangeSerie extends Vue {
         this.subSeries[i].data.setAll(this.getClosedSubData(this.subDatas[i]));
       }
     }
+    this.setShowTooltip();
   }
 
   mounted(): void {
@@ -234,7 +222,6 @@ export default class DRangeSerie extends Vue {
     // Set updatable properties
     this.setName();
     this.setSubNames();
-    this.setShowTooltip();
     this.setSnapTooltip();
 
     // Add to legend
