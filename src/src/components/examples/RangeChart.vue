@@ -35,6 +35,8 @@
               :opposite="yAxisOpposite"
               :showTooltip="yAxisShowTooltip"
               :tooltipNumberFormat="yAxisTooltipNumberFormat"
+              :ranges="yAxisRanges"
+              :unit="yAxisUnit"
             >
               <d-range-serie
                 :name="serie.serie"
@@ -63,6 +65,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
+import { AxisRange } from "../../helpers";
 
 import Spinner from "./Spinner.vue";
 
@@ -145,6 +148,12 @@ export default class RangeChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  yAxisRanges!: AxisRange[] | undefined;
+
+  @Prop({ required: true })
+  yAxisUnit!: string | undefined;
 
   @Prop({ required: true })
   serieShowTooltip!: boolean;

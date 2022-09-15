@@ -36,6 +36,8 @@ const Template = (args, { argTypes }) => ({
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :yAxisRanges="yAxisRanges"
+      :yAxisUnit="yAxisUnit"
       :serieShowTooltip="serieShowTooltip"
       :serieTooltipText="serieTooltipText"
       :serieSubTooltipText="serieSubTooltipText"
@@ -95,6 +97,11 @@ Default.args = {
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",
+  yAxisRanges: [
+    { startValue: -5,   endValue: 0,  opacity: 0.2, color: "#ff0000", label: "Bad" },
+    { startValue: 0,   endValue: 5,  opacity: 0.2, color: "#00ff00", label: "Bad" },
+  ],
+  yAxisUnit: "mL",
   serieShowTooltip: true,
   serieTooltipText: "{name}: {dataItem.dataContext.valueY}",
   serieSubTooltipText: "{name}: {dataItem.dataContext.valueY}"

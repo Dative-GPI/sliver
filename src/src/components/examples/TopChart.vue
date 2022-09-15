@@ -30,6 +30,8 @@
             :opposite="xAxisOpposite"
             :showTooltip="xAxisShowTooltip"
             :tooltipNumberFormat="xAxisTooltipNumberFormat"
+            :ranges="xAxisRanges"
+            :unit="xAxisUnit"
           >
             <d-category-y-axis
               :opposite="yAxisOpposite"
@@ -60,6 +62,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
+import { AxisRange } from "../../helpers";
 
 import Spinner from "./Spinner.vue";
 
@@ -130,6 +133,12 @@ export default class BarsChart extends Vue {
 
   @Prop({ required: true })
   xAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  xAxisRanges!: AxisRange[] | undefined;
+
+  @Prop({ required: true })
+  xAxisUnit!: string | undefined;
 
   @Prop({ required: true })
   yAxisOpposite!: boolean;

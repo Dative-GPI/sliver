@@ -30,11 +30,15 @@
             :opposite="xAxisOpposite"
             :showTooltip="xAxisShowTooltip"
             :tooltipNumberFormat="xAxisTooltipNumberFormat"
+            :ranges="xAxisRanges"
+            :unit="xAxisUnit"
           >
             <d-value-y-axis
               :opposite="yAxisOpposite"
               :showTooltip="yAxisShowTooltip"
               :tooltipNumberFormat="yAxisTooltipNumberFormat"
+              :ranges="yAxisRanges"
+              :unit="yAxisUnit"
             >
               <d-scatter-plot-serie
                 v-for="(serie, index) in data.series"
@@ -62,6 +66,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
+import { AxisRange } from "../../helpers";
 
 import Spinner from "./Spinner.vue";
 
@@ -134,6 +139,12 @@ export default class ScatterPlotChart extends Vue {
   xAxisTooltipNumberFormat!: string;
 
   @Prop({ required: true })
+  xAxisRanges!: AxisRange[] | undefined;
+
+  @Prop({ required: true })
+  xAxisUnit!: string | undefined;
+
+  @Prop({ required: true })
   yAxisOpposite!: boolean;
 
   @Prop({ required: true })
@@ -141,6 +152,12 @@ export default class ScatterPlotChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  yAxisRanges!: AxisRange[] | undefined;
+
+  @Prop({ required: true })
+  yAxisUnit!: string | undefined;
 
   @Prop({ required: true })
   serieShowTooltip!: boolean;

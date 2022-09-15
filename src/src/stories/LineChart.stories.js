@@ -37,6 +37,7 @@ const Template = (args, { argTypes }) => ({
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisRanges="yAxisRanges"
+      :yAxisUnit="yAxisUnit"
       :serieShowBullets="serieShowBullets"
       :serieBulletsRadius="serieBulletsRadius"
     />`,
@@ -91,14 +92,15 @@ Default.args = {
   xAxisOpposite: false,
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
-  xAxisRanges: [
-    { startDay: 5, startHour: 0, startMinute: 0, endDay: 0, endHour: 0, endMinute: 0, opacity: 0.2, color: "#ff00ff", label: "Week-end"},
-    { startDay: 2, startHour: 0, startMinute: 0, endDay: 3, endHour: 0, endMinute: 0, opacity: 0.2, color: "#cccccc", label: "Wednesday"}
-  ],
+  xAxisRanges: [],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",
-  yAxisRanges: [],
+  yAxisRanges: [
+    { startValue: -5,   endValue: 0,  opacity: 0.2, color: "#ff0000", label: "Bad" },
+    { startValue: 0,   endValue: 5,  opacity: 0.2, color: "#00ff00", label: "Bad" },
+  ],
+  yAxisUnit: "mL",
   serieShowBullets: false,
   serieBulletsRadius: 5
 };

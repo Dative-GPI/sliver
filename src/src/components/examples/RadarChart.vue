@@ -24,6 +24,7 @@
           :min="axisMin"
           :max="axisMax"
           :ranges="ranges"
+          :unit="unit"
         >
           <d-clock-hand
             :name="firstName"
@@ -91,6 +92,9 @@ export default class RadarChart extends Vue {
 
   @Prop({ required: true })
   ranges!: AxisRange[] | undefined;
+
+  @Prop({ required: true })
+  unit!: string | undefined;
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

@@ -28,6 +28,7 @@ const Template = (args, { argTypes }) => ({
       :axisMin="axisMin"
       :axisMax="axisMax"
       :ranges="ranges"
+      :unit="unit"
       :firstName="firstName"
       :firstColorIndex="firstColorIndex"
       :firstPinRadius="firstPinRadius"
@@ -64,6 +65,7 @@ Default.args = {
     { startValue: 120, endValue: 160, opacity: 1, color: "#aaff64", label: "Somewhat good" },
     { startValue: 160, endValue: 200, opacity: 1, color: "#64ff8c", label: "Good" }
   ],
+  unit: "mA",
   minHeight: '400px',
   locale: "fr-FR",
   chartLayout: 2,

@@ -31,6 +31,7 @@
             :showTooltip="yAxisShowTooltip"
             :tooltipNumberFormat="yAxisTooltipNumberFormat"
             :ranges="yAxisRanges"
+            :unit="yAxisUnit"
           >
             <d-date-x-axis
               :opposite="xAxisOpposite"
@@ -150,6 +151,9 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   yAxisRanges!: AxisRange[] | undefined;
+
+  @Prop({ required: true })
+  yAxisUnit!: string | undefined;
 
   @Prop({ required: true })
   serieShowBullets!: boolean;

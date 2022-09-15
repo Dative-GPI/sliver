@@ -33,6 +33,7 @@
             :ranges="xAxisRanges"
             :strokeOpacity="1"
             :strokeWidth="5"
+            :unit="xAxisUnit"
           >
             <d-value-y-axis
               :opposite="yAxisOpposite"
@@ -152,6 +153,9 @@ export default class IndicatorChart extends Vue {
 
   @Prop({ required: true })
   xAxisRanges!: AxisRange[] | undefined;
+
+  @Prop({ required: true })
+  xAxisUnit!: string | undefined;
 
   @Prop({ required: true })
   yAxisOpposite!: boolean;

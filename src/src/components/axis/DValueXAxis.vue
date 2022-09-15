@@ -243,7 +243,7 @@ export default class DValueXAxis extends Vue {
           return value + this.unit;
         }
         else {
-          return "".padStart(this.debugLabel, "X") + this.unit;
+          return "";
         }
       });
     }

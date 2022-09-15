@@ -35,6 +35,7 @@ const Template = (args, { argTypes }) => ({
       :xAxisMin="xAxisMin"
       :xAxisMax="xAxisMax"
       :xAxisRanges="xAxisRanges"
+      :xAxisUnit="xAxisUnit"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
@@ -55,18 +56,7 @@ Default.args = {
     },{
       serie: "B",
       data: [{
-        valueX: 5
-      }]
-    },{
-      serie: "C",
-      data: [{
-        valueX: 10
-      }]
-    },
-    {
-      serie: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore",
-      data: [{
-        valueX: 20
+        valueX: 100
       }]
     }]
   },
@@ -99,6 +89,7 @@ Default.args = {
     { startValue: 120, endValue: 160, opacity: 0.5, color: "#aaff64", label: "Somewhat good" },
     { startValue: 160, endValue: 200, opacity: 0.5, color: "#64ff8c", label: "Good" }
   ],
+  xAxisUnit: "cm",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",

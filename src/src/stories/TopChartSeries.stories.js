@@ -32,6 +32,8 @@ const Template = (args, { argTypes }) => ({
       :xAxisOpposite="xAxisOpposite"
       :xAxisShowTooltip="xAxisShowTooltip"
       :xAxisTooltipNumberFormat="xAxisTooltipNumberFormat"
+      :xAxisRanges="xAxisRanges"
+      :xAxisUnit="xAxisUnit"
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipText="yAxisTooltipText"
@@ -93,9 +95,8 @@ Default.args = {
   data: {
     series:
       processColumnSeries([
-        { ...makeColumnSerie("Delta", ["Marcus Phoenix", "Dominic Santiago", "Damon Baird", "Augustus Cole"], 5 ) },
-        { ...makeColumnSerie("Epsilon", ["Marcus Phoenix", "Dominic Santiago"], 5 ) },
-        { ...makeColumnSerie("Charlie", ["Anthony Carmine", "Benjamin Carmine", "Clay Carmine"], 5 ) }
+        { ...makeColumnSerie("Delta", ["Marcus Phoenix", "Dominic Santiago", "Damon Baird", "Augustus Cole"], 100 ) },
+        { ...makeColumnSerie("Charlie", ["Anthony Carmine", "Benjamin Carmine", "Clay Carmine"], 100 ) }
       ])
   },
   minHeight: '400px',
@@ -119,6 +120,14 @@ Default.args = {
   xAxisOpposite: false,
   xAxisShowTooltip: true,
   xAxisTooltipNumberFormat: "#,###.###### a",
+  xAxisRanges: [
+    { startValue: 0,   endValue: 20,  opacity: 0.5, color: "#ff3c3c", label: "Bad" },
+    { startValue: 20,  endValue: 40,  opacity: 0.5, color: "#ff8c3c", label: "Somewhat bad" },
+    { startValue: 40,  endValue: 60, opacity: 0.5, color: "#b4b4b4", label: "Just meh" },
+    { startValue: 60, endValue: 80, opacity: 0.5, color: "#aaff64", label: "Somewhat good" },
+    { startValue: 80, endValue: 100, opacity: 0.5, color: "#64ff8c", label: "Good" }
+  ],
+  xAxisUnit: "kills",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipText: "{categoryY}",

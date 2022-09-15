@@ -28,6 +28,7 @@ const Template = (args, { argTypes }) => ({
       :axisMin="axisMin"
       :axisMax="axisMax"
       :ranges="ranges"
+      :unit="unit"
       :firstName="firstName"
       :firstColorIndex="firstColorIndex"
       :firstPinRadius="firstPinRadius"
@@ -58,6 +59,7 @@ Default.args = {
   axisMin: 0,
   axisMax: 200,
   ranges: undefined,
+  unit: "eV",
   minHeight: '400px',
   locale: "fr-FR",
   chartLayout: 2,
