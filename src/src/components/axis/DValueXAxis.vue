@@ -193,21 +193,20 @@ export default class DValueXAxis extends Vue {
       am5.array.each(this.ranges!, (range : AxisRange) => {
         let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
 
-        axisRange.get("axisFill")!.setAll({
-          visible: true,
-          fillOpacity: range.opacity,
-          fill: am5.color(range.color)
-        });
-
         if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
           axisRange.get("label")!.setAll({
             text: range.label,
             inside: true,
             centerY: 30,
-            // radius: 10,
             fill: textColor(range.color)
           });
         }
+
+        axisRange.get("axisFill")!.setAll({
+          visible: true,
+          fillOpacity: range.opacity,
+          fill: am5.color(range.color)
+        });
 
         axisRange.setAll({
           value: range.startValue,

@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, YAXIS } from "../../literals";
-import { AxisRange } from "../../helpers";
+import { AxisRange, textColor } from "../../helpers";
 
 @Component({})
 export default class DValueYAxis extends Vue {
@@ -188,22 +188,20 @@ export default class DValueYAxis extends Vue {
       am5.array.each(this.ranges!, (range : AxisRange) => {
         let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
 
+        if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
+          axisRange.get("label")!.setAll({
+            text: range.label,
+            inside: true,
+            centerX: 0,
+            fill: am5.color("#000000")
+          });
+        }
+
         axisRange.get("axisFill")!.setAll({
           visible: true,
           fillOpacity: range.opacity,
           fill: am5.color(range.color)
         });
-
-        // TODO : Pourquoi ça marche avec les axes T et X et pas Y ?
-        // if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
-        //   axisRange.get("label")!.setAll({
-        //     text: range.label,
-        //     inside: true,
-        //     centerX: 0,
-        //     radius: 10,
-        //     fill: textColor(range.color)
-        //   });
-        // }
 
         axisRange.setAll({
           value: range.startValue,

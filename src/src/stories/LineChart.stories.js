@@ -97,8 +97,8 @@ Default.args = {
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisRanges: [
-    { startValue: -5,   endValue: 0,  opacity: 0.2, color: "#ff0000", label: "Bad" },
-    { startValue: 0,   endValue: 5,  opacity: 0.2, color: "#00ff00", label: "Bad" },
+    { startValue: 0,   endValue: -3,  opacity: 0.2, color: "#ff0000", label: "Bad" },
+    { startValue: 0,   endValue: 3,  opacity: 0.2, color: "#00ff00", label: "Good" },
   ],
   yAxisUnit: "mL",
   serieShowBullets: false,

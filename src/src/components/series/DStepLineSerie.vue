@@ -119,7 +119,8 @@ export default class DStepLineSerie extends Vue {
     else {
       this.tooltip = am5.Tooltip.new(this.root, {
         autoTextColor: false,
-        labelText: this.tooltipText
+        labelText: this.tooltipText,
+        centerY: 25
       });
       this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
       this.tooltip.get("background")!.set("fillOpacity", 0.50);

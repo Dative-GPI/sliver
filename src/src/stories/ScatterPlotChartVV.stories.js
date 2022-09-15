@@ -90,19 +90,16 @@ Default.args = {
   xAxisShowTooltip: true,
   xAxisTooltipNumberFormat: "#,###.###### a",
   xAxisRanges: [
-    { startValue: 0,   endValue: 40,  opacity: 0.5, color: "#ff3c3c", label: "Bad" },
-    { startValue: 40,  endValue: 80,  opacity: 0.5, color: "#ff8c3c", label: "Somewhat bad" },
-    { startValue: 80,  endValue: 120, opacity: 0.5, color: "#b4b4b4", label: "Just meh" },
-    { startValue: 120, endValue: 160, opacity: 0.5, color: "#aaff64", label: "Somewhat good" },
-    { startValue: 160, endValue: 200, opacity: 0.5, color: "#64ff8c", label: "Good" }
+    { startValue: 0,   endValue: 15,  opacity: 0.2, color: "#0000ff", label: "Short" },
+    { startValue: 15,  endValue: 30,  opacity: 0.2, color: "#000000", label: "Long" }
   ],
   xAxisUnit: "cm",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisRanges: [
-    { startValue: -5,   endValue: 0,  opacity: 0.2, color: "#ff0000", label: "Bad" },
-    { startValue: 0,   endValue: 5,  opacity: 0.2, color: "#00ff00", label: "Bad" },
+    { startValue: 0,   endValue: 15,  opacity: 0.2, color: "#ff0000", label: "Empty" },
+    { startValue: 15,   endValue: 30,  opacity: 0.2, color: "#00ffff", label: "Filled" },
   ],
   yAxisUnit: "mL",
   serieShowTooltip: true,
