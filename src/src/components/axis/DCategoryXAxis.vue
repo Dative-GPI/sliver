@@ -59,6 +59,12 @@ export default class DCategoryXAxis extends Vue {
   @Watch("labelsTooltipText")
   onLabelsToolTipTextChange = this.setLabelsTooltipText;
 
+  @Prop({ required: false, default: 20 })
+  minGridDistance!: number;
+
+  @Watch("minGridDistance")
+  onMinGridDistanceChange = this.setMinGridDistance;
+
   @ProvideReactive(XAXIS)
   axis: any = null;
 
@@ -120,6 +126,10 @@ export default class DCategoryXAxis extends Vue {
     this.axis!.get("renderer").labels.template.set("tooltipText", this.labelsTooltipText);
   }
 
+  setMinGridDistance(): void {
+    this.axis!.get("renderer").set("minGridDistance", this.minGridDistance);
+  }
+
   mounted(): void {
     // Add to chart
     this.axis = this.chart.xAxes.push(am5xy.CategoryAxis.new(this.root, {
@@ -143,6 +153,7 @@ export default class DCategoryXAxis extends Vue {
     this.setShowTooltip();
     this.setLabelsOversizedBehavior();
     this.setLabelsTooltipText();
+    this.setMinGridDistance();
 
     this.axis!.get("renderer").labels.template.set("textAlign", "center");
 
