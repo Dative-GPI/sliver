@@ -87,7 +87,7 @@ Default.args = {
   scrollbarEndGripVisible: true,
   xAxisOpposite: false,
   xAxisShowTooltip: true,
-  xAxisLabelsOversizedBehavior: "wrap",
+  xAxisLabelsOversizedBehavior: "truncate",
   xAxisLabelsMaxWidth: 100,
   xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,

@@ -86,7 +86,7 @@ Default.args = {
   xAxisOpposite: false,
   xAxisShowTooltip: true,
   xAxisTooltipText: "{categoryX}",
-  xAxisLabelsOversizedBehavior: "none",
+  xAxisLabelsOversizedBehavior: "truncate",
   xAxisLabelsMaxWidth: 100,
   xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,

@@ -65,6 +65,12 @@ export default class DCategoryXAxis extends Vue {
   @Watch("minGridDistance")
   onMinGridDistanceChange = this.setMinGridDistance;
 
+  @Prop({ required: false, default: 70 })
+  labelsRotationWidth!: number;
+
+  @Prop({ required: false, default: 100 })
+  labelsMaxWidth!: number
+
   @ProvideReactive(XAXIS)
   axis: any = null;
 
@@ -141,12 +147,35 @@ export default class DCategoryXAxis extends Vue {
     if (this.cursor) {
       this.cursor!.set("xAxis", this.axis);
     }
-    
-    this.axis!.get("renderer").labels.template.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
+
+    this.axis.get("renderer").labels.template.adapters.add("text", (text: string | undefined, target: any): string | undefined => {
       if (target.dataItem && target.dataItem.dataContext && target.dataItem.dataContext[this.categoryField]) {
         return target.dataItem.dataContext[this.categoryField];
       }
       return text;
+    });
+
+    this.axis!.get("renderer").labels.template.adapters.add("width", (width: any, target: any) =>  {
+      let cellWidth = this.axis!.width() / this.axis!.endIndex();
+      if (cellWidth < this.labelsRotationWidth) {
+        this.axis!.get("renderer").labels.template.setAll({
+          rotation: -45,
+          textAlign: undefined
+        });
+
+        target.set("maxWidth", this.labelsMaxWidth);
+      }
+      else {
+        this.axis!.get("renderer").labels.template.setAll({
+          rotation: 0,
+          textAlign: "center"
+        });
+
+        let x0 = this.axis!.getDataItemCoordinateY(this.axis!.dataItems[0], "category", 0);
+        let x1 = this.axis!.getDataItemCoordinateY(this.axis!.dataItems[0], "category", 1);
+        target.set("maxWidth", x1 - x0);
+        return x1 - x0;
+      }
     });
 
     this.setOpposite();
@@ -154,15 +183,6 @@ export default class DCategoryXAxis extends Vue {
     this.setLabelsOversizedBehavior();
     this.setLabelsTooltipText();
     this.setMinGridDistance();
-
-    this.axis!.get("renderer").labels.template.set("textAlign", "center");
-
-    this.axis!.get("renderer").labels.template.adapters.add("width", (width: any, target: any) =>  {
-      let x0 = this.axis!.getDataItemCoordinateY(this.axis!.dataItems[0], "category", 0);
-      let x1 = this.axis!.getDataItemCoordinateY(this.axis!.dataItems[0], "category", 1);
-      target.set("maxWidth", x1 - x0)
-      return x1 - x0;
-    });
 
     this.upAndRunning = true;
   }
