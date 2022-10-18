@@ -11,14 +11,11 @@
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
-      <d-legend
+      <d-heat-legend
         :enabled="legend"
-        :layout="legendLayout"
         :position="legendPosition"
-        :x="legendX"
-        :centerX="legendCenterX"
-        :y="legendY"
-        :centerY="legendCenterY"
+        :minColor="minColor"
+        :maxColor="maxColor"
       >
         <d-xy-cursor
           :enabled="cursor"
@@ -52,7 +49,7 @@
             </d-category-y-axis>
           </d-category-x-axis>
         </d-xy-cursor>
-      </d-legend>
+      </d-heat-legend>
       <d-x-scrollbar
         v-if="scrollbar"
         :height="scrollbarHeight"

@@ -29,6 +29,9 @@ export default class DXYChart extends Vue {
   @ProvideReactive(CHART)
   chart: am5xy.XYChart | null = null;
 
+  @Prop({ required: false, default: null })
+  licence!: string | null;
+
   @Prop({ required: false, default: "en-US" })
   locale!: string;
 
@@ -90,9 +93,12 @@ export default class DXYChart extends Vue {
   }
 
   mounted(): void {
+    if (this.licence != null) {
+      am5.addLicense(this.licence);
+    }
+
     // Create root
     this.root = am5.Root.new((this.$refs.xychart as HTMLElement));
-    this.root.setThemes([ am5themes_Animated.new(this.root) ]);
     this.root.locale = getLocale(this.locale);
     this.root.timezone = getTimezone(this.timeOffset);
 

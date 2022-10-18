@@ -7,6 +7,7 @@ import DValueXAxis from "./components/axis/DValueXAxis.vue";
 import DValueYAxis from "./components/axis/DValueYAxis.vue";
 
 import DLegend from "./components/charts/DLegendWrapper.vue";
+import DHeatLegend from "./components/charts/DHeatLegendWrapper.vue";
 import DPieChart from "./components/charts/DPieChart.vue";
 import DRadarChart from "./components/charts/DRadarChart.vue";
 import DXYChart from "./components/charts/DXYChart.vue";
@@ -40,6 +41,7 @@ const Sliver = {
     vue.component("d-value-x-axis", DValueXAxis);
     vue.component("d-value-y-axis", DValueYAxis);
     vue.component("d-legend", DLegend);
+    vue.component("d-heat-legend", DHeatLegend);
     vue.component("d-pie-chart", DPieChart);
     vue.component("d-radar-chart", DRadarChart);
     vue.component("d-xy-chart", DXYChart);

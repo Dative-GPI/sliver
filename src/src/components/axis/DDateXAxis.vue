@@ -66,6 +66,20 @@ export default class DDateXAxis extends Vue {
   @ProvideReactive(XAXISVALIDATED)
   serieValidated: () => void = this.setRanges;
 
+  @Prop({ required: false, default: () => [null, null] })
+  selection!: (number | null)[];
+
+  @Watch("selection")
+  onSelectionChange(newVal: (number | null)[], oldVal: (number | null)[]): void {
+    if (newVal.length === 2 && newVal[0] != null && newVal[1] != null) {
+      let start = new Date(0);
+      start.setUTCMilliseconds(newVal[0]);
+      let end = new Date(0);
+      end.setUTCMilliseconds(newVal[1]);
+      this.axis!.zoomToDates(start, end);
+    }
+  }
+
   tooltip: am5.Tooltip | null = null;
   start: Date | null = null;
   end: Date | null = null;
@@ -235,6 +249,14 @@ export default class DDateXAxis extends Vue {
       ],
       
     }));
+
+    this.axis.onPrivate("selectionMin", (value: any, _: any): void => {
+      this.$emit("update:selectionMin", value);
+    });
+
+    this.axis.onPrivate("selectionMax", (value: any, _: any): void => {
+      this.$emit("update:selectionMax", value);
+    });
 
     // Add to cursor
     if (this.cursor) {

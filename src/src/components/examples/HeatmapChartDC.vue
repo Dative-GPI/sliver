@@ -11,14 +11,11 @@
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
-      <d-legend
+      <d-heat-legend
         :enabled="legend"
-        :layout="legendLayout"
         :position="legendPosition"
-        :x="legendX"
-        :centerX="legendCenterX"
-        :y="legendY"
-        :centerY="legendCenterY"
+        :minColor="minColor"
+        :maxColor="maxColor"
       >
         <d-xy-cursor
           :enabled="cursor"
@@ -30,6 +27,7 @@
             :opposite="xAxisOpposite"
             :showTooltip="xAxisShowTooltip"
             :tooltipDateFormat="xAxisTooltipDateFormat"
+            :selection="selection"
           >
             <d-category-y-axis
               :opposite="yAxisOpposite"
@@ -50,7 +48,7 @@
             </d-category-y-axis>
           </d-date-x-axis>
         </d-xy-cursor>
-      </d-legend>
+      </d-heat-legend>
       <d-x-scrollbar
         v-if="scrollbar"
         :height="scrollbarHeight"
@@ -86,22 +84,7 @@ export default class HeatmapChart extends Vue {
   legend!: boolean;
 
   @Prop({ required: true })
-  legendLayout!: LayoutEnum;
-
-  @Prop({ required: true })
   legendPosition!: PositionEnum;
-
-  @Prop({ required: true })
-  legendX!: number;
-
-  @Prop({ required: true })
-  legendCenterX!: number;
-
-  @Prop({ required: true })
-  legendY!: number;
-
-  @Prop({ required: true })
-  legendCenterY!: number;
 
   @Prop({ required: true })
   cursor!: boolean;
@@ -156,6 +139,9 @@ export default class HeatmapChart extends Vue {
 
   @Prop({ required: true })
   maxColor!: string;
+
+  @Prop({ required: true })
+  selection!: (number | null)[];
 
   ready: boolean = false;
 }

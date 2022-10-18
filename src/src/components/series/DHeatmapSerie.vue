@@ -34,7 +34,7 @@ export default class DHeatmapSerie extends Vue {
   cursor!: am5xy.XYCursor | null;
 
   @InjectReactive(LEGEND)
-  legend!: am5.Legend | null;
+  legend!: am5.HeatLegend | null;
 
   @Prop({ required: true })
   name!: string;
@@ -168,7 +168,7 @@ export default class DHeatmapSerie extends Vue {
     this.serie.columns.template.setAll({
       height: am5.percent(100),
       width: am5.percent(100),
-      strokeOpacity: 1,
+      strokeOpacity: 0.1,
       strokeWidth: 2
     });
 
@@ -176,11 +176,6 @@ export default class DHeatmapSerie extends Vue {
     this.setName();
     this.setHeatRules();
     this.setShowTooltip();
-    
-    // Add to legend
-    if (this.legend != null) {
-      this.legend.data.push(this.serie);
-    }
 
     // Add to cursor
     if (this.cursor != null && this.snapToSeries) {
@@ -190,17 +185,22 @@ export default class DHeatmapSerie extends Vue {
     // Set data
     this.setData();
     
+    // Add to legend
+    this.serie.events.on("datavalidated", () => {
+      if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
+        this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
+      }
+      if (this.legend!.get("endValue") == null || this.legend!.get("endValue")! < this.serie!.getPrivate("valueHigh")!) {
+        this.legend!.set("endValue", this.serie!.getPrivate("valueHigh")!);
+      }
+    });
+    
     this.upAndRunning = true;
   }
 
   destroyed(): void {
     // Remove from chart
     this.chart.series.removeValue(this.serie!);
-
-    // Remove from legend
-    if (this.legend) {
-      this.legend.data.removeValue(this.serie);
-    }
 
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
