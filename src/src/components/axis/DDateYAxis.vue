@@ -74,6 +74,9 @@ export default class DDateYAxis extends Vue {
     if (newVal.length === 2 && newVal[0] != null && newVal[1] != null) {
       this.axis!.zoomToDates(newVal[0], newVal[1]);
     }
+    else {
+      this.axis!.zoom(0, 1, 0);
+    }
   }
 
   tooltip: am5.Tooltip | null = null;

@@ -78,6 +78,9 @@ export default class DDateXAxis extends Vue {
       end.setUTCMilliseconds(newVal[1]);
       this.axis!.zoomToDates(start, end);
     }
+    else {
+      this.axis!.zoom(0, 1, 0);
+    }
   }
 
   tooltip: am5.Tooltip | null = null;
