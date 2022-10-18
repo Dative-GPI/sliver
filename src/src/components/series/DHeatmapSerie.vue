@@ -75,12 +75,6 @@ export default class DHeatmapSerie extends Vue {
   @Watch("tooltipText")
   onTooltipTextChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "" })
-  legendLabelText!: string;
-
-  @Watch("legendLabelText")
-  onLegendLabelTextChange = this.setLegendLabelText;
-
   @Prop({ required: false, default: "#ffff00" })
   minColor!: string;
 
@@ -105,7 +99,6 @@ export default class DHeatmapSerie extends Vue {
 
   setName(): void {
     this.serie!.set("name", this.name);
-    this.setLegendLabelText();
   }
 
   setShowTooltip(): void {
@@ -115,10 +108,6 @@ export default class DHeatmapSerie extends Vue {
     else {
       this.serie!.columns.template.set("tooltipText", undefined);    
     }
-  }
-
-  setLegendLabelText(): void {
-    this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
   }
 
   setHeatRules(): void {
@@ -187,11 +176,13 @@ export default class DHeatmapSerie extends Vue {
     
     // Add to legend
     this.serie.events.on("datavalidated", () => {
-      if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
-        this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
-      }
-      if (this.legend!.get("endValue") == null || this.legend!.get("endValue")! < this.serie!.getPrivate("valueHigh")!) {
-        this.legend!.set("endValue", this.serie!.getPrivate("valueHigh")!);
+      if (this.legend != null) {
+        if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
+          this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
+        }
+        if (this.legend!.get("endValue") == null || this.legend!.get("endValue")! < this.serie!.getPrivate("valueHigh")!) {
+          this.legend!.set("endValue", this.serie!.getPrivate("valueHigh")!);
+        }
       }
     });
     
