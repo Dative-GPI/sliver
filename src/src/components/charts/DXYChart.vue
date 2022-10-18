@@ -137,6 +137,7 @@ export default class DXYChart extends Vue {
         cursor.set("behavior", undefined);
         setTimeout(() => cursor!.set("behavior", behavior), 5)
       }
+      this.$emit("update:zoomOut");
     });
 
     this.setLayout();
