@@ -89,6 +89,14 @@ export default class DXScrollbar extends Vue {
           this.$emit("update:selection", [start, end]);
         }
       });
+
+      this.scrollbar.endGrip.events.on("pointerup", (event: ISpritePointerEvent & { type: "pointerup"; target: am5.Button; }): void => {
+        if (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX> != null) {
+          let start = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.scrollbar!.get("start")!).getTime();
+          let end = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.scrollbar!.get("end")!).getTime();
+          this.$emit("update:selection", [start, end]);
+        }
+      });
       
       this.scrollbar.startGrip.set("width", 10);
       this.scrollbar.startGrip.set("height", 20);

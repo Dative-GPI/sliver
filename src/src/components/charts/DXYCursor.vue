@@ -11,7 +11,6 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, XAXIS, YAXIS } from "../../literals";
-import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 @Component({})
 export default class DXYCursor extends Vue {

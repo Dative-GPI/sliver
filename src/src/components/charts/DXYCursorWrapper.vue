@@ -1,5 +1,9 @@
 <template>
-  <wrapped-cursor :key="key" v-bind="$props">
+  <wrapped-cursor
+    :key="key"
+    v-bind="$props"
+    @update:selection="(value) => $emit('update:selection', value)"
+  >
     <slot> </slot>
   </wrapped-cursor>
 </template>
