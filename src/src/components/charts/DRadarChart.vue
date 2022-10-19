@@ -16,10 +16,10 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5radar from "@amcharts/amcharts5/radar";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
+import { ColorSets, GetColors } from "../../colors";
 import { AMROOT, CHART } from "../../literals";
 import { LayoutEnum } from "../../enums";
 import { getLocale } from "../../helpers";
-import { ColorSets, GetColors } from "../../colors";
 
 @Component({})
 export default class DRadarChart extends Vue {
@@ -28,9 +28,6 @@ export default class DRadarChart extends Vue {
 
   @ProvideReactive(CHART)
   chart: am5radar.RadarChart | null = null;
-
-  @Prop({ required: false, default: null })
-  licence!: string | null;
 
   @Prop({ required: false, default: "en-US" })
   locale!: string;
@@ -120,10 +117,6 @@ export default class DRadarChart extends Vue {
   }
 
   mounted(): void {
-    if (this.licence != null) {
-      am5.addLicense(this.licence);
-    }
-
     // Create root
     this.root = am5.Root.new((this.$refs.radarchart as HTMLElement));
     this.root.locale = getLocale(this.locale);

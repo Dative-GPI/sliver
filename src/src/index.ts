@@ -1,3 +1,5 @@
+import * as am5 from "@amcharts/amcharts5";
+
 import DCategoryXAxis from "./components/axis/DCategoryXAxis.vue";
 import DCategoryYAxis from "./components/axis/DCategoryYAxis.vue";
 import DDateXAxis from "./components/axis/DDateXAxis.vue";
@@ -32,7 +34,11 @@ import DTopSerie from "./components/series/DTopSerie.vue";
 import { LayoutEnum, PositionEnum } from "./enums";
 
 const Sliver = {
-  install(vue: any, options: any) {
+  install(vue: any, options: { license?: string }) {
+    if (options != null && options.license != null) {
+      am5.addLicense(options.license);
+    }
+    
     vue.component("d-category-x-axis", DCategoryXAxis);
     vue.component("d-category-y-axis", DCategoryYAxis);
     vue.component("d-date-x-axis", DDateXAxis);

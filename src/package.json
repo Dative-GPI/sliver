@@ -1,6 +1,6 @@
 {
   "name": "@dative-gpi/sliver",
-  "version": "0.2.30",
+  "version": "0.2.31",
   "private": false,
   "main": "src/index.ts",
   "scripts": {

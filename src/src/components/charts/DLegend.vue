@@ -117,7 +117,7 @@ export default class DLegend extends Vue {
   }
 
   setEnabled(): void {
-    if (this.enabled) {
+    if (this.enabled && this.legend == null) {
       // Add to chart
       if (this.singleColumn) {
         this.legend = this.chart.children.push(am5.Legend.new(this.root, {
@@ -279,7 +279,7 @@ export default class DLegend extends Vue {
       }
       this.setPosition();
     }
-    else if (this.legend != null) {
+    else if (!this.enabled && this.legend != null) {
       // Remove from chart
       this.chart!.children.removeValue(this.legend!);
 

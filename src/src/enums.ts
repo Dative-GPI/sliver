@@ -24,3 +24,8 @@ export enum SerieEnum {
   StepLineSerie = 11,
   TopSerie = 12
 }
+
+export enum HeatmapRule {
+  Gradient = 0,
+  Ranges = 1
+}

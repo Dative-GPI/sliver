@@ -7,7 +7,8 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
-import { PositionEnum } from "../../enums";
+import { HeatmapRule, PositionEnum } from "../../enums";
+import { AxisRange } from "../../helpers";
 
 import WrappedLegend from "./DHeatLegend.vue";
 
@@ -21,11 +22,29 @@ export default class DHeatLegendWrapper extends Vue {
   @Prop({ required: false, default: PositionEnum.Abscissa })
   position!: PositionEnum;
 
+  @Prop({ required: false, default: 50 })
+  x!: number;
+
+  @Prop({ required: false, default: 50 })
+  centerX!: number;
+
+  @Prop({ required: false, default: 50 })
+  y!: number;
+
+  @Prop({ required: false, default: 50 })
+  centerY!: number;
+
+  @Prop({ required: false, default: HeatmapRule.Gradient })
+  rule!: HeatmapRule;
+
   @Prop({ required: false, default: "#ffff00" })
   minColor!: string;
 
   @Prop({ required: false, default: "#ff0000" })
   maxColor!: string;
+
+  @Prop({ required: false, default: undefined })
+  ranges!: AxisRange[] | undefined;
 
   @Watch("enabled")
   onEnabledChange() {

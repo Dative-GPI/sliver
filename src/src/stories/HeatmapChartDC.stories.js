@@ -32,8 +32,10 @@ const Template = (args, { argTypes }) => ({
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisCellStartLocation="yAxisCellStartLocation"
       :yAxisCellEndLocation="yAxisCellEndLocation"
+      :rule="rule"
       :minColor="minColor"
       :maxColor="maxColor"
+      :ranges="ranges"
       :selection="selection"
     />`,
 });
@@ -64,7 +66,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeHeatmapSerie("Occupancy", 1661817600000, 3600000, ["Dawn", "Morning", "Afternoon", "Evening", "Night"], 150000, 7) }
+      { ...makeHeatmapSerie("Occupancy", 1661817600000, 3600000, ["Dawn", "Morning", "Afternoon", "Evening", "Night"], 600, 24) }
     ]
   },
   minHeight: '400px',
@@ -88,7 +90,13 @@ Default.args = {
   yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisCellStartLocation: 0,
   yAxisCellEndLocation: 1,
+  rule: 1,
   minColor: "#00ffff",
   maxColor: "#ff0000",
+  ranges: [
+    { startValue: 0, endValue: 200, color: "#ff0000", opacity: 1, label: "Low" },
+    { startValue: 200, endValue: 400, color: "#0000ff", opacity: 1, label: "Medium" },
+    { startValue: 200, endValue: 600, color: "#00ff00", opacity: 1, label: "High" }
+  ],
   selection: [null, null]
 };

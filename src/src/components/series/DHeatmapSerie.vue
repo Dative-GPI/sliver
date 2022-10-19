@@ -11,8 +11,8 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
-import { updateCategories, addSerie, removeSerie } from "../../helpers";
-import { PositionEnum, SerieEnum } from "../../enums";
+import { updateCategories, addSerie, removeSerie, AxisRange } from "../../helpers";
+import { HeatmapRule, PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
 export default class DHeatmapSerie extends Vue {
@@ -35,6 +35,9 @@ export default class DHeatmapSerie extends Vue {
 
   @InjectReactive(LEGEND)
   legend!: am5.HeatLegend | null;
+
+  @Watch("legend")
+  onLegendChange = this.setLegend;
 
   @Prop({ required: true })
   name!: string;
@@ -75,6 +78,12 @@ export default class DHeatmapSerie extends Vue {
   @Watch("tooltipText")
   onTooltipTextChange = this.setShowTooltip;
 
+  @Prop({ required: false, default: HeatmapRule.Gradient })
+  rule!: HeatmapRule;
+
+  @Watch("rule")
+  onRuleChange = this.setHeatRules;
+
   @Prop({ required: false, default: "#ffff00" })
   minColor!: string;
 
@@ -86,6 +95,12 @@ export default class DHeatmapSerie extends Vue {
 
   @Watch("maxColor")
   onMaxColorChange = this.setHeatRules;
+
+  @Prop({ required: false, default: undefined })
+  ranges!: AxisRange[] | undefined;
+
+  @Watch("ranges")
+  onRangesChange = this.setHeatRules;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -111,13 +126,39 @@ export default class DHeatmapSerie extends Vue {
   }
 
   setHeatRules(): void {
-    this.serie!.set("heatRules", [{
-      target: this.serie!.columns.template,
-      min: am5.color(this.minColor),
-      max: am5.color(this.maxColor),
-      dataField: "value",
-      key: "fill"
-    }]);
+    this.serie!.columns.template.adapters.remove("fill");
+    this.serie!.set("heatRules", undefined);
+
+    switch(this.rule) {
+      case HeatmapRule.Gradient: {
+        this.serie!.set("heatRules", [{
+          target: this.serie!.columns.template,
+          min: am5.color(this.minColor),
+          max: am5.color(this.maxColor),
+          dataField: "value",
+          key: "fill"
+        }]);
+        break;
+      }
+      case HeatmapRule.Ranges: {
+        if (this.ranges != null && this.ranges.length > 0) {
+          this.serie!.columns.template.adapters.add("fill", (value: any, target: any): am5.Color | undefined => {
+            if (target.dataItem != null) {
+              let value = target.dataItem!.dataContext[this.sizeField];
+              for (let i = 0; i < this.ranges!.length; i++) {
+                if (value >= this.ranges![i].startValue && value < this.ranges![i].endValue) {
+                  return am5.color(this.ranges![i].color);
+                }
+              }
+            }
+            return value;
+          });
+        }
+        break;
+      }
+    }
+
+    this.setData();
   }
 
   setData(): void {
@@ -134,6 +175,17 @@ export default class DHeatmapSerie extends Vue {
       );
     }
     this.serie!.data.setAll(this.data);
+  }
+
+  setLegend(): void {
+    if (this.legend != null && this.rule === HeatmapRule.Gradient) {
+      if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
+        this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
+      }
+      if (this.legend!.get("endValue") == null || this.legend!.get("endValue")! < this.serie!.getPrivate("valueHigh")!) {
+        this.legend!.set("endValue", this.serie!.getPrivate("valueHigh")!);
+      }
+    }
   }
 
   mounted(): void {
@@ -171,20 +223,8 @@ export default class DHeatmapSerie extends Vue {
       this.cursor.set("snapToSeries", addSerie(this.cursor.get("snapToSeries")!, this.serie));
     }
     
-    // Set data
-    this.setData();
-    
     // Add to legend
-    this.serie.events.on("datavalidated", () => {
-      if (this.legend != null) {
-        if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
-          this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
-        }
-        if (this.legend!.get("endValue") == null || this.legend!.get("endValue")! < this.serie!.getPrivate("valueHigh")!) {
-          this.legend!.set("endValue", this.serie!.getPrivate("valueHigh")!);
-        }
-      }
-    });
+    this.serie.events.once("datavalidated", this.setLegend);
     
     this.upAndRunning = true;
   }

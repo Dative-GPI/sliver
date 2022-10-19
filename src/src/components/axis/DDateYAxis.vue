@@ -70,13 +70,26 @@ export default class DDateYAxis extends Vue {
   selection!: (number | null)[];
 
   @Watch("selection")
-  onSelectionChange(newVal: (number | null)[], oldVal: (number | null)[]): void {
-    if (newVal.length === 2 && newVal[0] != null && newVal[1] != null) {
-      this.axis!.zoomToDates(newVal[0], newVal[1]);
+  onSelectionChange(): void {
+    if (this.selection.length !== 2 || (this.selection[0] == null && this.selection[1] == null)) {
+      this.axis!.zoom(0, 1, 0);
+      return;
+    }
+    let start = new Date(0);
+    let end = new Date(0);
+    if (this.selection[0] != null) {
+      start.setUTCMilliseconds(this.selection[0]);
     }
     else {
-      this.axis!.zoom(0, 1, 0);
+      start = this.axis!.positionToDate(0);
     }
+    if (this.selection[1] != null) {
+      end.setUTCMilliseconds(this.selection[1]);
+    }
+    else {
+      end = this.axis!.positionToDate(1);
+    }
+    this.axis!.zoomToDates(start, end);
   }
 
   tooltip: am5.Tooltip | null = null;
