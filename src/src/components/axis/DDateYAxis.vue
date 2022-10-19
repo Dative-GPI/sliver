@@ -66,32 +66,6 @@ export default class DDateYAxis extends Vue {
   @ProvideReactive(YAXISVALIDATED)
   serieValidated: () => void = this.setRanges;
 
-  @Prop({ required: false, default: () => [null, null] })
-  selection!: (number | null)[];
-
-  @Watch("selection")
-  onSelectionChange(): void {
-    if (this.selection.length !== 2 || (this.selection[0] == null && this.selection[1] == null)) {
-      this.axis!.zoom(0, 1, 0);
-      return;
-    }
-    let start = new Date(0);
-    let end = new Date(0);
-    if (this.selection[0] != null) {
-      start.setUTCMilliseconds(this.selection[0]);
-    }
-    else {
-      start = this.axis!.positionToDate(0);
-    }
-    if (this.selection[1] != null) {
-      end.setUTCMilliseconds(this.selection[1]);
-    }
-    else {
-      end = this.axis!.positionToDate(1);
-    }
-    this.axis!.zoomToDates(start, end);
-  }
-
   tooltip: am5.Tooltip | null = null;
   start: Date | null = null;
   end: Date | null = null;
@@ -257,14 +231,6 @@ export default class DDateYAxis extends Vue {
         { timeUnit: "month", count: 1 },
       ]
     }));
-
-    this.axis.onPrivate("selectionMin", (value: any, _: any): void => {
-      this.$emit("update:selectionMin", value);
-    });
-
-    this.axis.onPrivate("selectionMax", (value: any, _: any): void => {
-      this.$emit("update:selectionMax", value);
-    });
 
     // Add to cursor
     if (this.cursor) {

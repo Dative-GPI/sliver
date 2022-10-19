@@ -10,11 +10,11 @@
 </template>
 
 <script lang="ts">
+import _ from "lodash";
 import { Component, ProvideReactive, Vue, Prop, Watch } from "vue-property-decorator";
 
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
-import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
 import { ColorSets, GetColors } from "../../colors";
 import { LayoutEnum } from "../../enums";
@@ -63,6 +63,14 @@ export default class DXYChart extends Vue {
   onWheelYChange = this.setWheelY;
 
   upAndRunning: boolean = false;
+
+  debouncedUpdate = _.debounce(this.update, 350);
+
+  update(): void {
+    let start = (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.chart!.xAxes.values[0].get("start")!).getTime();
+    let end = (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.chart!.xAxes.values[0].get("end")!).getTime();
+    this.$emit("update:selection", [start, end]);
+  }
 
   setLayout(): void {
     switch(this.layout) {
@@ -130,8 +138,14 @@ export default class DXYChart extends Vue {
         cursor.set("behavior", undefined);
         setTimeout(() => cursor!.set("behavior", behavior), 5)
       }
-      this.$emit("update:zoomOut");
+      this.$emit("update:selection", [null, null]);
     });
+
+    this.chart.events.on("wheelended", (a: any) => {
+      if (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX> != null) {
+        this.debouncedUpdate();
+      }
+    })
 
     this.setLayout();
     this.setWheelX();

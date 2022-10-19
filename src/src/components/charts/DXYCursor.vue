@@ -11,6 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, XAXIS, YAXIS } from "../../literals";
+import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 @Component({})
 export default class DXYCursor extends Vue {
@@ -47,6 +48,9 @@ export default class DXYCursor extends Vue {
   @Watch("yVisible")
   onYVisibleChange = this.setYVisible;
 
+  @Prop({ required: false, default: () => [null, null] })
+  selection!: (number | null)[];
+
   @ProvideReactive(CURSOR)
   cursor: am5xy.XYCursor | null = null;
 
@@ -80,6 +84,21 @@ export default class DXYCursor extends Vue {
       this.setBehavior();
       this.setXVisible();
       this.setYVisible();
+
+      this.cursor.events.on("selectended", (event: any): void => {
+        if (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX> != null) {
+          if (this.selection[0] != null && this.selection[1] != null) {
+            let start = (this.selection[1] - this.selection[0]) * this.cursor!.getPrivate("downPositionX")! + this.selection[0];
+            let end = (this.selection[1] - this.selection[0]) * this.cursor!.getPrivate("positionX")! + this.selection[0];
+            this.$emit("update:selection", [start, end]);
+          }
+          else {
+            let start = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.cursor!.getPrivate("downPositionX")!).getTime();
+            let end = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.cursor!.getPrivate("positionX")!).getTime();
+            this.$emit("update:selection", [start, end]);
+          }
+        }
+      });
     }
     
     this.upAndRunning = true;

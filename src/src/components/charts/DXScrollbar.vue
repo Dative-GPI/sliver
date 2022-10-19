@@ -11,6 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART } from "../../literals";
+import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 @Component({})
 export default class DXScrollbar extends Vue {
@@ -80,6 +81,14 @@ export default class DXScrollbar extends Vue {
       this.scrollbar = this.chart.set("scrollbarX", am5xy.XYChartScrollbar.new(this.root, {
         orientation: "horizontal"
       }));
+
+      this.scrollbar.startGrip.events.on("pointerup", (event: ISpritePointerEvent & { type: "pointerup"; target: am5.Button; }): void => {
+        if (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX> != null) {
+          let start = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.scrollbar!.get("start")!).getTime();
+          let end = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.scrollbar!.get("end")!).getTime();
+          this.$emit("update:selection", [start, end]);
+        }
+      });
       
       this.scrollbar.startGrip.set("width", 10);
       this.scrollbar.startGrip.set("height", 20);
@@ -96,24 +105,7 @@ export default class DXScrollbar extends Vue {
   }
 
   mounted(): void {
-    if (this.enabled) {
-      // Add to chart
-      this.scrollbar = this.chart.set("scrollbarX", am5xy.XYChartScrollbar.new(this.root, {
-        orientation: "horizontal"
-      }));
-      
-      this.scrollbar.startGrip.set("width", 10);
-      this.scrollbar.startGrip.set("height", 20);
-      this.scrollbar.startGrip.set("icon", undefined);
-      
-      this.scrollbar.endGrip.set("width", 10);
-      this.scrollbar.endGrip.set("height", 20);
-      this.scrollbar.endGrip.set("icon", undefined);
-
-      this.setHeight();
-      this.setStartGripVisible();
-      this.setEndGripVisible();
-    }
+    this.setEnabled();
 
     this.upAndRunning = true;
   }
