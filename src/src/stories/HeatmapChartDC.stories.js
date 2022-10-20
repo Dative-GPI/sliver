@@ -98,5 +98,5 @@ Default.args = {
     { startValue: 200, endValue: 400, color: "#0000ff", opacity: 1, label: "Medium" },
     { startValue: 200, endValue: 600, color: "#00ff00", opacity: 1, label: "High" }
   ],
-  selection: [null, null]
+  selection: [1661817600000, 1661819600000]
 };

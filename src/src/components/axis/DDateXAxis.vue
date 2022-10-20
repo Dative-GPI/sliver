@@ -265,7 +265,7 @@ export default class DDateXAxis extends Vue {
     this.setMax();
 
     // Apply zoom if needed
-    this.onSelectionChange();
+    setTimeout(this.onSelectionChange, 50);
 
     this.upAndRunning = true;
   }
