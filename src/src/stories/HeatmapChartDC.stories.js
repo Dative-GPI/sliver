@@ -32,10 +32,10 @@ const Template = (args, { argTypes }) => ({
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
       :yAxisCellStartLocation="yAxisCellStartLocation"
       :yAxisCellEndLocation="yAxisCellEndLocation"
-      :rule="rule"
+      :heatRule="heatRule"
       :minColor="minColor"
       :maxColor="maxColor"
-      :ranges="ranges"
+      :heatRanges="heatRanges"
       :selection="selection"
     />`,
 });
@@ -90,10 +90,10 @@ Default.args = {
   yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisCellStartLocation: 0,
   yAxisCellEndLocation: 1,
-  rule: 1,
+  heatRule: 2,
   minColor: "#00ffff",
   maxColor: "#ff0000",
-  ranges: [
+  heatRanges: [
     { startValue: 0, endValue: 200, color: "#ff0000", opacity: 1, label: "Low" },
     { startValue: 200, endValue: 400, color: "#0000ff", opacity: 1, label: "Medium" },
     { startValue: 200, endValue: 600, color: "#00ff00", opacity: 1, label: "High" }

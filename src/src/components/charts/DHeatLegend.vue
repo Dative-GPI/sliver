@@ -13,7 +13,7 @@ import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, LEGEND_DEBUG } from "../../literals";
-import { HeatmapRule, LayoutEnum, PositionEnum } from "../../enums";
+import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
 import { AxisRange } from "../../helpers";
 
 @Component({})
@@ -66,11 +66,11 @@ export default class DHeatLegend extends Vue {
   @Watch("centerY")
   onCenterYChange = this.setEnabled;
 
-  @Prop({ required: false, default: HeatmapRule.Gradient })
-  rule!: HeatmapRule;
+  @Prop({ required: false, default: HeatRule.Gradient })
+  heatRule!: HeatRule;
 
-  @Watch("rule")
-  onRuleChange = this.setEnabled;
+  @Watch("heatRule")
+  onHeatRuleChange = this.setEnabled;
 
   @Prop({ required: false, default: "#ffff00" })
   minColor!: string;
@@ -85,10 +85,10 @@ export default class DHeatLegend extends Vue {
   onMaxColorChange = this.setEnabled;
 
   @Prop({ required: false, default: undefined })
-  ranges!: AxisRange[] | undefined;
+  heatRanges!: AxisRange[] | undefined;
 
   @Watch("ranges")
-  onRangesChange = this.setEnabled;
+  onHeatRangesChange = this.setEnabled;
 
   @ProvideReactive(LEGEND)
   legend: am5.HeatLegend | am5.Legend | null = null;
@@ -115,8 +115,8 @@ export default class DHeatLegend extends Vue {
       this.legend = null;
     }
     if (this.enabled) {
-      switch (this.rule) {
-        case HeatmapRule.Gradient: {
+      switch (this.heatRule) {
+        case HeatRule.Gradient: {
           // Add to chart
           this.legend = this.chart.children.push(am5.HeatLegend.new(this.root, {
             startColor: am5.color(this.minColor),
@@ -125,7 +125,7 @@ export default class DHeatLegend extends Vue {
           }));
           break;
         }
-        case HeatmapRule.Ranges: {
+        case HeatRule.Ranges: {
           this.legend = this.chart.children.push(am5.Legend.new(this.root, {
             nameField: "name",
             fillField: "color",
@@ -161,8 +161,8 @@ export default class DHeatLegend extends Vue {
               break;
             }
           }
-          if (this.ranges != null) {
-            this.legend.data.setAll(this.ranges!.map(r => ({
+          if (this.heatRanges != null) {
+            this.legend.data.setAll(this.heatRanges!.map(r => ({
               name: r.label,
               color: am5.color(r.color)
             })));

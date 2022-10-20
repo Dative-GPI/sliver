@@ -11,8 +11,8 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
-import { textColor } from "../../helpers";
-import { SerieEnum } from "../../enums";
+import { AxisRange, textColor } from "../../helpers";
+import { HeatRule, SerieEnum } from "../../enums";
 
 @Component({})
 export default class DLineSerie extends Vue {
@@ -91,6 +91,30 @@ export default class DLineSerie extends Vue {
   @Watch("bulletsRadius")
   onBulletsRadiusChange = this.setShowBullets;
 
+  @Prop({ required: false, default: HeatRule.None })
+  heatRule!: HeatRule;
+
+  @Watch("heatRule")
+  onHeatRuleChange = this.setHeatRule;
+
+  @Prop({ required: false, default: "#ffff00" })
+  minColor!: string;
+
+  @Watch("minColor")
+  onMinColorChange = this.setHeatRule;
+
+  @Prop({ required: false, default: "#ff0000" })
+  maxColor!: string;
+
+  @Watch("maxColor")
+  onMaxColorChange = this.setHeatRule;
+
+  @Prop({ required: false, default: undefined })
+  heatRanges!: AxisRange[] | undefined;
+
+  @Watch("ranges")
+  onHeatRangesChange = this.setHeatRule;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -160,20 +184,68 @@ export default class DLineSerie extends Vue {
     }
   }
 
+  setHeatRule(): void {
+    this.serie!.strokes.template.set("strokeGradient", undefined);
+
+    switch (this.heatRule) {
+      case HeatRule.Gradient: {
+        this.serie!.strokes.template.set("strokeGradient", am5.LinearGradient.new(this.root, {
+          stops: [
+            { color: am5.color(this.maxColor) },
+            { color: am5.color(this.minColor) }
+          ],
+          target: this.chart!.plotContainer
+        }));
+        break;
+      }
+    }
+
+    this.setData();
+  }
+
   setData(): void {
-    this.serie!.data.setAll(this.data);
+    switch (this.heatRule) {
+      case HeatRule.None:
+      case HeatRule.Gradient: {
+        this.serie!.data.setAll(this.data);
+        break;
+      }
+      case HeatRule.Ranges: {
+        if (this.heatRanges != null && this.heatRanges.length > 0) {
+          this.serie!.strokes.template.set("templateField", "strokeSettings");
+
+          let data = this.data.map((point: any) => {
+            var color: am5.Color | null = null;
+            for (let i = 0; i < this.heatRanges!.length; i++) {
+              if (point[this.valueYField] >= this.heatRanges![i].startValue && point[this.valueYField] <= this.heatRanges![i].endValue) {
+                color = am5.color(this.heatRanges![i].color);
+              }
+            }
+            return {
+              [this.valueYField]: point[this.valueYField],
+              [this.dateXField]: point[this.dateXField],
+              strokeSettings: color != null ? { stroke: color } : undefined
+            }
+          });
+          this.serie!.data.setAll(data);
+        }
+        else {
+          this.serie!.data.setAll(this.data);
+        }
+      }
+    }
     this.setShowTooltip();
   }
 
   mounted(): void {
     // Add to chart
     this.serie = this.chart.series.push(am5xy.LineSeries.new(this.root, {
+      calculateAggregates: true,
       xAxis: this.xAxis,
       yAxis: this.yAxis,
       valueXField: this.dateXField,
       valueYField: this.valueYField,
-      sequencedInterpolation: true,
-      userData: { serie: SerieEnum.LineSerie }
+      userData: { serie: SerieEnum.LineSerie },
     }));
 
     this.serie.events.on("datavalidated", this.xAxisValidated);
@@ -183,14 +255,12 @@ export default class DLineSerie extends Vue {
     this.setSnapTooltip();
     this.setConnect();
     this.setShowBullets();
+    this.setHeatRule();
 
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
     }
-    
-    // Set data
-    this.setData();
     
     this.upAndRunning = true;
   }

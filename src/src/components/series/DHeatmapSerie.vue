@@ -12,7 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie, AxisRange } from "../../helpers";
-import { HeatmapRule, PositionEnum, SerieEnum } from "../../enums";
+import { HeatRule, PositionEnum, SerieEnum } from "../../enums";
 
 @Component({})
 export default class DHeatmapSerie extends Vue {
@@ -78,29 +78,29 @@ export default class DHeatmapSerie extends Vue {
   @Watch("tooltipText")
   onTooltipTextChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: HeatmapRule.Gradient })
-  rule!: HeatmapRule;
+  @Prop({ required: false, default: HeatRule.Gradient })
+  heatRule!: HeatRule;
 
-  @Watch("rule")
-  onRuleChange = this.setHeatRules;
+  @Watch("heatRule")
+  onHeatRuleChange = this.setHeatRule;
 
   @Prop({ required: false, default: "#ffff00" })
   minColor!: string;
 
   @Watch("minColor")
-  onMinColorChange = this.setHeatRules;
+  onMinColorChange = this.setHeatRule;
 
   @Prop({ required: false, default: "#ff0000" })
   maxColor!: string;
 
   @Watch("maxColor")
-  onMaxColorChange = this.setHeatRules;
+  onMaxColorChange = this.setHeatRule;
 
   @Prop({ required: false, default: undefined })
-  ranges!: AxisRange[] | undefined;
+  heatRanges!: AxisRange[] | undefined;
 
   @Watch("ranges")
-  onRangesChange = this.setHeatRules;
+  onHeatRangesChange = this.setHeatRule;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -125,12 +125,12 @@ export default class DHeatmapSerie extends Vue {
     }
   }
 
-  setHeatRules(): void {
+  setHeatRule(): void {
     this.serie!.columns.template.adapters.remove("fill");
     this.serie!.set("heatRules", undefined);
 
-    switch(this.rule) {
-      case HeatmapRule.Gradient: {
+    switch(this.heatRule) {
+      case HeatRule.Gradient: {
         this.serie!.set("heatRules", [{
           target: this.serie!.columns.template,
           min: am5.color(this.minColor),
@@ -140,14 +140,14 @@ export default class DHeatmapSerie extends Vue {
         }]);
         break;
       }
-      case HeatmapRule.Ranges: {
-        if (this.ranges != null && this.ranges.length > 0) {
+      case HeatRule.Ranges: {
+        if (this.heatRanges != null && this.heatRanges.length > 0) {
           this.serie!.columns.template.adapters.add("fill", (value: any, target: any): am5.Color | undefined => {
             if (target.dataItem != null) {
-              let value = target.dataItem!.dataContext[this.sizeField];
-              for (let i = 0; i < this.ranges!.length; i++) {
-                if (value >= this.ranges![i].startValue && value < this.ranges![i].endValue) {
-                  return am5.color(this.ranges![i].color);
+              let heat = target.dataItem!.dataContext[this.sizeField];
+              for (let i = 0; i < this.heatRanges!.length; i++) {
+                if (heat >= this.heatRanges![i].startValue && heat <= this.heatRanges![i].endValue) {
+                  return am5.color(this.heatRanges![i].color);
                 }
               }
             }
@@ -178,7 +178,7 @@ export default class DHeatmapSerie extends Vue {
   }
 
   setLegend(): void {
-    if (this.legend != null && this.rule === HeatmapRule.Gradient) {
+    if (this.legend != null && this.heatRule === HeatRule.Gradient) {
       if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
         this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
       }
@@ -215,7 +215,7 @@ export default class DHeatmapSerie extends Vue {
 
     // Set updatable properties
     this.setName();
-    this.setHeatRules();
+    this.setHeatRule();
     this.setShowTooltip();
 
     // Add to cursor

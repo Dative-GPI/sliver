@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
-import { HeatmapRule, PositionEnum } from "../../enums";
+import { HeatRule, PositionEnum } from "../../enums";
 import { AxisRange } from "../../helpers";
 
 import WrappedLegend from "./DHeatLegend.vue";
@@ -34,8 +34,8 @@ export default class DHeatLegendWrapper extends Vue {
   @Prop({ required: false, default: 50 })
   centerY!: number;
 
-  @Prop({ required: false, default: HeatmapRule.Gradient })
-  rule!: HeatmapRule;
+  @Prop({ required: false, default: HeatRule.Gradient })
+  heatRule!: HeatRule;
 
   @Prop({ required: false, default: "#ffff00" })
   minColor!: string;
@@ -44,7 +44,7 @@ export default class DHeatLegendWrapper extends Vue {
   maxColor!: string;
 
   @Prop({ required: false, default: undefined })
-  ranges!: AxisRange[] | undefined;
+  heatRanges!: AxisRange[] | undefined;
 
   @Watch("enabled")
   onEnabledChange() {

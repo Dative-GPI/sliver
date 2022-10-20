@@ -14,10 +14,10 @@
       <d-heat-legend
         :enabled="legend"
         :position="legendPosition"
-        :rule="rule"
+        :heatRule="heatRule"
         :minColor="minColor"
         :maxColor="maxColor"
-        :ranges="ranges"
+        :heatRanges="heatRanges"
       >
         <d-xy-cursor
           :enabled="cursor"
@@ -44,10 +44,10 @@
                 :data="serie.data"
                 :xField="'timestampX'"
                 :yField="'categoryY'"
-                :rule="rule"
+                :heatRule="heatRule"
                 :minColor="minColor"
                 :maxColor="maxColor"
-                :ranges="ranges"
+                :heatRanges="heatRanges"
               />
             </d-category-y-axis>
           </d-date-x-axis>
@@ -66,7 +66,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 
-import { HeatmapRule, LayoutEnum, PositionEnum } from "../../enums";
+import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
 import { AxisRange } from "../../helpers";
 
 import Spinner from "./Spinner.vue";
@@ -140,7 +140,7 @@ export default class HeatmapChart extends Vue {
   yAxisCellEndLocation!: number;
 
   @Prop({ required: true })
-  rule!: HeatmapRule;
+  heatRule!: HeatRule;
 
   @Prop({ required: true })
   minColor!: string;
@@ -149,7 +149,7 @@ export default class HeatmapChart extends Vue {
   maxColor!: string;
 
   @Prop({ required: true })
-  ranges!: AxisRange[] | undefined;
+  heatRanges!: AxisRange[] | undefined;
 
   @Prop({ required: true })
   selection!: (number | null)[];

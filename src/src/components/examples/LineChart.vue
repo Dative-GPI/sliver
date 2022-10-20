@@ -46,6 +46,10 @@
                 :data="serie.data"
                 :showBullets="serieShowBullets"
                 :bulletsRadius="serieBulletsRadius"
+                :heatRule="heatRule"
+                :minColor="minColor"
+                :maxColor="maxColor"
+                :heatRanges="heatRanges"
               />
             </d-date-x-axis>
           </d-value-y-axis>
@@ -64,7 +68,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 
-import { LayoutEnum, PositionEnum } from "../../enums";
+import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
 import { AxisRange, TimeRange } from "../../helpers";
 
 import Spinner from "./Spinner.vue";
@@ -160,6 +164,18 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   serieBulletsRadius!: number;
+
+  @Prop({ required: true })
+  heatRule!: HeatRule;
+
+  @Prop({ required: true })
+  minColor!: string;
+
+  @Prop({ required: true })
+  maxColor!: string;
+
+  @Prop({ required: true })
+  heatRanges!: AxisRange[] | undefined;
   
   ready: boolean = false;
 }

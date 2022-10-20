@@ -40,6 +40,10 @@ const Template = (args, { argTypes }) => ({
       :yAxisUnit="yAxisUnit"
       :serieShowBullets="serieShowBullets"
       :serieBulletsRadius="serieBulletsRadius"
+      :heatRule="heatRule"
+      :minColor="minColor"
+      :maxColor="maxColor"
+      :heatRanges="heatRanges"
     />`,
 });
 
@@ -67,8 +71,9 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeLineSerie("Line 1", 1660860000000 + 86400000, 1, 2.16e+7, 1, 25 ) },
-      { ...makeLineSerie("Line 2", 1660860000000 + 86400000, 1, 2.16e+7, 1, 25 ) }
+      { ...makeLineSerie("Line 1", 1660860000000 + 86400000, 0, 2.16e+7, 2, 50 ) },
+      { ...makeLineSerie("Line 2", 1660860000000 + 86400000, 0, 2.16e+7, 2, 50 ) },
+      { ...makeLineSerie("Line 3", 1660860000000 + 86400000, 0, 2.16e+7, 2, 50 ) }
     ]
   },
   minHeight: '400px',
@@ -97,10 +102,19 @@ Default.args = {
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisRanges: [
-    { startValue: 0,   endValue: -3,  opacity: 0.2, color: "#ff0000", label: "Bad" },
+    { startValue: -3,   endValue: 0,  opacity: 0.2, color: "#ff0000", label: "Bad" },
     { startValue: 0,   endValue: 3,  opacity: 0.2, color: "#00ff00", label: "Good" },
   ],
   yAxisUnit: "mL",
   serieShowBullets: false,
-  serieBulletsRadius: 5
+  serieBulletsRadius: 5,
+  heatRule: 2,
+  minColor: "#FF0000",
+  maxColor: "#00FF00",
+  heatRanges: [
+    { startValue: -1500,   endValue: -3,  opacity: 1, color: "#0000ff", label: "Out of scope" },
+    { startValue: -3,   endValue: 0,  opacity: 1, color: "#ff0000", label: "Bad" },
+    { startValue: 0,   endValue: 3,  opacity: 1, color: "#00ff00", label: "Good" },
+    { startValue: 3,   endValue: 1500,  opacity: 1, color: "#0000ff", label: "Out of scope" },
+  ]
 };
