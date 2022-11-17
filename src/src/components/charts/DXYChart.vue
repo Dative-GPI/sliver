@@ -73,7 +73,7 @@ export default class DXYChart extends Vue {
   setSharedZoom(): void {
     if (this.sharedZoom) {
       this.chart!.zoomOutButton.set("forceHidden", true);
-      this.chart!.events.on("wheelended", (a: any) => {
+      this.chart!.events.on("wheelended", (event: any) => {
         if (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX> != null) {
           this.debouncedUpdate();
         }
@@ -91,6 +91,7 @@ export default class DXYChart extends Vue {
     let start = (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.chart!.xAxes.values[0].get("start")!).getTime();
     let end = (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.chart!.xAxes.values[0].get("end")!).getTime();
     this.$emit("update:selection", [start, end]);
+    this.chart!.zoomOut();
   }
 
   setLayout(): void {
