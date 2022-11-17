@@ -44,14 +44,14 @@ export default class DXYChart extends Vue {
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;
 
-  @Prop({ required: false, default: LayoutEnum.Vertical })
-  layout!: LayoutEnum;
-
   @Prop({ required: false, default: false })
   sharedZoom!: boolean;
 
   @Watch("sharedZoom")
   onSharedZoomChange = this.setSharedZoom;
+
+  @Prop({ required: false, default: LayoutEnum.Vertical })
+  layout!: LayoutEnum;
 
   @Watch("layout")
   onLayoutChange = this.setLayout;

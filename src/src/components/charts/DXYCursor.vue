@@ -73,6 +73,7 @@ export default class DXYCursor extends Vue {
             let start = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.cursor!.getPrivate("downPositionX")!).getTime();
             let end = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.cursor!.getPrivate("positionX")!).getTime();
             this.$emit("update:selection", [start, end]);
+            this.cursor!.selection.hide();
         }
       });
     }
