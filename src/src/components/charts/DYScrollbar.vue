@@ -11,6 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART } from "../../literals";
+import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 @Component({})
 export default class DYScrollbar extends Vue {
@@ -25,6 +26,12 @@ export default class DYScrollbar extends Vue {
 
   @Watch("enabled")
   onEnabledChange = this.setEnabled;
+
+  @Prop({ required: false, default: false })
+  sharedZoom!: boolean;
+
+  @Watch("sharedZoom")
+  onSharedZoomCHange = this.setSharedZoom;
 
   @Prop({ required: false, default: 5 })
   height!: number;
@@ -89,31 +96,34 @@ export default class DYScrollbar extends Vue {
       this.scrollbar.endGrip.set("height", 20);
       this.scrollbar.endGrip.set("icon", undefined);
 
+      this.setSharedZoom();
+
       this.setHeight();
       this.setStartGripVisible();
       this.setEndGripVisible();
     }
   }
 
-  mounted(): void {
-    if (this.enabled) {
-      // Add to chart
-      this.scrollbar = this.chart.set("scrollbarY", am5xy.XYChartScrollbar.new(this.root, {
-        orientation: "vertical"
-      }));
-      
-      this.scrollbar.startGrip.set("width", 10);
-      this.scrollbar.startGrip.set("height", 20);
-      this.scrollbar.startGrip.set("icon", undefined);
-      
-      this.scrollbar.endGrip.set("width", 10);
-      this.scrollbar.endGrip.set("height", 20);
-      this.scrollbar.endGrip.set("icon", undefined);
+  setSharedZoom(): void {
+    this.scrollbar!.startGrip.events.off("pointerup");
+    this.scrollbar!.endGrip.events.off("pointerup");
 
-      this.setHeight();
-      this.setStartGripVisible();
-      this.setEndGripVisible();
+    if (this.sharedZoom) {
+      this.scrollbar!.startGrip.events.on("pointerup", this.update);
+      this.scrollbar!.endGrip.events.on("pointerup", this.update);
     }
+  }
+
+  update(): void {
+    if (this.chart.yAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererY> != null) {
+      let start = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererY>).positionToDate(this.scrollbar!.get("start")!).getTime();
+      let end = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererY>).positionToDate(this.scrollbar!.get("end")!).getTime();
+      this.$emit("update:selection", [start, end]);
+    }
+  }
+
+  mounted(): void {
+    this.setEnabled();
 
     this.upAndRunning = true;
   }

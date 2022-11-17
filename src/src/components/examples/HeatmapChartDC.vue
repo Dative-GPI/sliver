@@ -29,7 +29,6 @@
             :opposite="xAxisOpposite"
             :showTooltip="xAxisShowTooltip"
             :tooltipDateFormat="xAxisTooltipDateFormat"
-            :selection="selection"
           >
             <d-category-y-axis
               :opposite="yAxisOpposite"
@@ -150,9 +149,6 @@ export default class HeatmapChart extends Vue {
 
   @Prop({ required: true })
   heatRanges!: AxisRange[] | undefined;
-
-  @Prop({ required: true })
-  selection!: (number | null)[];
 
   ready: boolean = false;
 }

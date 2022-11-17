@@ -47,22 +47,43 @@ export default class DXYChart extends Vue {
   @Prop({ required: false, default: LayoutEnum.Vertical })
   layout!: LayoutEnum;
 
+  @Prop({ required: false, default: false })
+  sharedZoom!: boolean;
+
+  @Watch("sharedZoom")
+  onSharedZoomChange = this.setSharedZoom;
+
   @Watch("layout")
   onLayoutChange = this.setLayout;
 
-  @Prop({ required: false, default: "panX" })
-  wheelX!: "zoomX" | "zoomY" | "zoomXY" | "panX" | "panY" | "panXY" | undefined;
+  @Prop({ required: false, default: "zoomX" })
+  wheelX!: "zoomX" | "zoomY" | "zoomXY" | "panX" | "panY" | "panXY" | "none" | undefined;
 
   @Watch("wheelX")
   onWheelXChange = this.setWheelX;
 
   @Prop({ required: false, default: "zoomX" })
-  wheelY!: "zoomX" | "zoomY" | "zoomXY" | "panX" | "panY" | "panXY" | undefined;
+  wheelY!: "zoomX" | "zoomY" | "zoomXY" | "panX" | "panY" | "panXY" | "none" | undefined;
 
   @Watch("wheelY")
   onWheelYChange = this.setWheelY;
 
   upAndRunning: boolean = false;
+
+  setSharedZoom(): void {
+    if (this.sharedZoom) {
+      this.chart!.zoomOutButton.set("forceHidden", true);
+      this.chart!.events.on("wheelended", (a: any) => {
+        if (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX> != null) {
+          this.debouncedUpdate();
+        }
+      });
+    }
+    else {
+      this.chart!.zoomOutButton.set("forceHidden", false);
+      this.chart!.events.off("wheelended");
+    }
+  }
 
   debouncedUpdate = _.debounce(this.update, 350);
 
@@ -104,7 +125,7 @@ export default class DXYChart extends Vue {
     this.root.timezone = getTimezone(this.timeOffset);
 
     this.root.numberFormatter.setAll({
-      numberFormat: "#,###.###### a",
+      numberFormat: "#,###.### a",
       smallNumberThreshold: 0.001
     });
 
@@ -130,23 +151,7 @@ export default class DXYChart extends Vue {
       this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
     }
 
-    // Hack to bypass the cursor behavior when clicking the zoom out button
-    this.chart.zoomOutButton.events.on("click", () => {
-      let cursor = this.chart!.get("cursor");
-      if (cursor != null) {
-        let behavior = cursor.get("behavior");
-        cursor.set("behavior", undefined);
-        setTimeout(() => cursor!.set("behavior", behavior), 5)
-      }
-      this.$emit("update:selection", [null, null]);
-    });
-
-    this.chart.events.on("wheelended", (a: any) => {
-      if (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX> != null) {
-        this.debouncedUpdate();
-      }
-    })
-
+    this.setSharedZoom();
     this.setLayout();
     this.setWheelX();
     this.setWheelY();

@@ -66,23 +66,6 @@ export default class DDateXAxis extends Vue {
   @ProvideReactive(XAXISVALIDATED)
   serieValidated: () => void = this.setRanges;
 
-  @Prop({ required: false, default: () => [null, null] })
-  selection!: (number | null)[];
-
-  @Watch("selection")
-  onSelectionChange(): void {
-    if (this.selection.length !== 2 || (this.selection[0] == null && this.selection[1] == null)) {
-      this.axis!.zoom(0, 1, 0);
-    }
-    else {
-      let start = new Date(0);
-      let end = new Date(0);
-      start.setTime(this.selection[0]!);
-      end.setTime(this.selection[1]!);
-      this.axis!.zoomToDates(start, end);
-    }
-  }
-
   tooltip: am5.Tooltip | null = null;
   start: Date | null = null;
   end: Date | null = null;
@@ -263,9 +246,6 @@ export default class DDateXAxis extends Vue {
     this.setTooltipDateFormat();
     this.setMin();
     this.setMax();
-
-    // Apply zoom if needed
-    setTimeout(this.onSelectionChange, 50);
 
     this.upAndRunning = true;
   }

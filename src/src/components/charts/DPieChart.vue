@@ -68,7 +68,7 @@ export default class DPieChart extends Vue {
     this.root.locale = getLocale(this.locale);
 
     this.root.numberFormatter.setAll({
-      numberFormat: "#,###.###### a",
+      numberFormat: "#,###.### a",
       smallNumberThreshold: 0.001
     });
 

@@ -2,7 +2,7 @@
   <wrapped-cursor
     :key="key"
     v-bind="$props"
-    @update:selection="(value) => $emit('update:selection', value)"
+    v-on="$listeners"
   >
     <slot> </slot>
   </wrapped-cursor>
@@ -20,8 +20,11 @@ export default class DXYCursorWrapper extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 
+  @Prop({ required: false, default: false })
+  sharedZoom!: boolean;
+
   @Prop({ required: false, default: "zoomX" })
-  behavior!: "zoomXY" | "zoomX" | "zoomY" | "selectX" | "selectY" | "selectXY" | undefined;
+  behavior!: "zoomXY" | "zoomX" | "zoomY" | "selectX" | "selectY" | "selectXY" | "none" | undefined;
 
   @Prop({ required: false, default: true })
   xVisible!: boolean;

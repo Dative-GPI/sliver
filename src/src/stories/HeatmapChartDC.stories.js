@@ -36,7 +36,6 @@ const Template = (args, { argTypes }) => ({
       :minColor="minColor"
       :maxColor="maxColor"
       :heatRanges="heatRanges"
-      :selection="selection"
     />`,
 });
 
@@ -97,6 +96,5 @@ Default.args = {
     { startValue: 0, endValue: 200, color: "#ff0000", opacity: 1, label: "Low" },
     { startValue: 200, endValue: 400, color: "#0000ff", opacity: 1, label: "Medium" },
     { startValue: 200, endValue: 600, color: "#00ff00", opacity: 1, label: "High" }
-  ],
-  selection: [1661817600000, 1661819600000]
+  ]
 };
