@@ -48,7 +48,7 @@ export default class DPieSerie extends Vue {
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;
 
-  @Prop({ required: false, default: false })
+  @Prop({ required: false, default: true })
   alignLabels!: boolean;
 
   @Watch("alignLabels")
@@ -73,22 +73,28 @@ export default class DPieSerie extends Vue {
   onLegendLabelTextChange = this.setLegendLabelText;
 
   @Prop({ required: false, default: false })
-  forceHiddenLabels!: boolean;
+  forceHidden!: boolean;
 
-  @Watch("forceHiddenLabels")
-  onForceHiddenLabelsChange = this.setForceHiddenLabels;
+  @Watch("forceHidden")
+  onForceHiddenChange = this.setForceHidden;
+
+  @Prop({ required: false, default: "truncate" })
+  oversizedBehavior!: "none" | "hide" | "fit" | "wrap" | "truncate";
+
+  @Watch("oversizedBehavior")
+  onOversizedBehaviorChange = this.setOversizedBehavior;
 
   @Prop({ required: false, default: "{category}" })
-  textLabels!: string;
+  text!: string;
 
-  @Watch("textLabels")
-  onTextLabelsCHange = this.setTextLabels;
+  @Watch("text")
+  onTextChange = this.setText;
 
   @Prop({ required: false, default: "aligned" })
-  textTypeLabels!: "regular" | "circular" | "radial" | "aligned" | "adjusted" | undefined;
+  textType!: "regular" | "circular" | "radial" | "aligned" | "adjusted";
 
-  @Watch("textTypeLabels")
-  onTextTypeLabelsChange = this.setTextTypeLabels;
+  @Watch("textType")
+  onTextTypeChange = this.setTextType;
 
   @Prop({ required: false, default: "Other" })
   otherLabel!: string;
@@ -121,6 +127,28 @@ export default class DPieSerie extends Vue {
   hiddenItems: string[] = [];
 
   upAndRunning: boolean = false;
+  latestDimension: number = 0;
+
+  onResize(): void {
+    if (["truncate", "wrap"].includes(this.oversizedBehavior)) {
+      if (this.serie != null && this.serie!.width() !== this.latestDimension) {
+        this.latestDimension = this.serie!.width();
+        let factor = 1;
+        if (this.latestDimension >= 800) {
+          this.serie!.set("radius", am5.percent(100));
+        }
+        else if (this.latestDimension < 400) {
+          this.serie!.set("radius", am5.percent(50));
+          factor = 0.5;
+        }
+        else {
+          this.serie!.set("radius", am5.percent(75));
+          factor = 0.75;
+        }
+        this.serie!.labels.template.set("maxWidth", (this.serie!.width() - (Math.min(this.serie!.width(), this.serie!.height()) * factor)) / 2);
+      }
+    }
+  }
 
   setName(): void {
     this.serie!.set("name", this.name);
@@ -144,16 +172,20 @@ export default class DPieSerie extends Vue {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
   }
 
-  setForceHiddenLabels(): void {
-    this.serie!.labels.template.set("forceHidden", this.forceHiddenLabels);
+  setForceHidden(): void {
+    this.serie!.labels.template.set("forceHidden", this.forceHidden);
   }
 
-  setTextLabels(): void {
-    this.serie!.labels.template.set("text", this.textLabels);
+  setOversizedBehavior(): void {
+    this.serie!.labels.template.set("oversizedBehavior", this.oversizedBehavior);
   }
 
-  setTextTypeLabels(): void {
-    this.serie!.labels.template.set("textType", this.textTypeLabels);
+  setText(): void {
+    this.serie!.labels.template.set("text", this.text);
+  }
+
+  setTextType(): void {
+    this.serie!.labels.template.set("textType", this.textType);
   }
 
   subData(): void {
@@ -366,7 +398,6 @@ export default class DPieSerie extends Vue {
       categoryField: this.categoryField,
       valueField: this.valueField,
       fillField: "color",
-      sequencedInterpolation: true,
       userData: { serie: SerieEnum.PieSerie }
     }));
 
@@ -399,17 +430,25 @@ export default class DPieSerie extends Vue {
     this.setShowTooltip();
     this.setAlignLabels();
 
-    this.setForceHiddenLabels();
-    this.setTextLabels();
-    this.setTextTypeLabels();
+    this.setForceHidden();
+    this.setOversizedBehavior();
+    this.setText();
+    this.setTextType();
     
     // Set data
     this.subData();
+
+    // Handle resize
+    window.addEventListener("resize", this.onResize);
+    this.onResize();
 
     this.upAndRunning = true;
   }
 
   destroyed(): void {
+    // Remove event listener
+    window.removeEventListener("resize", this.onResize);
+
     // Remove from chart
     this.chart.series.removeValue(this.serie!);
 

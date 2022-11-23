@@ -45,7 +45,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePieSerie("Categories", ["Pineapple", "Orange", "Cherry", "Strawberry", "Watermelon", "Canteloup", "Blueberry", "Apple", "Peach", "Pear", "Cherry", "Cramberry"], 250000 ) }
+      { ...makePieSerie("Categories", ["Pineapple without its crust cause otherwise it's not that good you know", "Orange", "Cherry", "Strawberry", "Watermelon", "Canteloup", "Blueberry", "Apple", "Peach", "Pear", "Cherry", "Cramberry"], 5 ) }
     ]
   },
   minHeight: '400px',
@@ -59,5 +59,5 @@ Default.args = {
   legendY: 50,
   legendCenterY: 50,
   otherLabel: "Other",
-  otherThreshold: 5
+  otherThreshold: 1
 };

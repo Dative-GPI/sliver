@@ -44,12 +44,6 @@ export default class DXYChart extends Vue {
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;
 
-  @Prop({ required: false, default: false })
-  sharedZoom!: boolean;
-
-  @Watch("sharedZoom")
-  onSharedZoomChange = this.setSharedZoom;
-
   @Prop({ required: false, default: LayoutEnum.Vertical })
   layout!: LayoutEnum;
 
@@ -69,30 +63,6 @@ export default class DXYChart extends Vue {
   onWheelYChange = this.setWheelY;
 
   upAndRunning: boolean = false;
-
-  setSharedZoom(): void {
-    if (this.sharedZoom) {
-      this.chart!.zoomOutButton.set("forceHidden", true);
-      this.chart!.events.on("wheelended", (event: any) => {
-        if (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX> != null) {
-          this.debouncedUpdate();
-        }
-      });
-    }
-    else {
-      this.chart!.zoomOutButton.set("forceHidden", false);
-      this.chart!.events.off("wheelended");
-    }
-  }
-
-  debouncedUpdate = _.debounce(this.update, 350);
-
-  update(): void {
-    let start = (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.chart!.xAxes.values[0].get("start")!).getTime();
-    let end = (this.chart!.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.chart!.xAxes.values[0].get("end")!).getTime();
-    this.$emit("update:selection", [start, end]);
-    this.chart!.zoomOut();
-  }
 
   setLayout(): void {
     switch(this.layout) {
@@ -152,7 +122,6 @@ export default class DXYChart extends Vue {
       this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
     }
 
-    this.setSharedZoom();
     this.setLayout();
     this.setWheelX();
     this.setWheelY();

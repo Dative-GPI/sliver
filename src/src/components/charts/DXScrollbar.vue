@@ -27,12 +27,6 @@ export default class DXScrollbar extends Vue {
   @Watch("enabled")
   onEnabledChange = this.setEnabled;
 
-  @Prop({ required: false, default: false })
-  sharedZoom!: boolean;
-
-  @Watch("sharedZoom")
-  onSharedZoomCHange = this.setSharedZoom;
-
   @Prop({ required: false, default: 5 })
   height!: number;
 
@@ -96,29 +90,9 @@ export default class DXScrollbar extends Vue {
       this.scrollbar.endGrip.set("height", 20);
       this.scrollbar.endGrip.set("icon", undefined);
 
-      this.setSharedZoom();
-
       this.setHeight();
       this.setStartGripVisible();
       this.setEndGripVisible();
-    }
-  }
-
-  setSharedZoom(): void {
-    this.scrollbar!.startGrip.events.off("pointerup");
-    this.scrollbar!.endGrip.events.off("pointerup");
-
-    if (this.sharedZoom) {
-      this.scrollbar!.startGrip.events.on("pointerup", this.update);
-      this.scrollbar!.endGrip.events.on("pointerup", this.update);
-    }
-  }
-
-  update(): void {
-    if (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX> != null) {
-      let start = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.scrollbar!.get("start")!).getTime();
-      let end = (this.chart.xAxes.values[0] as am5xy.DateAxis<am5xy.AxisRendererX>).positionToDate(this.scrollbar!.get("end")!).getTime();
-      this.$emit("update:selection", [start, end]);
     }
   }
 

@@ -180,8 +180,8 @@ export default class DCategoryXAxis extends Vue {
 
     this.setOpposite();
     this.setShowTooltip();
-    this.setLabelsOversizedBehavior();
     this.setLabelsTooltipText();
+    this.setLabelsOversizedBehavior();
     this.setMinGridDistance();
 
     this.upAndRunning = true;
