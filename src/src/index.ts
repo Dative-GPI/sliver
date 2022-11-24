@@ -31,6 +31,9 @@ import DStackedColumnSerie from "./components/series/DStackedColumnSerie.vue";
 import DStepLineSerie from "./components/series/DStepLineSerie.vue";
 import DTopSerie from "./components/series/DTopSerie.vue";
 
+import DPieSerieExtended from "./components/series/DPieSerieExtended.vue";
+import DPieSlice from "./components/series/DPieSlice.vue";
+
 import { LayoutEnum, PositionEnum } from "./enums";
 
 const Sliver = {
@@ -67,6 +70,9 @@ const Sliver = {
     vue.component("d-stacked-column-serie", DStackedColumnSerie);
     vue.component("d-step-line-serie", DStepLineSerie);
     vue.component("d-top-serie", DTopSerie);
+
+    vue.component("d-pie-serie-extended", DPieSerieExtended);
+    vue.component("d-pie-slice", DPieSlice);
   }
 };
  

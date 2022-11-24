@@ -12,7 +12,8 @@ import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, XAXIS } from "../../literals";
-import { AxisRange, textColor } from "../../helpers";
+import { textColor } from "../../helpers";
+import { AxisRange } from "../../models";
 
 @Component({})
 export default class DValueTAxis extends Vue {

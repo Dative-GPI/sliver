@@ -66,7 +66,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
-import { AxisRange } from "../../helpers";
+import { AxisRange } from "../../models";
 
 import Spinner from "./Spinner.vue";
 

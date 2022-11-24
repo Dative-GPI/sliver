@@ -20,14 +20,16 @@
         :y="legendY"
         :centerY="legendCenterY"
       >
-        <d-pie-serie
-          v-for="(serie, index) in data.series"
-          :key="index"
-          :name="serie.serie"
-          :data="serie.data"
-          :otherLabel="otherLabel"
-          :otherThreshold="otherThreshold"
-        />
+        <d-pie-serie-extended>
+          <template v-slot="{ clickedData }">
+            <d-pie-slice
+              v-for="(serie, index) in data.series"
+              :key="index"
+              :data="serie.data"
+              :clickedData="clickedData"
+            />
+          </template>
+        </d-pie-serie-extended>
       </d-legend>
     </d-pie-chart>
   </div>

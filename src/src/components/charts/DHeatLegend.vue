@@ -14,7 +14,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, LEGEND_DEBUG } from "../../literals";
 import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
-import { AxisRange } from "../../helpers";
+import { AxisRange } from "../../models";
 
 @Component({})
 export default class DHeatLegend extends Vue {

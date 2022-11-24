@@ -11,7 +11,8 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, YAXIS, YAXISVALIDATED } from "../../literals";
-import { textColor, TimeRange } from "../../helpers";
+import { textColor } from "../../helpers";
+import { TimeRange } from "../../models";
 
 @Component({})
 export default class DDateYAxis extends Vue {

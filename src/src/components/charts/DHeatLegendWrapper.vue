@@ -8,7 +8,7 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
 import { HeatRule, PositionEnum } from "../../enums";
-import { AxisRange } from "../../helpers";
+import { AxisRange } from "../../models";
 
 import WrappedLegend from "./DHeatLegend.vue";
 

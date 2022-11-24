@@ -29,9 +29,11 @@ const Template = (args, { argTypes }) => ({
 const makePieSerie = (name, categories, rangeValue) => {
   var data = [];
   for (let i = 0; i < categories.length; i++) {
+    let subs = makePieSubs(categories[i], ["A", "B"], 5);
     data.push({
       categoryX: categories[i],
-      valueY: Math.floor(Math.random() * rangeValue)
+      valueY: subs.reduce((acc, cur) => acc + cur.valueY, 0),
+      subs: subs
     });
   }
 
@@ -41,11 +43,33 @@ const makePieSerie = (name, categories, rangeValue) => {
   };
 }
 
+const makePieSubs = (main, categories, rangeValue) => {
+  return categories.map(c => {
+    let subs = makePieSubSubs(main + " : " + c, ["1", "2"], rangeValue);
+    return {
+      categoryX: main + " : " + c,
+      valueY: subs.reduce((acc, cur) => acc + cur.valueY, 0),
+      subs: subs
+    }
+  });
+}
+
+const makePieSubSubs = (main, categories, rangeValues) => {
+  return categories.map(c => {
+    return {
+      categoryX: main + " : " + c,
+      valueY: Math.floor(Math.random() * rangeValues + 1),
+      subs: []
+    }
+  });
+}
+
 export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePieSerie("Categories", ["Pineapple without its crust cause otherwise it's not that good you know", "Orange", "Cherry", "Strawberry", "Watermelon", "Canteloup", "Blueberry", "Apple", "Peach", "Pear", "Cherry", "Cramberry"], 5 ) }
+      { ...makePieSerie("Categories", ["Pineapple"], 5 ) },
+      { ...makePieSerie("Categories", ["Eggs"], 5 ) }
     ]
   },
   minHeight: '400px',

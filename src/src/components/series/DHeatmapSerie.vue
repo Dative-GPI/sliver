@@ -11,8 +11,9 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
-import { updateCategories, addSerie, removeSerie, AxisRange } from "../../helpers";
+import { updateCategories, addSerie, removeSerie } from "../../helpers";
 import { HeatRule, PositionEnum, SerieEnum } from "../../enums";
+import { AxisRange } from "../../models";
 
 @Component({})
 export default class DHeatmapSerie extends Vue {

@@ -64,7 +64,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
-import { TimeRange } from "../../helpers";
+import { TimeRange } from "../../models";
 
 import Spinner from "./Spinner.vue";
 

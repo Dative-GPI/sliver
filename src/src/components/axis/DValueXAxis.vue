@@ -11,7 +11,8 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, XAXIS } from "../../literals";
-import { AxisRange, textColor } from "../../helpers";
+import { textColor } from "../../helpers";
+import { AxisRange } from "../../models";
 
 @Component({})
 export default class DValueXAxis extends Vue {
