@@ -96,6 +96,7 @@ export default class DXYChart extends Vue {
   debouncedResize = _.debounce(this.resize, this.resizeDebounce);
 
   resize(): void {
+    console.log("resize d-xy-chart");
     this.root!.resize();
   }
 
