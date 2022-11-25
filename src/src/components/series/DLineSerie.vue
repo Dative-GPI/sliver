@@ -246,7 +246,7 @@ export default class DLineSerie extends Vue {
       yAxis: this.yAxis,
       valueXField: this.dateXField,
       valueYField: this.valueYField,
-      userData: { serie: SerieEnum.LineSerie },
+      userData: { serie: SerieEnum.LineSerie }
     }));
 
     this.serie.events.on("datavalidated", this.xAxisValidated);

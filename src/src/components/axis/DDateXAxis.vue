@@ -68,8 +68,6 @@ export default class DDateXAxis extends Vue {
   serieValidated: () => void = this.setRanges;
 
   tooltip: am5.Tooltip | null = null;
-  start: Date | null = null;
-  end: Date | null = null;
   dataItems: am5.DataItem<am5xy.IDateAxisDataItem>[] = [];
 
   upAndRunning: boolean = false;
@@ -233,8 +231,7 @@ export default class DDateXAxis extends Vue {
         { timeUnit: "day", count: 1 },
         { timeUnit: "day", count: 7 },
         { timeUnit: "month", count: 1 },
-      ],
-      
+      ]
     }));
 
     // Add to cursor

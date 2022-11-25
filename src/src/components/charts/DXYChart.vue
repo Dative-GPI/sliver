@@ -16,9 +16,9 @@ import { Component, ProvideReactive, Vue, Prop, Watch } from "vue-property-decor
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { ColorSets, GetColors } from "../../colors";
 import { LayoutEnum } from "../../enums";
 import { AMROOT, CHART } from "../../literals";
+import { ColorSets, GetColors } from "../../colors";
 import { getLocale, getTimezone } from "../../helpers";
 
 @Component({})
@@ -37,6 +37,9 @@ export default class DXYChart extends Vue {
 
   @Prop({ required: false, default: 1500 })
   readyTimeout!: number;
+
+  @Prop({ required: false, default: 250 })
+  resizeDebounce!: number;
 
   @Prop({ required: false, default: '400px' })
   minHeight!: string;
@@ -62,6 +65,7 @@ export default class DXYChart extends Vue {
   @Watch("wheelY")
   onWheelYChange = this.setWheelY;
 
+  resizeObserver: ResizeObserver | null = null;
   upAndRunning: boolean = false;
 
   setLayout(): void {
@@ -89,11 +93,18 @@ export default class DXYChart extends Vue {
     this.chart!.set("wheelY", this.wheelY);
   }
 
+  debouncedResize = _.debounce(this.resize, this.resizeDebounce);
+
+  resize(): void {
+    this.root!.resize();
+  }
+
   mounted(): void {
     // Create root
     this.root = am5.Root.new((this.$refs.xychart as HTMLElement));
     this.root.locale = getLocale(this.locale);
     this.root.timezone = getTimezone(this.timeOffset);
+    this.root.autoResize = false;
 
     this.root.numberFormatter.setAll({
       numberFormat: "#,###.### a",
@@ -126,10 +137,16 @@ export default class DXYChart extends Vue {
     this.setWheelX();
     this.setWheelY();
 
+    this.resizeObserver = new ResizeObserver(this.debouncedResize);
+    this.resizeObserver.observe(this.$el);
+
     this.upAndRunning = true;
   }
 
   destroyed(): void {
+    // Remove resize observer
+    this.resizeObserver!.disconnect();
+
     // Remove chart from root
     this.root!.container.children.removeValue(this.chart!);
     
