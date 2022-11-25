@@ -93,7 +93,7 @@ export default class DXYChart extends Vue {
     this.chart!.set("wheelY", this.wheelY);
   }
 
-  debouncedResize = _.debounce(this.resize, this.resizeDebounce);
+  debouncedResize = _.debounce(this.resize, Math.max(250, this.resizeDebounce));
 
   resize(): void {
     console.log("resize d-xy-chart");
@@ -138,7 +138,10 @@ export default class DXYChart extends Vue {
     this.setWheelX();
     this.setWheelY();
 
-    this.resizeObserver = new ResizeObserver(this.debouncedResize);
+    this.resizeObserver = new ResizeObserver(() => {
+      console.log("observe d-chart-xy");
+      this.debouncedResize();
+    });
     this.resizeObserver.observe(this.$el);
 
     this.upAndRunning = true;

@@ -34,6 +34,8 @@ import DTopSerie from "./components/series/DTopSerie.vue";
 import DPieSerieExtended from "./components/series/DPieSerieExtended.vue";
 import DPieSlice from "./components/series/DPieSlice.vue";
 
+import DExportData from "./components/plugins/DExportData.vue";
+
 import { LayoutEnum, PositionEnum } from "./enums";
 
 const Sliver = {
@@ -73,6 +75,8 @@ const Sliver = {
 
     vue.component("d-pie-serie-extended", DPieSerieExtended);
     vue.component("d-pie-slice", DPieSlice);
+
+    vue.component("d-export-data", DExportData);
   }
 };
  
