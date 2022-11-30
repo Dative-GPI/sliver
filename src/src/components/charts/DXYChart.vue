@@ -41,7 +41,7 @@ export default class DXYChart extends Vue {
   @Prop({ required: false, default: 1500 })
   readyTimeout!: number;
 
-  @Prop({ required: false, default: 300 })
+  @Prop({ required: false, default: 250 })
   resizeDebounce!: number;
 
   @Prop({ required: false, default: '400px' })
@@ -98,7 +98,6 @@ export default class DXYChart extends Vue {
   }
 
   resize(): void {
-    console.log("resize d-xy-chart");
     this.root!.resize();
   }
 
@@ -141,11 +140,10 @@ export default class DXYChart extends Vue {
     this.setWheelY();
 
     this.resizeObserver = new ResizeObserver(() => {
-      console.log("observe d-chart-xy");
       if (this.debounceResize != null) {
         clearTimeout(this.debounceResize);
       }
-      this.debounceResize = setTimeout(() => this.resize, this.resizeDebounce);
+      this.debounceResize = setTimeout(this.resize, this.resizeDebounce);
     });
     this.resizeObserver.observe(this.$el);
 
