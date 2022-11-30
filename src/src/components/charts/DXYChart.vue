@@ -29,6 +29,9 @@ export default class DXYChart extends Vue {
   @ProvideReactive(CHART)
   chart: am5xy.XYChart | null = null;
 
+  @Prop({ required: true })
+  chartId!: string;
+
   @Prop({ required: false, default: "en-US" })
   locale!: string;
 
@@ -38,7 +41,7 @@ export default class DXYChart extends Vue {
   @Prop({ required: false, default: 1500 })
   readyTimeout!: number;
 
-  @Prop({ required: false, default: 250 })
+  @Prop({ required: false, default: 300 })
   resizeDebounce!: number;
 
   @Prop({ required: false, default: '400px' })
@@ -66,6 +69,7 @@ export default class DXYChart extends Vue {
   onWheelYChange = this.setWheelY;
 
   resizeObserver: ResizeObserver | null = null;
+  debounceResize: number | null = null;
   upAndRunning: boolean = false;
 
   setLayout(): void {
@@ -92,8 +96,6 @@ export default class DXYChart extends Vue {
   setWheelY(): void {
     this.chart!.set("wheelY", this.wheelY);
   }
-
-  debouncedResize = _.debounce(this.resize, Math.max(250, this.resizeDebounce));
 
   resize(): void {
     console.log("resize d-xy-chart");
@@ -140,7 +142,10 @@ export default class DXYChart extends Vue {
 
     this.resizeObserver = new ResizeObserver(() => {
       console.log("observe d-chart-xy");
-      this.debouncedResize();
+      if (this.debounceResize != null) {
+        clearTimeout(this.debounceResize);
+      }
+      this.debounceResize = setTimeout(() => this.resize, this.resizeDebounce);
     });
     this.resizeObserver.observe(this.$el);
 
@@ -149,6 +154,9 @@ export default class DXYChart extends Vue {
 
   destroyed(): void {
     // Remove resize observer
+    if (this.debounceResize != null) {
+      clearTimeout(this.debounceResize);
+    }
     this.resizeObserver!.disconnect();
 
     // Remove chart from root

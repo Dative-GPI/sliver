@@ -94,7 +94,6 @@ export default class DValueYAxis extends Vue {
   axis: any = null;
 
   tooltip: am5.Tooltip | null = null;
-  debugLabel: number = 0;
 
   upAndRunning: boolean = false;
 
@@ -188,7 +187,7 @@ export default class DValueYAxis extends Vue {
       am5.array.each(this.ranges!, (range : AxisRange) => {
         let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
 
-        if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
+        if (range.label != null && range.label != "") {
           axisRange.get("label")!.setAll({
             text: range.label,
             inside: true,
@@ -224,13 +223,10 @@ export default class DValueYAxis extends Vue {
       }
       this.axis.get("renderer").labels.template.adapters.remove("text");
       this.axis.get("renderer").labels.template.adapters.add("text", (value?: string) => {
-        if (value != null && value.length > 0 && this.unit != null) {
-          this.debugLabel = Math.max(this.debugLabel, value.length);
+        if (value != null && !isNaN(parseInt(value))) {
           return value + this.unit;
         }
-        else {
-          return "".padStart(this.debugLabel, "X") + this.unit;
-        }
+        return value;
       });
     }
   }

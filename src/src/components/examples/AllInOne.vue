@@ -154,7 +154,7 @@ export default class AllInOne extends Vue {
         logarithmic: false,
         min: undefined,
         max: undefined,
-        strictMinMax: false,
+        strictMinMax: true,
         height: am5.percent(100)
       }));
       this.yAxis.get("renderer").grid.template.set("visible", true);

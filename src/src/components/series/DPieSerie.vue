@@ -133,19 +133,22 @@ export default class DPieSerie extends Vue {
     if (["truncate", "wrap"].includes(this.oversizedBehavior)) {
       if (this.serie != null && this.serie!.width() !== this.latestDimension) {
         this.latestDimension = this.serie!.width();
-        let factor = 1;
-        if (this.latestDimension >= 800) {
-          this.serie!.set("radius", am5.percent(100));
+        if (this.latestDimension < 400) {
+          this.serie!.set("radius", 30);
+          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 70) / 2);
         }
-        else if (this.latestDimension < 400) {
-          this.serie!.set("radius", am5.percent(50));
-          factor = 0.5;
+        else if (this.latestDimension < 800) {
+          this.serie!.set("radius", 70);
+          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 110) / 2);
+        }
+        else if (this.latestDimension < 1000) {
+          this.serie!.set("radius", 100);
+          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 140) / 2);
         }
         else {
-          this.serie!.set("radius", am5.percent(75));
-          factor = 0.75;
+          this.serie!.set("radius", 130);
+          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 170) / 2);
         }
-        this.serie!.labels.template.set("maxWidth", (this.serie!.width() - (Math.min(this.serie!.width(), this.serie!.height()) * factor)) / 2);
       }
     }
   }

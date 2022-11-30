@@ -101,7 +101,6 @@ export default class DValueXAxis extends Vue {
   axis: any | null = null;
 
   tooltip: am5.Tooltip | null = null;
-  debugLabel: number = 0;
 
   upAndRunning = false;
 
@@ -238,13 +237,10 @@ export default class DValueXAxis extends Vue {
       }
       this.axis.get("renderer").labels.template.adapters.remove("text");
       this.axis.get("renderer").labels.template.adapters.add("text", (value?: string) => {
-        if (value != null && value.length > 0 && this.unit != null) {
-          this.debugLabel = Math.max(this.debugLabel, value.length);
+        if (value != null && !isNaN(parseInt(value))) {
           return value + this.unit;
         }
-        else {
-          return "";
-        }
+        return value;
       });
     }
   }

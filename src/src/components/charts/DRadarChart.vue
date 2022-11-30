@@ -29,6 +29,9 @@ export default class DRadarChart extends Vue {
   @ProvideReactive(CHART)
   chart: am5radar.RadarChart | null = null;
 
+  @Prop({ required: true })
+  chartId!: string;
+
   @Prop({ required: false, default: "en-US" })
   locale!: string;
 

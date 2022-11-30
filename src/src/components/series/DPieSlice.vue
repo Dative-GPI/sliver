@@ -79,7 +79,7 @@ export default class DPieSlice extends Vue {
   }
 
   setData(): void {
-    this.dataWithIds = this.data.map(d => {
+    this.dataWithIds = this.data.filter(d => d[this.valueField] > 0).map(d => {
       let dataId = uuidv4();
       let dataWithIds = {
         ...d,
@@ -144,13 +144,16 @@ export default class DPieSlice extends Vue {
               index: -1
             };
             subData.subs = this.setSubs(subData);
+            if (subData.subs != null) {
+              subData.subs = subData.subs.filter((d: any) => d[this.valueField] > 0);
+            }
             return subData;
           });
         }
         if (otherData != null) {
           notOtherData.push(otherData);
         }
-        return notOtherData;
+        return notOtherData.filter((d: any) => d[this.valueField] > 0);
       }
       else {
         return data.subs.map((s: any) => {
@@ -165,8 +168,11 @@ export default class DPieSlice extends Vue {
             index: -1
           };
           subData.subs = this.setSubs(subData);
+          if (subData.subs != null) {
+            subData.subs = subData.subs.filter((d: any) => d[this.valueField] > 0);
+          }
           return subData;
-        });
+        }).filter((d: any) => d[this.valueField] > 0);
       }
     }
     return null;

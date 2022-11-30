@@ -1,7 +1,7 @@
 <template>
   <div
     ref="piechart"
-    :id="'piechart'"
+    :id="chartId"
     :style="{ minHeight: minHeight }"
     style="width: 100%; height: 100%;"
   >
@@ -26,6 +26,9 @@ export default class DPieChart extends Vue {
 
   @ProvideReactive(CHART)
   chart: am5percent.PieChart | null = null;
+
+  @Prop({ required: true })
+  chartId!: string;
   
   @Prop({ required: false, default: "en-US" })
   locale!: string;
