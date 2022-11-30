@@ -106,19 +106,19 @@ export default class DPieSerieExtended extends Vue {
         this.latestDimension = this.serie!.width();
         if (this.latestDimension < 400) {
           this.serie!.set("radius", 30);
-          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 70) / 2);
+          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 120) / 2);
         }
         else if (this.latestDimension < 800) {
-          this.serie!.set("radius", 70);
-          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 110) / 2);
+          this.serie!.set("radius", 60);
+          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 180) / 2);
         }
         else if (this.latestDimension < 1000) {
           this.serie!.set("radius", 100);
-          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 140) / 2);
+          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 260) / 2);
         }
         else {
-          this.serie!.set("radius", 130);
-          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 170) / 2);
+          this.serie!.set("radius", 120);
+          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 300) / 2);
         }
       }
     }

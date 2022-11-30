@@ -68,8 +68,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePieSerie("Categories", ["Pineapple"], 5 ) },
-      { ...makePieSerie("Categories", ["Eggs"], 5 ) }
+      { ...makePieSerie("Categories", ["Société Cairotte d'Elevage de Poulets"], 5 ) },
+      { ...makePieSerie("Categories", ["Société Egyptienne d'Elevage de Boeufs"], 5 ) }
     ]
   },
   minHeight: '400px',
