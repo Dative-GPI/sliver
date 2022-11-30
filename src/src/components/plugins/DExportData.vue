@@ -1,6 +1,6 @@
 <template>
   <div>
-    <slot :csv="csv" :png="png"> </slot>
+    <slot :getCsv="getCsv" :canPng="canPng" :getPng="getPng"> </slot>
     <a ref="link" :style="{ visibility: 'hidden' }" />
   </div>
 </template>
@@ -28,7 +28,7 @@ export default class DExportData extends Vue {
   @Prop({ required: false, default: "data" })
   prefix!: string;
 
-  csv(): void {
+  getCsv(): void {
     let groupByHeaders = this.groupByHeaders();
     let headers: string[] = groupByHeaders.map(h => h.label);
     let rows: any[] = [];
@@ -162,7 +162,17 @@ export default class DExportData extends Vue {
     (this.$refs.link as HTMLElement).click();
   }
 
-  png(): void {
+  get canPng(): boolean {
+    if (this.chartData == null) {
+      return false;
+    }
+    if ([ChartType.None, ChartType.ScoreCard, ChartType.Table].includes(this.chartData.chartType)) {
+      return false;
+    }
+    return true;
+  }
+
+  getPng(): void {
     if (this.chartId != null && this.chartId != "") {
       let canvases: NodeListOf<HTMLCanvasElement> = document.querySelectorAll("#" + this.chartId + " canvas");
       if (canvases.length > 0) {
