@@ -1,7 +1,7 @@
 <template>
   <div
     ref="radarchart"
-    :id="'radarchart'"
+    :id="chartId"
     :style="{ minHeight: minHeight }"
     style="width: 100%; height: 100%;"
   >

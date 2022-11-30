@@ -1,6 +1,6 @@
 {
   "name": "@dative-gpi/sliver",
-  "version": "0.2.47",
+  "version": "0.2.48",
   "private": false,
   "main": "src/index.ts",
   "scripts": {
@@ -51,6 +51,7 @@
   "dependencies": {
     "@amcharts/amcharts5": "^5.2.35",
     "@types/resize-observer-browser": "^0.1.7",
+    "date-fns": "^2.23.0",
     "lodash": "^4.17.21"
   }
 }

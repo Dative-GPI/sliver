@@ -7,23 +7,27 @@
 
 <script lang="ts">
 import _ from "lodash";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
-import { AxisType, ChartData, ChartDataData, ChartDataOperand, ChartDataPlot, ChartDataSerie, ChartDataSub, ChartType, SerieType, TableData } from "../../models/index";
+import { AxisType, ChartData, ChartDataData, ChartDataOperand, ChartDataPlot, ChartDataSerie, ChartType, SerieType, TableData } from "../../models";
+import { DateTools } from "../../dates";
 
 @Component({})
 export default class DExportData extends Vue {
+  @Prop({ required: false, default: null })
+  chartId!: string | null;
+
+  @Prop({ required: false, default: "en-US" })
+  locale!: string;
+
+  @Prop({ required: false, default: "UTC" })
+  timeOffset!: string;
+
   @Prop({ required: false, default: null })
   chartData!: ChartData | null;
 
   @Prop({ required: false, default: null })
   tableData!: TableData | null;
-
-  @Prop({ required: false, default: null })
-  chartId!: string | null;
-
-  @Prop({ required: false, default: "yyyy-MM-dd HH:mm:ss" })
-  dateFormat!: string;
 
   @Prop({ required: false, default: "data" })
   prefix!: string;
@@ -44,8 +48,14 @@ export default class DExportData extends Vue {
                   operand.data.forEach((data: ChartDataData) => {
                     let row: string[] = this.findRow(groupByHeaders, rows, data);
                     if (row == null) {
-                      row = groupByHeaders.map((h: { id: string, label: string }) => {
-                        return (data as any)[h.id] != null ? (data as any)[h.id].toString() : "";
+                      row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
+                        if ((data as any)[h.id] != null) {
+                          if (h.date) {
+                            return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
+                          }
+                          return (data as any)[h.id].toString();
+                        }
+                        return "";
                       });
                       rows.push(row);
                     }
@@ -54,11 +64,15 @@ export default class DExportData extends Vue {
                     }
                     switch (plot.yAxisType) {
                       case AxisType.Value: {
-                        row[row.length - 1] = data.valueY != null ? data.valueY.toString() : "";
+                        if (data.valueY != null) {
+                          row[row.length - 1] = data.valueY.toString();
+                        }
                         break;
                       }
                       case AxisType.Category: {
-                        row[row.length - 1] = data.categoryY != null ? data.categoryY : "";
+                        if (data.categoryY != null) {
+                          row[row.length - 1] = data.categoryY;
+                        }
                         break;
                       }
                     }
@@ -93,8 +107,14 @@ export default class DExportData extends Vue {
           this.chartData.plots[0].series[0].operands.forEach((operand: ChartDataOperand) => {
             headers.push(operand.label);
             operand.data.forEach((data: ChartDataData) => {
-              let row = groupByHeaders.map((h: { id: string, label: string }) => {
-                return (data as any)[h.id] != null ? (data as any)[h.id].toString() : "";
+              let row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
+                if ((data as any)[h.id] != null) {
+                  if (h.date) {
+                    return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
+                  }
+                  return (data as any)[h.id].toString();
+                }
+                return "";
               });
               if (row.length < headers.length) {
                 row.push(...Array(headers.length - row.length).fill(""));
@@ -102,11 +122,6 @@ export default class DExportData extends Vue {
               row[headers.length - 1] = data.valueZ != null ? data.valueZ!.toString() : "";
               rows.push(row);
             });
-          });
-          rows.forEach((row: string[]) => {
-            if (row.length < headers.length) {
-              row.push(...Array(headers.length - row.length).fill(""));
-            }
           });
           break;
         }
@@ -116,20 +131,23 @@ export default class DExportData extends Vue {
           this.chartData.plots[0].series[0].operands.forEach((operand: ChartDataOperand) => {
             headers.push(operand.label);
             operand.data.forEach((data: ChartDataData) => {
-              let row = groupByHeaders.map((h: { id: string, label: string }) => {
-                return (data as any)[h.id] != null ? (data as any)[h.id].toString() : "";
+              let row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
+                if ((data as any)[h.id] != null) {
+                  if (h.date) {
+                    return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
+                  }
+                  return (data as any)[h.id].toString();
+                }
+                return "";
               });
               if (row.length < headers.length) {
                 row.push(...Array(headers.length - row.length).fill(""));
               }
-              row[headers.length - 1] = data.valueY != null ? data.valueY!.toString() : "";
+              if (data.valueY != null) {
+                row[headers.length - 1] = data.valueY.toString();
+              }
               rows.push(row);
             });
-          });
-          rows.forEach((row: string[]) => {
-            if (row.length < headers.length) {
-              row.push(...Array(headers.length - row.length).fill(""));
-            }
           });
           break;
         }
@@ -187,48 +205,48 @@ export default class DExportData extends Vue {
     }
   }
 
-  groupByHeaders(): { id: string, label: string }[] {
+  groupByHeaders(): { id: string, label: string, date: boolean }[] {
     if (this.chartData != null) {
       switch (this.chartData.chartType) {
         case ChartType.XY: {
           switch (this.chartData.xAxisType) {
             case AxisType.Date: {
               return [
-                { id: "timestampX", label: "StartTimeX" },
-                { id: "closeTimestampX", label: "EndTimeX" }
+                { id: "timestampX", label: "StartTimeX", date: true },
+                { id: "closeTimestampX", label: "EndTimeX", date: true }
               ];
             }
             case AxisType.Value: {
               return [
-                { id: "selfValueX", label: "ValueX" }
+                { id: "selfValueX", label: "ValueX", date: false }
               ];
             }
             case AxisType.Category: {
               return [
-                { id: "categoryX", label: "CategoryX" }
+                { id: "categoryX", label: "CategoryX", date: false }
               ];
             }
           }
         }
         case ChartType.Pie: {
           return [
-            { id: "categoryX", label: "Category" },
-            { id: "valueY", label: "Value" }
+            { id: "categoryX", label: "Category", date: false },
+            { id: "valueY", label: "Value", date: false }
           ];
         }
         case ChartType.Heatmap: {
           switch (this.chartData.xAxisType) {
             case AxisType.Date: {
               return [
-                { id: "timestampX", label: "StartTimeX" },
-                { id: "closeTimestampX", label: "EndTimeX" },
-                { id: "categoryY", label: "CategoryY" }
+                { id: "timestampX", label: "StartTimeX", date: true },
+                { id: "closeTimestampX", label: "EndTimeX", date: true },
+                { id: "categoryY", label: "CategoryY", date: false }
               ];
             }
             case AxisType.Category: {
               return [
-                { id: "categoryX", label: "CategoryX" },
-                { id: "categoryY", label: "CategoryY" }
+                { id: "categoryX", label: "CategoryX", date: false },
+                { id: "categoryY", label: "CategoryY", date: false }
               ];
             }
           }
@@ -237,14 +255,14 @@ export default class DExportData extends Vue {
         case ChartType.Gauge:
         case ChartType.ScoreCard: {
           return [
-            { id: "timestampX", label: "StartTime" },
-            { id: "closeTimestampX", label: "EndTime" }
+            { id: "timestampX", label: "StartTime", date: true },
+            { id: "closeTimestampX", label: "EndTime", date: true }
           ];
         }
       }
     }
     else if (this.tableData != null) {
-      return this.tableData.headers.map(h => ({ id: h.label, label: h.label }));
+      return this.tableData.headers.map(h => ({ id: h.label, label: h.label, date: false }));
     }
     return [];
   }

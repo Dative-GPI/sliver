@@ -10,10 +10,16 @@ const Template = (args, { argTypes }) => ({
   components: { AllInOne },
   template:
     `<div>
-      <d-export-data :chartData="chartData" :chartId="'xychart'" :style="{ display: 'flex' }">
-        <template v-slot="{csv, png}">
-          <div :style="{ cursor: 'pointer', border: '2px solid red', margin: '2px', padding: '2px' }" @click="csv"> CSV </div>
-          <div :style="{ cursor: 'pointer', border: '2px solid red', margin: '2px', padding: '2px' }" @click="png"> PNG </div>
+      <d-export-data
+        :chartId="'xychart'"
+        :locale="'fr-FR'"
+        :timeOffset="'UTC+01:00:00'"
+        :chartData="chartData"
+        :style="{ display: 'flex' }"
+      >
+        <template v-slot="{ getCsv, canPng, getPng }">
+          <div :style="{ cursor: 'pointer', border: '2px solid red', margin: '2px', padding: '2px' }" @click="getCsv"> CSV </div>
+          <div v-if="canPng" :style="{ cursor: 'pointer', border: '2px solid red', margin: '2px', padding: '2px' }" @click="getPng"> PNG </div>
         </template>
       </d-export-data>
       <all-in-one
@@ -342,10 +348,10 @@ Default.args = {
     { startValue: -3,   endValue: 0,  opacity: 0.2, color: "#ff0000", label: "Bad" },
     { startValue: 0,   endValue: 3,  opacity: 0.2, color: "#00ff00", label: "Good" },
   ],
-  heatRanges: [
-    { startValue: -1500,   endValue: -3,  opacity: 1, color: "#0000ff", label: "Out of scope" },
-    { startValue: -3,   endValue: 0,  opacity: 1, color: "#ff0000", label: "Bad" },
-    { startValue: 0,   endValue: 3,  opacity: 1, color: "#00ff00", label: "Good" },
-    { startValue: 3,   endValue: 1500,  opacity: 1, color: "#0000ff", label: "Out of scope" },
-  ]
+  // heatRanges: [
+  //   { startValue: -1500,   endValue: -3,  opacity: 1, color: "#0000ff", label: "Out of scope" },
+  //   { startValue: -3,   endValue: 0,  opacity: 1, color: "#ff0000", label: "Bad" },
+  //   { startValue: 0,   endValue: 3,  opacity: 1, color: "#00ff00", label: "Good" },
+  //   { startValue: 3,   endValue: 1500,  opacity: 1, color: "#0000ff", label: "Out of scope" },
+  // ]
 };

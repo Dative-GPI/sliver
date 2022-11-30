@@ -279,7 +279,7 @@ export default class AllInOne extends Vue {
     }
 
     const resizeObserver = new ResizeObserver(this.debouncedResize);
-    resizeObserver.observe(document.getElementById("xychart")!);
+    resizeObserver.observe(this.$el);
   }
 }
 </script>

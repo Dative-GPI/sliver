@@ -1,7 +1,7 @@
 <template>
   <div
     ref="xychart"
-    :id="'xychart'"
+    :id="chartId"
     :style="{ minHeight: minHeight }"
     style="width: 100%; height: 100%;"
   >
