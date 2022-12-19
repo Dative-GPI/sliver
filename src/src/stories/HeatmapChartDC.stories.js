@@ -65,7 +65,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeHeatmapSerie("Occupancy", 1661817600000, 3600000, ["Dawn", "Morning", "Afternoon", "Evening", "Night"], 600, 24) }
+      { ...makeHeatmapSerie("Occupancy", 1670771609000, 28800000, ["Dawn", "Morning", "Afternoon", "Evening", "Night"], 600, 24) }
     ]
   },
   minHeight: '400px',

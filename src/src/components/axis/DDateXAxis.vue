@@ -43,17 +43,23 @@ export default class DDateXAxis extends Vue {
   @Watch("tooltipDateFormat")
   onTooltipDateFormatChange = this.setTooltipDateFormat;
 
-  @Prop({ required: false, default: null })
+  @Prop({ required: false, default: 1670771609000 })
   min!: number | null;
 
   @Watch("min")
   onMinChange = this.setMin;
 
-  @Prop({ required: false, default: null })
+  @Prop({ required: false, default: 1671203609000 })
   max!: number | null;
 
   @Watch("max")
   onMaxChange = this.setMax;
+
+  @Prop({ required: false, default: +Infinity })
+  maxZoomFactor!: number | null;
+
+  @Watch("maxZoomFactor")
+  onMaxZoomFactorChange = this.setMaxZoomFactor;
 
   @Prop({ required: false, default: undefined })
   ranges!: TimeRange[] | undefined;
@@ -129,6 +135,15 @@ export default class DDateXAxis extends Vue {
     }
     else {
       this.axis!.set("max", undefined);
+    }
+  }
+
+  setMaxZoomFactor(): void {
+    if (this.maxZoomFactor != null) {
+      this.axis!.set("maxZoomFactor", this.maxZoomFactor);
+    }
+    else {
+      this.axis!.set("maxZoomFactor", undefined);
     }
   }
 
@@ -244,6 +259,7 @@ export default class DDateXAxis extends Vue {
     this.setTooltipDateFormat();
     this.setMin();
     this.setMax();
+    this.setMaxZoomFactor();
 
     this.upAndRunning = true;
   }
