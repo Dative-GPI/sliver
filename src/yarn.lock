@@ -11,10 +11,10 @@
     "event-pubsub" "4.3.0"
     "js-message" "1.0.7"
 
-"@amcharts/amcharts5@^5.2.41":
-  "integrity" "sha512-zVUWG3Ke9NIpxagc3Fwf3z4He+KE37SOa5+/fC15IpDm9PHIXZb6omxGDJRpTK+H7YiBpbdq0isYLwsEeiTvwA=="
-  "resolved" "https://registry.npmjs.org/@amcharts/amcharts5/-/amcharts5-5.2.41.tgz"
-  "version" "5.2.41"
+"@amcharts/amcharts5@^5.2.43":
+  "integrity" "sha512-kHcyfo7KUbOVouCPpm/Yt5s3dJ0uFOZwimYHDu8hI+JDuzDdBPXcvgimnBvsOF+oRoq1V8Kgly8sKqS9Hunc9w=="
+  "resolved" "https://registry.npmjs.org/@amcharts/amcharts5/-/amcharts5-5.2.43.tgz"
+  "version" "5.2.43"
   dependencies:
     "@types/d3" "^7.0.0"
     "@types/d3-chord" "^3.0.0"

@@ -55,7 +55,7 @@ export default class DDateYAxis extends Vue {
   @Watch("max")
   onMaxChange = this.setMax;
 
-  @Prop({ required: false, default: +Infinity })
+  @Prop({ required: false, default: null })
   maxZoomFactor!: number | null;
 
   @Watch("maxZoomFactor")
