@@ -169,3 +169,8 @@ export const getTimezone = (timeOffset: string): am5.Timezone  => {
     default: return am5.Timezone.new("UTC");
   }
 }
+
+export const formatNumber = (value: number, locale: string, decimalPlaces: number): string => {
+  if (isNaN(value)) return value.toString();
+  return new Intl.NumberFormat(locale, { maximumFractionDigits: decimalPlaces }).format(value);
+}

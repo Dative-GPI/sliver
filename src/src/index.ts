@@ -12,6 +12,7 @@ import DLegend from "./components/charts/DLegendWrapper.vue";
 import DHeatLegend from "./components/charts/DHeatLegendWrapper.vue";
 import DPieChart from "./components/charts/DPieChart.vue";
 import DRadarChart from "./components/charts/DRadarChart.vue";
+import DScoreCard from "./components/charts/DScoreCard.vue";
 import DXYChart from "./components/charts/DXYChart.vue";
 import DXYCursor from "./components/charts/DXYCursorWrapper.vue";
 import DXScrollbar from "./components/charts/DXScrollbar.vue";
@@ -55,6 +56,7 @@ const Sliver = {
     vue.component("d-heat-legend", DHeatLegend);
     vue.component("d-pie-chart", DPieChart);
     vue.component("d-radar-chart", DRadarChart);
+    vue.component("d-score-card", DScoreCard);
     vue.component("d-xy-chart", DXYChart);
     vue.component("d-xy-cursor", DXYCursor);
     vue.component("d-x-scrollbar", DXScrollbar);

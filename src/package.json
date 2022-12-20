@@ -1,6 +1,6 @@
 {
   "name": "@dative-gpi/sliver",
-  "version": "0.2.51",
+  "version": "0.2.52",
   "private": false,
   "main": "src/index.ts",
   "scripts": {
@@ -12,12 +12,16 @@
   },
   "peerDependencies": {
     "core-js": "^3.6.5",
+    "material-design-icons-iconfont": "6.1.0",
+    "roboto-fontface": "*",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^9.1.2"
+    "vue-property-decorator": "^9.1.2",
+    "vuetify": "^2.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
+    "@mdi/font": "^6.7.96",
     "@storybook/addon-a11y": "^6.4.13",
     "@storybook/addon-actions": "^6.4.9",
     "@storybook/addon-essentials": "^6.4.9",
@@ -37,6 +41,8 @@
     "eslint": "^6.7.2",
     "eslint-plugin-storybook": "^0.5.5",
     "eslint-plugin-vue": "^6.2.2",
+    "material-design-icons-iconfont": "6.1.0",
+    "roboto-fontface": "*",
     "sass": "~1.32.0",
     "sass-loader": "^10.0.0",
     "storybook-addon-designs": "^6.2.1",
@@ -45,8 +51,11 @@
     "typescript": "~4.1.5",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
+    "vue-cli-plugin-vuetify": "~2.4.3",
     "vue-property-decorator": "^9.1.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "vuetify": "^2.4.0",
+    "vuetify-loader": "^1.7.0"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.2.43",
