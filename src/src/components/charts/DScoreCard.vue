@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
     <div v-for="(s, sIndex) in series" :key="sIndex">
-      <div v-for="(o, oIndex) in s.operands" :key="oIndex" no-gutters :style="{ height: '35px', display: 'flex', alignItems: 'center' }">
+      <div v-for="(o, oIndex) in s.operands" :key="oIndex" class="d-flex" :style="{ height: '35px', alignItems: 'center' }">
         <span v-if="s.operands.length > 1" class="text-h6 text-truncate" :style="{ width: '60%' }">
           {{ o.label }}
         </span>
@@ -9,7 +9,7 @@
         <span class="text-h4" :style="{ whiteSpace: 'nowrap' }">
           {{ formatNumber(o.data[0].valueY, s.decimalPlaces) }} {{ s.operationUnit }}
         </span>
-        <v-icon :size="s.iconSize" :style="{ marginLeft: '20px' }">
+        <v-icon :size="s.iconSize" class="ml-5">
           {{ s.icon }}
         </v-icon>
       </div>
