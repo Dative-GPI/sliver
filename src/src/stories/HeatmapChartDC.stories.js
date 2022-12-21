@@ -89,7 +89,7 @@ Default.args = {
   yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisCellStartLocation: 0,
   yAxisCellEndLocation: 1,
-  heatRule: 2,
+  heatRule: 1,
   minColor: "#00ffff",
   maxColor: "#ff0000",
   heatRanges: [

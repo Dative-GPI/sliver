@@ -131,6 +131,7 @@ export default class DHeatmapSerie extends Vue {
     this.serie!.set("heatRules", undefined);
 
     switch(this.heatRule) {
+      case HeatRule.None:
       case HeatRule.Gradient: {
         this.serie!.set("heatRules", [{
           target: this.serie!.columns.template,
@@ -179,7 +180,7 @@ export default class DHeatmapSerie extends Vue {
   }
 
   setLegend(): void {
-    if (this.legend != null && this.heatRule === HeatRule.Gradient) {
+    if (this.legend != null && [HeatRule.None, HeatRule.Gradient].includes(this.heatRule)) {
       if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
         this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
       }

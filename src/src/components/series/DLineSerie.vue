@@ -92,7 +92,7 @@ export default class DLineSerie extends Vue {
   @Watch("bulletsRadius")
   onBulletsRadiusChange = this.setShowBullets;
 
-  @Prop({ required: false, default: HeatRule.Gradient })
+  @Prop({ required: false, default: HeatRule.None })
   heatRule!: HeatRule;
 
   @Watch("heatRule")
@@ -206,6 +206,7 @@ export default class DLineSerie extends Vue {
 
   setData(): void {
     switch (this.heatRule) {
+      case HeatRule.None:
       case HeatRule.Gradient: {
         this.serie!.data.setAll(this.data);
         break;

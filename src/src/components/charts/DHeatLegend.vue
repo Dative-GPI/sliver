@@ -116,6 +116,7 @@ export default class DHeatLegend extends Vue {
     }
     if (this.enabled) {
       switch (this.heatRule) {
+        case HeatRule.None:
         case HeatRule.Gradient: {
           // Add to chart
           this.legend = this.chart.children.push(am5.HeatLegend.new(this.root, {
