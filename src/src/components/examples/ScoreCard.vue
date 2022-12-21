@@ -3,6 +3,7 @@
     :locale="locale"
     :minHeight="minHeight"
     :series="series"
+    :data="data"
   />
 </template>
 
@@ -19,5 +20,8 @@ export default class ScoreCard extends Vue {
 
   @Prop({ required: true })
   series!: any[];
+
+  @Prop({ required: true })
+  data!: any[];
 }
 </script>

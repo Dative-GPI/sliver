@@ -1,18 +1,20 @@
 <template>
   <div class="w-100">
-    <div v-for="(s, sIndex) in series" :key="sIndex">
-      <div v-for="(o, oIndex) in s.operands" :key="oIndex" class="d-flex" :style="{ height: '35px', alignItems: 'center' }">
-        <span v-if="s.operands.length > 1" class="text-h6 text-truncate" :style="{ width: '60%' }">
-          {{ o.label }}
-        </span>
-        <v-spacer v-if="s.operands.length > 1" />
-        <span class="text-h4" :style="{ whiteSpace: 'nowrap' }">
-          {{ formatNumber(o.data[0].valueY, s.decimalPlaces) }} {{ s.operationUnit }}
-        </span>
-        <v-icon :size="s.iconSize" class="ml-5">
-          {{ s.icon }}
-        </v-icon>
-      </div>
+    <div v-for="(ds, dsIndex) in data" :key="dsIndex">
+      <template v-if="series[dsIndex] != null">
+        <div v-for="(dop, dopIndex) in ds.operands" :key="dopIndex" class="d-flex" :style="{ height: '35px', alignItems: 'center' }">
+          <span class="text-h6 text-truncate" :style="{ width: '60%' }">
+            {{ dop.label }}
+          </span>
+          <v-spacer />
+          <span class="text-h4" :style="{ whiteSpace: 'nowrap' }">
+            {{ formatNumber(dop.data[0].valueY, locale, series[dsIndex].decimalPlaces) }} {{ series[dsIndex].operationUnit }}
+          </span>
+          <v-icon :size="series[dsIndex].iconSize" class="ml-5">
+            {{ series[dsIndex].icon }}
+          </v-icon>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -34,6 +36,9 @@ export default class DScoreCard extends Vue {
   minHeight!: string;
 
   @Prop({ required: true })
-  series!: unknown[];
+  series!: any[];
+
+  @Prop({ required: true })
+  data!: any[];
 }
 </script>
