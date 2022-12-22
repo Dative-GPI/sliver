@@ -121,30 +121,15 @@ export default class DDateYAxis extends Vue {
   }
 
   setMin(): void {
-    if (this.min != null) {
-      this.axis!.set("min", this.min);
-    }
-    else {
-      this.axis!.set("min", undefined);
-    }
+    this.axis!.set("min", this.min);
   }
 
   setMax(): void {
-    if (this.max != null) {
-      this.axis!.set("max", this.max);
-    }
-    else {
-      this.axis!.set("max", undefined);
-    }
+    this.axis!.set("max", this.max);
   }
 
   setMaxZoomFactor(): void {
-    if (this.maxZoomFactor != null) {
-      this.axis!.set("maxZoomFactor", this.maxZoomFactor);
-    }
-    else {
-      this.axis!.set("maxZoomFactor", undefined);
-    }
+    this.axis!.set("maxZoomFactor", this.maxZoomFactor);
   }
 
   setRanges(): void {

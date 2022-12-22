@@ -42,7 +42,7 @@
               <d-line-serie
                 v-for="(serie, index) in data.series"
                 :key="index"
-                :name="serie.serie"
+                :name="serie.label"
                 :data="serie.data"
                 :showBullets="serieShowBullets"
                 :bulletsRadius="serieBulletsRadius"

@@ -71,9 +71,168 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeLineSerie("Line 1", 1660860000000 + 86400000, 0, 2.16e+7, 2, 50 ) },
-      { ...makeLineSerie("Line 2", 1660860000000 + 86400000, 0, 2.16e+7, 2, 50 ) },
-      { ...makeLineSerie("Line 3", 1660860000000 + 86400000, 0, 2.16e+7, 2, 50 ) }
+      {
+        label: "Level 1",
+        data: [
+          {
+            valueY: 163.6,
+            timestampX: 1671680092000,
+            subs: []
+          },
+          {
+            valueY: 165.7,
+            timestampX: 1671680211000,
+            subs: []
+          },
+          {
+            valueY: 166.7,
+            timestampX: 1671680332000,
+            subs: []
+          },
+          {
+            valueY: 167.5,
+            timestampX: 1671680452000,
+            subs: []
+          },
+          {
+            valueY: 171,
+            timestampX: 1671680572000,
+            subs: []
+          },
+          {
+            valueY: 182.2,
+            timestampX: 1671680693000,
+            subs: []
+          },
+          {
+            valueY: 189.2,
+            timestampX: 1671680812000,
+            subs: []
+          },
+          {
+            valueY: 191.8,
+            timestampX: 1671680932000,
+            subs: []
+          },
+          {
+            valueY: 193.1,
+            timestampX: 1671681052000,
+            subs: []
+          },
+          {
+            valueY: 193.6,
+            timestampX: 1671681172000,
+            subs: []
+          },
+          {
+            valueY: 199.7,
+            timestampX: 1671681292000,
+            subs: []
+          },
+          {
+            valueY: 208.8,
+            timestampX: 1671681411000,
+            subs: []
+          },
+          {
+            valueY: 212.2,
+            timestampX: 1671681532000,
+            subs: []
+          },
+          {
+            valueY: 212.8,
+            timestampX: 1671681652000,
+            subs: []
+          },
+          {
+            valueY: 212.5,
+            timestampX: 1671681772000,
+            subs: []
+          }
+        ],
+        subOperands: []
+      },
+      {
+        label: "Level 6",
+        data: [
+          {
+            valueY: 0,
+            timestampX: 1671680092000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671680212000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671680333000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671680452000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671680573000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671680692000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671680812000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671680933000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671681052000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671681172000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671681293000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671681412000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671681533000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671681653000,
+            subs: []
+          },
+          {
+            valueY: 0,
+            timestampX: 1671681772000,
+            subs: []
+          }
+        ],
+        subOperands: []
+      }
     ]
   },
   minHeight: '400px',
@@ -101,20 +260,12 @@ Default.args = {
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",
-  yAxisRanges: [
-    { startValue: -3,   endValue: 0,  opacity: 0.2, color: "#ff0000", label: "Bad" },
-    { startValue: 0,   endValue: 3,  opacity: 0.2, color: "#00ff00", label: "Good" },
-  ],
+  yAxisRanges: [],
   yAxisUnit: "mL",
   serieShowBullets: false,
   serieBulletsRadius: 5,
-  heatRule: 2,
+  heatRule: 0,
   minColor: "#FF0000",
   maxColor: "#00FF00",
-  heatRanges: [
-    { startValue: -1500,   endValue: -3,  opacity: 1, color: "#0000ff", label: "Out of scope" },
-    { startValue: -3,   endValue: 0,  opacity: 1, color: "#ff0000", label: "Bad" },
-    { startValue: 0,   endValue: 3,  opacity: 1, color: "#00ff00", label: "Good" },
-    { startValue: 3,   endValue: 1500,  opacity: 1, color: "#0000ff", label: "Out of scope" },
-  ]
+  heatRanges: []
 };
