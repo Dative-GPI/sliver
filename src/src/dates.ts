@@ -1,10 +1,16 @@
 import { format } from "date-fns";
 import { enUS, enGB, fr, it, es, ru, de } from "date-fns/locale";
 
+export const LongTimeFormat =  "EEE dd LLL yyyy HH:mm:ss";
+
 export const DateTools =  {
   formatShortEpoch: (locale: string, offset: string, epoch: number): string => {
     return InnerDateTools.formatEpoch(locale, ShortTimeFormat(locale), epoch - (getTimeZoneOffsetMinutes(offset) * 60 * 1000));
-  }
+  },
+  formatLongTimeEpoch: (locale: string, offset: string, epoch: number): string => {
+    const result = InnerDateTools.formatEpoch(locale, LongTimeFormat, epoch - (getTimeZoneOffsetMinutes(offset) * 60 * 1000));
+    return capitalizeFirstLetter(result);
+  },
 }
 
 const InnerDateTools = {
@@ -72,4 +78,8 @@ const getLocale = (locale: string): Locale => {
     case "ru-RU": return ru;
     default: return enUS;
   }
+}
+
+function capitalizeFirstLetter(data: string) {
+  return data.charAt(0).toUpperCase() + data.slice(1);
 }
