@@ -5,7 +5,8 @@ export enum ColorSets {
   Grafana = 1,
   Kelly = 2,
   Armytage = 3,
-  ZeileisHornikMurrell = 4
+  ZeileisHornikMurrell = 4,
+  Hash = 5
 }
 
 const GrafanaSet: string[] = [
@@ -148,10 +149,38 @@ const ZeileisHornikMurrellSet: string[] = [
 
 export const GetColors = (set: ColorSets): am5.Color[] => {
   switch (set) {
-    case ColorSets.Default: return [];
     case ColorSets.Grafana: return GrafanaSet.map(c => am5.color(c));
     case ColorSets.Kelly: return KellySet.map(c => am5.color(c));
     case ColorSets.Armytage: return ArmytageSet.map(c => am5.color(c));
     case ColorSets.ZeileisHornikMurrell: return ZeileisHornikMurrellSet.map(c => am5.color(c));
+    default: return [];
   }
+}
+
+export const GetHashedColors = (seed: string, labels: string[]): am5.Color[] => {
+  let colors: am5.Color[] = [];
+  for (let i = 0; i < labels.length; i++) {
+    let hash = unsecureHash(labels[i] + unsecureHash(seed));
+    let r = 0, g = 0, b = 0;
+    r = hash % 255;
+    hash = Math.ceil(hash * 359);
+    g = hash % 255;
+    hash = Math.ceil(hash * 7789);
+    b = hash % 255
+    colors.push(am5.color(`#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`));
+  }
+  return colors;
+}
+
+const unsecureHash = (value: string): number => {
+  let a = 1, c = 0;
+  if (value) {
+    a = 0;
+    for (let h = 0; h < value.length; h++) {
+      a = (a << 6&268435455) + value.charCodeAt(h) + (value.charCodeAt(h) << 14);
+      c = a & 266338304;
+      a = c !== 0 ? a ^ c >> 21 : a;
+    }
+  }
+  return a * 479001599;
 }

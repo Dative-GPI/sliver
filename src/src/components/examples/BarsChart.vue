@@ -5,10 +5,13 @@
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-xy-chart
+      :chartId="Math.random().toString()"
       :min-height="minHeight"
-      :layout="chartLayout"
       :locale="locale"
       :colorSet="colorSet"
+      :colorSeed="colorSeed"
+      :seriesLabels="seriesLabels"
+      :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -55,9 +58,9 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { ColorSets } from "../../colors";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
+import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
 
@@ -74,6 +77,12 @@ export default class BarsChart extends Vue {
 
   @Prop({ required: true })
   colorSet!: ColorSets;
+
+  @Prop({ required: true })
+  colorSeed!: string;
+
+  @Prop({ required: true })
+  seriesLabels!: string[];
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

@@ -41,8 +41,8 @@
 
 <script lang="ts">
 import _ from "lodash";
-import { Component, Vue, Prop } from "vue-property-decorator";
 import Color from "color";
+import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { HeatRule } from "../../enums";
 import { formatNumber } from "../../helpers";

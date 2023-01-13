@@ -14,12 +14,11 @@ import { Component, ProvideReactive, Vue, Prop, Watch } from "vue-property-decor
 
 import * as am5 from "@amcharts/amcharts5";
 import * as am5radar from "@amcharts/amcharts5/radar";
-import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
-import { ColorSets, GetColors } from "../../colors";
-import { AMROOT, CHART } from "../../literals";
 import { LayoutEnum } from "../../enums";
 import { getLocale } from "../../helpers";
+import { AMROOT, CHART } from "../../literals";
+import { ColorSets, GetColors, GetHashedColors } from "../../colors";
 
 @Component({})
 export default class DRadarChart extends Vue {
@@ -43,6 +42,21 @@ export default class DRadarChart extends Vue {
 
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColors;
+
+  @Prop({ required: false, default: 0 })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColors;
+
+  @Prop({ required: false, default: () => [] })
+  seriesLabels!: string[];
+
+  @Watch("seriesLabels")
+  onSeriesLabelsChange = this.setColors;
 
   @Prop({ required: false, default: LayoutEnum.Vertical })
   layout!: LayoutEnum;
@@ -80,7 +94,17 @@ export default class DRadarChart extends Vue {
   @Watch("radius")
   onRadiusChange = this.setRadius;
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
+
+  setColors(): void {
+    if ([ColorSets.Hash].includes(this.colorSet)) {
+      this.chart!.get("colors")!.set("colors", GetHashedColors(this.colorSeed, this.seriesLabels));
+    }
+
+    else if (![ColorSets.Default].includes(this.colorSet)) {
+      this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
+    }
+  }
 
   setLayout(): void {
     switch(this.layout) {
@@ -145,10 +169,7 @@ export default class DRadarChart extends Vue {
     // Add chart to root
     this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {}));
 
-    if (![ColorSets.Default].includes(this.colorSet)) {
-      this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
-    }
-
+    this.setColors();
     this.setLayout();
     this.setPanX();
     this.setPanY();

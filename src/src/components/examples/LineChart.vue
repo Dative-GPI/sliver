@@ -5,9 +5,13 @@
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-xy-chart
+      :chartId="Math.random().toString()"
       :min-height="minHeight"
-      :layout="chartLayout"
       :locale="locale"
+      :colorSet="colorSet"
+      :colorSeed="colorSeed"
+      :seriesLabels="seriesLabels"
+      :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -70,6 +74,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
 import { AxisRange, TimeRange } from "../../models";
+import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
 
@@ -83,6 +88,15 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   locale!: string;
+
+  @Prop({ required: true })
+  colorSet!: ColorSets;
+
+  @Prop({ required: true })
+  colorSeed!: string;
+
+  @Prop({ required: true })
+  seriesLabels!: string[];
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

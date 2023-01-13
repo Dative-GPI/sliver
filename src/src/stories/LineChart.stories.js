@@ -13,6 +13,9 @@ const Template = (args, { argTypes }) => ({
       :data="data"
       :minHeight="minHeight"
       :locale="locale"
+      :colorSet="colorSet"
+      :colorSeed="colorSeed"
+      :seriesLabels="seriesLabels"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -153,6 +156,87 @@ Default.args = {
         subOperands: []
       },
       {
+        label: "Level 4",
+        data: [
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671680092000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671680212000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671680333000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671680452000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671680573000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671680692000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671680812000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671680933000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671681052000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671681172000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671681293000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671681412000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671681533000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671681653000,
+            subs: []
+          },
+          {
+            valueY: Math.ceil(Math.random() * 50),
+            timestampX: 1671681772000,
+            subs: []
+          }
+        ],
+        subOperands: []
+      },
+      {
         label: "Level 6",
         data: [
           {
@@ -237,6 +321,9 @@ Default.args = {
   },
   minHeight: '400px',
   locale: "fr-FR",
+  colorSet: 5,
+  colorSeed: "tango",
+  seriesLabels: ["Level 1", "Level 4", "Level 6"],
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

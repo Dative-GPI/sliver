@@ -12,6 +12,9 @@ const Template = (args, { argTypes }) => ({
     `<radar-chart
       :minHeight="minHeight"
       :locale="locale"
+      :colorSet="colorSet"
+      :colorSeed="colorSeed"
+      :seriesLabels="seriesLabels"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -62,6 +65,9 @@ Default.args = {
   unit: "eV",
   minHeight: '400px',
   locale: "fr-FR",
+  colorSet: 5,
+  colorSeed: "gauffrier",
+  seriesLabels: ["Value 1", "Value 2"],
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

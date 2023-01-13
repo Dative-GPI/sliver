@@ -18,8 +18,8 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { LayoutEnum } from "../../enums";
 import { AMROOT, CHART } from "../../literals";
-import { ColorSets, GetColors } from "../../colors";
 import { getLocale, getTimezone } from "../../helpers";
+import { ColorSets, GetColors, GetHashedColors } from "../../colors";
 
 @Component({})
 export default class DXYChart extends Vue {
@@ -50,6 +50,21 @@ export default class DXYChart extends Vue {
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;
 
+  @Watch("colorSet")
+  onColorSetChange = this.setColors;
+
+  @Prop({ required: false, default: 0 })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColors;
+
+  @Prop({ required: false, default: () => [] })
+  seriesLabels!: string[];
+
+  @Watch("seriesLabels")
+  onSeriesLabelsChange = this.setColors;
+
   @Prop({ required: false, default: LayoutEnum.Vertical })
   layout!: LayoutEnum;
 
@@ -71,6 +86,16 @@ export default class DXYChart extends Vue {
   resizeObserver: ResizeObserver | null = null;
   debounceResize: number | null = null;
   upAndRunning: boolean = false;
+
+  setColors(): void {
+    if ([ColorSets.Hash].includes(this.colorSet)) {
+      this.chart!.get("colors")!.set("colors", GetHashedColors(this.colorSeed, this.seriesLabels));
+    }
+
+    else if (![ColorSets.Default].includes(this.colorSet)) {
+      this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
+    }
+  }
 
   setLayout(): void {
     switch(this.layout) {
@@ -131,10 +156,7 @@ export default class DXYChart extends Vue {
       maxTooltipDistance: 0
     }));
 
-    if (![ColorSets.Default].includes(this.colorSet)) {
-      this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
-    }
-
+    this.setColors();
     this.setLayout();
     this.setWheelX();
     this.setWheelY();
