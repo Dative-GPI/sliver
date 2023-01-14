@@ -23,15 +23,15 @@
               <span class="text-h3"
                 :style="{
                   whiteSpace: 'nowrap', color: color(dop.data[0].valueY, series[dsIndex]),
-                  fontSize: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces)}px !important` : undefined,
-                  lineHeight: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces)}px !important` : undefined
+                  fontSize: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit || series[dsIndex].operationUnit)}px !important` : undefined,
+                  lineHeight: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit || series[dsIndex].operationUnit)}px !important` : undefined
                 }">
                 {{ formatNumber(dop.data[0].valueY, locale, series[dsIndex].decimalPlaces) }} {{
                   dop.unit ||
                     series[dsIndex].operationUnit
                 }}
               </span>
-              <v-icon :size="solo ? soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces) * 0.8 : 26"
+              <v-icon :size="solo ? soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit || series[dsIndex].operationUnit) * 0.8 : 26"
                 style="margin-left: max(1%, 8px)"
                 :color="color(dop.data[0].valueY, series[dsIndex])">
                 {{ series[dsIndex].icon }}
@@ -172,10 +172,10 @@ export default class DScoreCard extends Vue {
     }
   }
 
-  soloFontSize(value: number, decimalPlaces: number) {
+  soloFontSize(value: number, decimalPlaces: number, unit: string) {
 
-    let formattedNumber = formatNumber(value, this.locale, decimalPlaces)
-    let maxCharacterWidth = Math.floor(this.clientWidth / formattedNumber.length * Math.log10(formattedNumber.length * 2));
+    let formattedNumber = [formatNumber(value, this.locale, decimalPlaces), unit].filter(el => el).join(" ");
+    let maxCharacterWidth = Math.floor(this.clientWidth / (formattedNumber.length + 2) * Math.log10(formattedNumber.length * 2));
     let maxCharacterHeight = this.clientHeight - (this.clientHeight < 80 ? 12 : 20)
 
     return Math.max(Math.min(maxCharacterWidth, maxCharacterHeight), 1);

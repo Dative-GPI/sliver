@@ -23,6 +23,7 @@ const Template = (args, { argTypes }) => ({
 const makeScoreCardChart = (labels, icon, iconSize, decimalPlaces, heatRule, valueMin, valueMax, close) => {
   let operands = labels.map(l => ({
     label: l,
+    unit: "MWh",
     data: [{ valueY: Math.random() * (valueMax - valueMin) + valueMin, timestampX: 1672833487703, ...(close ? {closeTimestampX: 1672834487903} : {}) }]
   }));
   return {
