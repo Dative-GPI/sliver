@@ -1,17 +1,18 @@
 <template>
-  <div style="width: 100%;"
+  <div style="width: 100%; position: relative"
     :style="{ minHeight: minHeight ? `${minHeight}px` : undefined, height: solo ? '100%' : undefined }">
     <div v-for="(ds, dsIndex) in data"
-      :key="dsIndex">
+      :key="dsIndex"
+      :class="{ centered: solo }">
       <template v-if="series[dsIndex] != null">
         <div v-for="(dop, dopIndex) in ds.operands"
           :key="dopIndex"
           :class="[solo ? '' : 'd-flex flex-nowrap items-center justify-center']"
-          :style="{ height: solo ? undefined : '55px' }">
+          :style="{ height: solo ? undefined : '55px', width: solo ? clientWidth + 'px' : undefined }">
           <div v-if="!solo"
             :style="{ 'max-width': `${maxWidth}px` }">
             <div class="text-h6 text-truncate">{{ dop.label }}</div>
-            <div class="text-truncate">{{
+            <div class="text-truncate text-body-1">{{
               [format(dop.data[0].timestampX), format(dop.data[0].closeTimestampX)].filter(t => !!t).join(" → ")
             }}
             </div>
@@ -36,7 +37,7 @@
                 {{ series[dsIndex].icon }}
               </v-icon>
             </div>
-            <div class="text-truncate text-center"
+            <div class="text-truncate text-center text-body-1" :class="{small: clientHeight < 80}"
               v-if="solo">{{
   [format(dop.data[0].timestampX), format(dop.data[0].closeTimestampX)].filter(t => !!t).join(" → ")
               }}
@@ -76,7 +77,7 @@ export default class DScoreCard extends Vue {
   @Prop({ required: true })
   series!: Serie[];
 
-  @Prop({ required: false, default: 1 })
+  @Prop({ required: false, default: 1.5 })
   fontRatio!: number;
 
   @Prop({ required: true })
@@ -172,14 +173,12 @@ export default class DScoreCard extends Vue {
   }
 
   soloFontSize(value: number, decimalPlaces: number) {
-    // return 10;
-    // console.log(this.clientWidth, this.clientHeight);
 
-    let maxCharacterWidth = Math.floor(this.clientWidth / formatNumber(value, this.locale, decimalPlaces).length);
-    let maxCharacterHeight = this.clientHeight - 24 // 24 = taille du footer avec la date
+    let formattedNumber = formatNumber(value, this.locale, decimalPlaces)
+    let maxCharacterWidth = Math.floor(this.clientWidth / formattedNumber.length * Math.log10(formattedNumber.length * 2));
+    let maxCharacterHeight = this.clientHeight - (this.clientHeight < 80 ? 12 : 20)
 
-    // console.log(maxCharacterWidth, maxCharacterHeight)
-    return Math.max(Math.min(maxCharacterWidth * this.fontRatio, maxCharacterHeight), 1);
+    return Math.max(Math.min(maxCharacterWidth, maxCharacterHeight), 1);
   }
 }
 
@@ -195,3 +194,17 @@ interface Serie {
   operationUnit: string
 }
 </script>
+
+<style scoped>
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.text-body-1.small {
+  line-height: 0.7rem!important; 
+  font-size: 0.6rem!important;
+}
+</style>

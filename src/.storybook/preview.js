@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import vuetify from '../src/plugins/vuetify' // <== important
+import '@fontsource/open-sans'
+import '@fontsource/montserrat'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@mdi/font/css/materialdesignicons.css'
