@@ -12,7 +12,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
 import { getLineIntersection, removeSerie, textColor } from "../../helpers";
-import { ColorSets, GetHashedColor } from "@/colors";
+import { ColorSets, GetHashedColor } from "../../colors";
 
 @Component({})
 export default class DRangeSerie extends Vue {

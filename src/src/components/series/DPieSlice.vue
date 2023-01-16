@@ -12,7 +12,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 
 import { AMROOT, CHART, LEGEND, SERIE } from "../../literals";
-import { ColorSets, GetHashedColor } from "@/colors";
+import { ColorSets, GetHashedColor } from "../../colors";
 import { uuidv4 } from "../../helpers";
 
 @Component({})

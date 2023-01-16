@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, XAXIS } from "../../literals";
-import { ColorSets, GetHashedColor } from "@/colors";
+import { ColorSets, GetHashedColor } from "../../colors";
 import { textColor } from "../../helpers";
 
 

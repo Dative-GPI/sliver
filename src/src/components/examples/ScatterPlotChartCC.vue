@@ -72,7 +72,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
-import { ColorSets } from "@/colors";
+import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
 

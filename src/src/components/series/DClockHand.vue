@@ -13,7 +13,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, XAXIS } from "../../literals";
 import { SerieEnum } from "../../enums";
-import { ColorSets, GetHashedColor } from "@/colors";
+import { ColorSets, GetHashedColor } from "../../colors";
 
 
 @Component({})
