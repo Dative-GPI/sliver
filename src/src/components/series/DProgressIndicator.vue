@@ -11,6 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, XAXIS } from "../../literals";
+import { ColorSets, GetHashedColor } from "@/colors";
 import { textColor } from "../../helpers";
 
 
@@ -47,7 +48,19 @@ export default class DProgressIndicator extends Vue {
   colorIndex!: number;
 
   @Watch("colorIndex")
-  onColorIndexChange = this.setColorIndex;
+  onColorIndexChange = this.setColor;
+
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColor;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColor;
 
   progressIndicator: any = null;
   tooltip: am5.Tooltip | null = null;
@@ -77,16 +90,20 @@ export default class DProgressIndicator extends Vue {
     });
   }
 
-  setColorIndex(): void {
+  setColor(): void {
     // Remove from legend
     if (this.legend != null) {
       this.legend.data.removeValue(this.progressIndicator!);
     }
 
-    let color = this.chart!.get("colors")!.getIndex(this.colorIndex);
+    let color = [ColorSets.Hash].includes(this.colorSet) ?
+      GetHashedColor(this.colorSeed, this.name) : 
+      this.chart!.get("colors")!.getIndex(this.colorIndex);
 
     this.progressIndicator!.set("fill", color);
     this.progressIndicator!.get("bullet").get("sprite").set("fill", color);
+    this.tooltip!.label.set("fill", textColor(color.toCSSHex()));
+    this.tooltip!.get("background")!.set("fill", color);
 
     // Add to legend (otherwise the name is not updated)
     if (this.legend != null) {
@@ -98,8 +115,6 @@ export default class DProgressIndicator extends Vue {
     this.tooltip = am5.Tooltip.new(this.root, {
       autoTextColor: false
     });
-      this.tooltip.label.set("fill", textColor(this.chart!.get("colors")!.getIndex(this.colorIndex).toCSSHex()));
-    this.tooltip.get("background")!.set("fill", this.chart!.get("colors")!.getIndex(this.colorIndex));
 
     // Add to axis
     this.progressIndicator = this.xAxis.makeDataItem({
@@ -116,7 +131,7 @@ export default class DProgressIndicator extends Vue {
     });
 
     this.setName();
-    this.setColorIndex();
+    this.setColor();
 
     this.xAxis.createAxisRange(this.progressIndicator);
 

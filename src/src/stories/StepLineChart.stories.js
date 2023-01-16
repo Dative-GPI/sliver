@@ -13,6 +13,8 @@ const Template = (args, { argTypes }) => ({
       :data="data"
       :minHeight="minHeight"
       :locale="locale"
+      :colorSet="colorSet"
+      :colorSeed="colorSeed"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -72,6 +74,8 @@ Default.args = {
   },
   minHeight: '400px',
   locale: "fr-FR",
+  colorSet: 5,
+  colorSeed: "soyouz",
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

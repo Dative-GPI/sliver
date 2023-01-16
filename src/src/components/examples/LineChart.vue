@@ -9,8 +9,6 @@
       :min-height="minHeight"
       :locale="locale"
       :colorSet="colorSet"
-      :colorSeed="colorSeed"
-      :seriesLabels="seriesLabels"
       :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
@@ -54,6 +52,8 @@
                 :minColor="minColor"
                 :maxColor="maxColor"
                 :heatRanges="heatRanges"
+                :colorSet="colorSet"
+                :colorSeed="colorSeed"
               />
             </d-date-x-axis>
           </d-value-y-axis>
@@ -94,9 +94,6 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   colorSeed!: string;
-
-  @Prop({ required: true })
-  seriesLabels!: string[];
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

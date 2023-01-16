@@ -11,8 +11,9 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
-import { updateCategories, addSerie, removeSerie, textColor } from "../../helpers";
-import { PositionEnum, SerieEnum } from "../../enums";
+import { updateCategories, textColor } from "../../helpers";
+import { ColorSets, GetHashedColor } from "@/colors";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DColumnSerie extends Vue {
@@ -69,6 +70,18 @@ export default class DColumnSerie extends Vue {
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
 
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColor;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColor;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -83,6 +96,7 @@ export default class DColumnSerie extends Vue {
   setName(): void {
     this.serie!.set("name", this.name);
     this.setLegendLabelText();
+    this.setColor();
   }
 
   setShowTooltip(): void {
@@ -114,10 +128,21 @@ export default class DColumnSerie extends Vue {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : this.name);
   }
 
+  setColor(): void {
+    if ([ColorSets.Hash].includes(this.colorSet)) {
+      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+    }
+    else {
+      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+    }
+  }
+
   setData(): void {
     // Add to axis
     this.xAxis.data.setAll(
-      updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.categoryCodeXField, null, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
+      updateCategories(this.xAxis.data.values, this.data, this.categoryXField, this.categoryCodeXField, null, this.valueYField, this.serieId, true)
     );
     this.serie!.data.setAll(this.data);
     this.setShowTooltip();
@@ -138,14 +163,12 @@ export default class DColumnSerie extends Vue {
 
     // Set updatable properties
     this.setName();
+    this.setData();
 
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
     }
-    
-    // Set data
-    this.setData();
     
     this.upAndRunning = true;
   }
@@ -161,7 +184,7 @@ export default class DColumnSerie extends Vue {
 
     // Remove from axis
     this.xAxis.data.setAll(
-      updateCategories(this.xAxis.data.values, [], this.categoryXField, this.categoryCodeXField, null, this.valueYField, this.serieId, true, PositionEnum.Abscissa)
+      updateCategories(this.xAxis.data.values, [], this.categoryXField, this.categoryCodeXField, null, this.valueYField, this.serieId, true)
     );
 
     // Dispose

@@ -172,8 +172,11 @@ export default class DPieSerieExtended extends Vue {
       tooltipY: am5.percent(75)
     });
 
-    if (![ColorSets.Default].includes(this.colorSet)) {
-      this.serie.get("colors")!.set("colors", GetColors(this.colorSet));
+    if (![ColorSets.Default, ColorSets.Hash].includes(this.colorSet)) {
+      this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
+    }
+    else if ([ColorSets.Default].includes(this.colorSet)) {
+      this.chart!.set("colors", am5.ColorSet.new(this.root!, {}))!;
     }
 
     this.serie.slices.template.events.on("click", this.onClick);

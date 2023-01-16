@@ -12,6 +12,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 
 import { AMROOT, CHART, LEGEND, SERIE } from "../../literals";
+import { ColorSets, GetHashedColor } from "@/colors";
 import { uuidv4 } from "../../helpers";
 
 @Component({})
@@ -51,6 +52,18 @@ export default class DPieSlice extends Vue {
 
   @Watch("otherThreshold")
   onOtherThresholdChange = this.setData;
+
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setData;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setData;
 
   @Prop({ required: true })
   data!: any[];
@@ -222,14 +235,21 @@ export default class DPieSlice extends Vue {
         .concat(this.localData)
         .sort(this.sortData)
         .map((c: any, i: number) => {
-          var offset = 0;
-          let color = this.serie!.get("colors")!.getIndex(offset);
-          while (colors.includes(color.hex)) {
-            offset++;
-            color = this.serie!.get("colors")!.getIndex(offset);
+          if ([ColorSets.Hash].includes(this.colorSet)) {
+            let color = GetHashedColor(this.colorSeed, c[this.categoryField]);
+            colors.push(color.hex);
+            return { ...c, color, index: i };
           }
-          colors.push(color.hex);
-          return { ...c, color, index: i };
+          else {
+            let offset = 0;
+            let color = this.serie!.get("colors")!.getIndex(offset);
+            while (colors.includes(color.hex)) {
+              offset++;
+              color = this.serie!.get("colors")!.getIndex(offset);
+            }
+            colors.push(color.hex);
+            return { ...c, color, index: i };
+          }
         })
     );
     if (this.legend != null) {

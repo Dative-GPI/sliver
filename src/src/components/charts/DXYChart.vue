@@ -53,18 +53,6 @@ export default class DXYChart extends Vue {
   @Watch("colorSet")
   onColorSetChange = this.setColors;
 
-  @Prop({ required: false, default: 0 })
-  colorSeed!: string;
-
-  @Watch("colorSeed")
-  onColorSeedChange = this.setColors;
-
-  @Prop({ required: false, default: () => [] })
-  seriesLabels!: string[];
-
-  @Watch("seriesLabels")
-  onSeriesLabelsChange = this.setColors;
-
   @Prop({ required: false, default: LayoutEnum.Vertical })
   layout!: LayoutEnum;
 
@@ -88,12 +76,11 @@ export default class DXYChart extends Vue {
   upAndRunning: boolean = false;
 
   setColors(): void {
-    if ([ColorSets.Hash].includes(this.colorSet)) {
-      this.chart!.get("colors")!.set("colors", GetHashedColors(this.colorSeed, this.seriesLabels));
-    }
-
-    else if (![ColorSets.Default].includes(this.colorSet)) {
+    if (![ColorSets.Default, ColorSets.Hash].includes(this.colorSet)) {
       this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
+    }
+    else if ([ColorSets.Default].includes(this.colorSet)) {
+      this.chart!.set("colors", am5.ColorSet.new(this.root!, {}))!;
     }
   }
 

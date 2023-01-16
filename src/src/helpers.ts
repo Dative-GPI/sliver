@@ -7,9 +7,7 @@ import am5locales_es_ES from "@amcharts/amcharts5/locales/es_ES";
 import am5locales_de_DE from "@amcharts/amcharts5/locales/de_DE";
 import am5locales_pt_PT from "@amcharts/amcharts5/locales/pt_PT";
 
-import { PositionEnum } from "./enums";
-
-export const updateCategories = (formers: any[], data: any[], categoryField: string, categoryCodeField: string, openValueField: string | null, valueField: string, serieId: number, sort: boolean, position: PositionEnum): any[] => {
+export const updateCategories = (formers: any[], data: any[], categoryField: string, categoryCodeField: string, openValueField: string | null, valueField: string, serieId: number, sort: boolean): any[] => {
   for (let i = 0; i < formers.length; i++) {
     let serieIndex = formers[i].series.indexOf(serieId);
     while (serieIndex !== -1) {
@@ -41,16 +39,10 @@ export const updateCategories = (formers: any[], data: any[], categoryField: str
   if (sort) {
     formers.sort((c1: any, c2: any) => {
       if (c1[categoryField] < c2[categoryField]) {
-        switch (position) {
-          case PositionEnum.Abscissa: return -1;
-          case PositionEnum.Ordinate: return 1;
-        }
+        return -1;
       }
       else if (c1[categoryField] > c2[categoryField]) {
-        switch (position) {
-          case PositionEnum.Abscissa: return 1;
-          case PositionEnum.Ordinate: return -1;
-        }
+        return 1;
       }
       return 0;
     });

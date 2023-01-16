@@ -12,7 +12,8 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, LEGEND_DEBUG, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie, textColor } from "../../helpers";
-import { PositionEnum, SerieEnum } from "../../enums";
+import { ColorSets, GetHashedColor } from "@/colors";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DScatterPlotSerie extends Vue {
@@ -102,6 +103,18 @@ export default class DScatterPlotSerie extends Vue {
   @Watch("heatRulesMax")
   onHeatRulesMaxChange = this.setHeatRules;
 
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColor;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColor;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -116,6 +129,7 @@ export default class DScatterPlotSerie extends Vue {
   setName(): void {
     this.serie!.set("name", this.name);
     this.setLegendLabelText();
+    this.setColor();
   }
 
   setLegendLabelText(): void {
@@ -175,17 +189,28 @@ export default class DScatterPlotSerie extends Vue {
     }]);
   }
 
+  setColor(): void {
+    if ([ColorSets.Hash].includes(this.colorSet)) {
+      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+    }
+    else {
+      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+    }
+  }
+
   setData(): void {
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
       this.xAxis.data.setAll(
-        updateCategories(this.xAxis.data.values, this.data, this.xField, this.codeXField, null, this.yField, this.serieId, true, PositionEnum.Abscissa)
+        updateCategories(this.xAxis.data.values, this.data, this.xField, this.codeXField, null, this.yField, this.serieId, true)
       );
     }
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Add to axis
       this.yAxis.data.setAll(
-        updateCategories(this.yAxis.data.values, this.data, this.yField, this.codeYField, null, this.xField, this.serieId, true, PositionEnum.Ordinate)
+        updateCategories(this.yAxis.data.values, this.data, this.yField, this.codeYField, null, this.xField, this.serieId, true)
       );
     }
     this.serie!.data.setAll(this.data);
@@ -241,14 +266,14 @@ export default class DScatterPlotSerie extends Vue {
     if (this.xAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
       this.xAxis.data.setAll(
-        updateCategories(this.xAxis.data.values, [], this.xField, this.codeXField, null, this.yField, this.serieId, true, PositionEnum.Abscissa)
+        updateCategories(this.xAxis.data.values, [], this.xField, this.codeXField, null, this.yField, this.serieId, true)
       );
     }
 
     if (this.yAxis instanceof am5xy.CategoryAxis) {
       // Remove from axis
       this.yAxis.data.setAll(
-        updateCategories(this.yAxis.data.values, [], this.yField, this.codeYField, null, this.xField, this.serieId, true, PositionEnum.Ordinate)
+        updateCategories(this.yAxis.data.values, [], this.yField, this.codeYField, null, this.xField, this.serieId, true)
       );
     }
 

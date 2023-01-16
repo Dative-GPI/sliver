@@ -13,6 +13,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, XAXIS } from "../../literals";
 import { SerieEnum } from "../../enums";
+import { ColorSets, GetHashedColor } from "@/colors";
 
 
 @Component({})
@@ -45,7 +46,19 @@ export default class DClockHand extends Vue {
   colorIndex!: number;
 
   @Watch("colorIndex")
-  onColorIndexChange = this.setColorIndex;
+  onColorIndexChange = this.setColor;
+
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColor;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColor;
 
   @Prop({ required: false, default: 5 })
   pinRadius!: number;
@@ -105,16 +118,18 @@ export default class DClockHand extends Vue {
     });
   }
 
-  setColorIndex(): void {
-    let color = this.chart!.get("colors")!.getIndex(this.colorIndex);
-
-    this.clockHand!.pin.set("fill", color);
-    this.clockHand!.hand.set("fill", color);
-
+  setColor(): void {
     // Remove from legend
     if (this.legend) {
       this.legend.data.removeValue(this.axisDataItem);
     }
+
+    let color = [ColorSets.Hash].includes(this.colorSet) ?
+      GetHashedColor(this.colorSeed, this.name) :
+      this.chart!.get("colors")!.getIndex(this.colorIndex);
+
+    this.clockHand!.pin.set("fill", color);
+    this.clockHand!.hand.set("fill", color);
     this.axisDataItem!.set("fill", color);
 
     // Add to legend (otherwise the color is not updated)
@@ -156,7 +171,7 @@ export default class DClockHand extends Vue {
     });
 
     this.setName();
-    this.setColorIndex();
+    this.setColor();
     this.setPinRadius();
     this.setBottomWidth();
     this.setClockHandRadius();

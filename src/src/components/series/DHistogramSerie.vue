@@ -13,6 +13,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
 import { textColor } from "../../helpers";
 import { SerieEnum } from "../../enums";
+import { ColorSets, GetHashedColor } from "@/colors";
 
 @Component({})
 export default class DHistogramSerie extends Vue {
@@ -84,6 +85,18 @@ export default class DHistogramSerie extends Vue {
   @Watch("stacked")
   onStackedChange = this.setStacked;
 
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColor;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColor;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -98,6 +111,7 @@ export default class DHistogramSerie extends Vue {
   setName(): void {
     this.serie!.set("name", this.name);
     this.setLegendLabelText();
+    this.setColor();
   }
 
   setShowTooltip(): void {
@@ -135,6 +149,17 @@ export default class DHistogramSerie extends Vue {
 
   setStacked(): void {
     this.serie!.set("stacked", this.stacked);
+  }
+
+  setColor(): void {
+    if ([ColorSets.Hash].includes(this.colorSet)) {
+      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+    }
+    else {
+      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+    }
   }
 
   setData(): void {

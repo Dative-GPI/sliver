@@ -11,7 +11,8 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
-import { addSerie, getLineIntersection, removeSerie, textColor } from "../../helpers";
+import { getLineIntersection, removeSerie, textColor } from "../../helpers";
+import { ColorSets, GetHashedColor } from "@/colors";
 
 @Component({})
 export default class DRangeSerie extends Vue {
@@ -87,6 +88,18 @@ export default class DRangeSerie extends Vue {
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
 
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColor;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColor;
+
   @Prop({ required: true })
   data!: any[];
 
@@ -109,6 +122,7 @@ export default class DRangeSerie extends Vue {
   setName(): void {
     this.serie!.set("name", this.name);
     this.setLegendLabelText();
+    this.setColor();
   }
 
   setSubNames(): void {
@@ -172,6 +186,31 @@ export default class DRangeSerie extends Vue {
     for (let i = 0; i < this.subSeries.length; i++) {
       let subName = this.subNames[i] ? this.subNames[i] : "";
       this.subSeries[i].set("legendLabelText", this.legendLabelText ? this.legendLabelText : subName);
+    }
+  }
+
+  setColor(): void {
+    if ([ColorSets.Hash].includes(this.colorSet)) {
+      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+
+      for (let i = 0; i < this.subSeries.length; i++) {
+        if (this.subDatas[i] != null) {
+          this.subSeries[i].set("fill", GetHashedColor(this.colorSeed, this.subNames[i]));
+          this.subSeries[i].set("stroke", GetHashedColor(this.colorSeed, this.subNames[i]));
+        }
+      }
+    }
+    else {
+      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+
+      for (let i = 0; i < this.subSeries.length; i++) {
+        if (this.subDatas[i] != null) {
+          this.subSeries[i].set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.subSeries[i])]);
+          this.subSeries[i].set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.subSeries[i])]);
+        }
+      }
     }
   }
 

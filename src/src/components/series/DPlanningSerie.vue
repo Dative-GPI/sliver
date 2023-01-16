@@ -10,9 +10,10 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie, textColor } from "../../helpers";
-import { PositionEnum, SerieEnum } from "../../enums";
+import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
+import { ColorSets, GetHashedColor } from "@/colors";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DPlanningSerie extends Vue {
@@ -129,6 +130,18 @@ export default class DPlanningSerie extends Vue {
   @Watch("templateCornerRadius")
   onTemplateCornerRadiusChange = this.setTemplateCornerRadius;
 
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColor;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColor;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -143,6 +156,7 @@ export default class DPlanningSerie extends Vue {
   setName(): void {
     this.serie!.set("name", this.name);
     this.setLegendLabelText();
+    this.setColor();
   }
 
   setShowTooltip(): void {
@@ -211,9 +225,20 @@ export default class DPlanningSerie extends Vue {
     });
   }
 
+  setColor(): void {
+    if ([ColorSets.Hash].includes(this.colorSet)) {
+      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+    }
+    else {
+      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+    }
+  }
+
   setData(): void {
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.categoryCodeYField, null, this.openDateXField, this.serieId, true, PositionEnum.Ordinate)
+      updateCategories(this.yAxis.data.values, this.data, this.categoryYField, this.categoryCodeYField, null, this.openDateXField, this.serieId, true)
     );
     this.serie!.data.setAll(this.data);
     this.setShowTooltip();
@@ -266,7 +291,7 @@ export default class DPlanningSerie extends Vue {
 
     // Remove from axis
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, [], this.categoryYField,  this.categoryCodeYField, null, this.openDateXField, this.serieId, true, PositionEnum.Ordinate)
+      updateCategories(this.yAxis.data.values, [], this.categoryYField,  this.categoryCodeYField, null, this.openDateXField, this.serieId, true)
     );
 
     // Remove from cursor

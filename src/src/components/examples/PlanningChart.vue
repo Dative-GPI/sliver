@@ -5,9 +5,11 @@
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-xy-chart
+      :chartId="Math.random().toString()"
       :min-height="minHeight"
-      :layout="chartLayout"
       :locale="locale"
+      :colorSet="colorSet"
+      :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -41,9 +43,11 @@
                 v-for="(serie, index) in data.series"
                 :key="index"
                 :name="serie.serie"
-                :data="serie.data"
                 :templateWidth="templateWidth"
                 :templateCornerRadius="templateCornerRadius"
+                :colorSet="colorSet"
+                :colorSeed="colorSeed"
+                :data="serie.data"
               />
             </d-category-y-axis>
           </d-date-x-axis>
@@ -63,6 +67,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
+import { ColorSets } from "@/colors";
 
 import Spinner from "./Spinner.vue";
 
@@ -76,6 +81,12 @@ export default class PlanningChart extends Vue {
 
   @Prop({ required: true })
   locale!: string;
+
+  @Prop({ required: true })
+  colorSet!: ColorSets;
+
+  @Prop({ required: true })
+  colorSeed!: string;
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

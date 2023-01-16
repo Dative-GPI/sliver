@@ -9,8 +9,6 @@
       :min-height="minHeight"
       :locale="locale"
       :colorSet="colorSet"
-      :colorSeed="colorSeed"
-      :seriesLabels="seriesLabels"
       :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
@@ -47,9 +45,11 @@
                 v-for="(serie, index) in data.series"
                 :key="index"
                 :name="serie.serie"
-                :data="serie.data"
                 :showTooltip="serieShowTooltip"
                 :tooltipText="serieTooltipText"
+                :colorSet="colorSet"
+                :colorSeed="colorSeed"
+                :data="serie.data"
               />
             </d-value-y-axis>
           </d-category-x-axis>
@@ -83,9 +83,6 @@ export default class BarsChart extends Vue {
 
   @Prop({ required: true })
   colorSeed!: string;
-
-  @Prop({ required: true })
-  seriesLabels!: string[];
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

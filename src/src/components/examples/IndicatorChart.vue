@@ -5,9 +5,11 @@
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-xy-chart
+      :chartId="Math.random().toString()"
       :min-height="minHeight"
-      :layout="chartLayout"
       :locale="locale"
+      :colorSet="colorSet"
+      :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -49,8 +51,10 @@
               <d-progress-indicator
                 v-for="(serie, index) in data.series"
                 :key="index"
-                :colorIndex="index"
                 :name="serie.serie"
+                :colorIndex="index"
+                :colorSet="colorSet"
+                :colorSeed="colorSeed"
                 :value="serie.data[0].valueX"
               />
             </d-value-y-axis>
@@ -66,6 +70,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
 import { AxisRange } from "../../models";
+import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
 
@@ -87,6 +92,12 @@ export default class IndicatorChart extends Vue {
 
   @Prop({ required: true })
   locale!: string;
+
+  @Prop({ required: true })
+  colorSet!: ColorSets;
+
+  @Prop({ required: true })
+  colorSeed!: string;
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

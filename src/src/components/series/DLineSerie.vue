@@ -11,6 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
+import { ColorSets, GetHashedColor } from "@/colors";
 import { HeatRule, SerieEnum } from "../../enums";
 import { textColor } from "../../helpers";
 import { AxisRange } from "../../models";
@@ -116,6 +117,18 @@ export default class DLineSerie extends Vue {
   @Watch("ranges")
   onHeatRangesChange = this.setHeatRule;
 
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColor;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColor;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -123,6 +136,7 @@ export default class DLineSerie extends Vue {
   onDataChange = this.setData;
 
   serie: am5xy.LineSeries | null = null;
+  color: am5.Color | null = null;
   tooltip: am5.Tooltip | null = null;
   bullets: am5.Bullet | null = null;
 
@@ -131,6 +145,7 @@ export default class DLineSerie extends Vue {
   setName(): void {
     this.serie!.set("name", this.name);
     this.setLegendLabelText();
+    this.setColor();
   }
 
   setShowTooltip(): void {
@@ -202,6 +217,17 @@ export default class DLineSerie extends Vue {
     }
 
     this.setData();
+  }
+
+  setColor(): void {
+    if ([ColorSets.Hash].includes(this.colorSet)) {
+      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+    }
+    else {
+      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+    }
   }
 
   setData(): void {

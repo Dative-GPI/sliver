@@ -172,6 +172,17 @@ export const GetHashedColors = (seed: string, labels: string[]): am5.Color[] => 
   return colors;
 }
 
+export const GetHashedColor = (seed: string, label: string): am5.Color => {
+  let hash = unsecureHash(label + unsecureHash(seed));
+  let r = 0, g = 0, b = 0;
+  r = hash % 255;
+  hash = Math.ceil(hash * 359);
+  g = hash % 255;
+  hash = Math.ceil(hash * 7789);
+  b = hash % 255
+  return am5.color(`#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`);
+}
+
 const unsecureHash = (value: string): number => {
   let a = 1, c = 0;
   if (value) {

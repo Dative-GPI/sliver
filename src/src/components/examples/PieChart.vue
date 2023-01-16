@@ -5,9 +5,10 @@
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-pie-chart
+      :chartId="Math.random().toString()"
       :min-height="minHeight"
-      :layout="chartLayout"
       :locale="locale"
+      :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -20,11 +21,13 @@
         :y="legendY"
         :centerY="legendCenterY"
       >
-        <d-pie-serie-extended>
+        <d-pie-serie-extended :colorSet="colorSet">
           <template v-slot="{ clickedData }">
             <d-pie-slice
               v-for="(serie, index) in data.series"
               :key="index"
+              :colorSet="colorSet"
+              :colorSeed="colorSeed"
               :data="serie.data"
               :clickedData="clickedData"
             />
@@ -39,6 +42,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
+import { ColorSets } from "@/colors";
 
 import Spinner from "./Spinner.vue";
 
@@ -52,6 +56,12 @@ export default class PieChart extends Vue {
 
   @Prop({ required: true })
   locale!: string;
+
+  @Prop({ required: true })
+  colorSet!: ColorSets;
+
+  @Prop({ required: true })
+  colorSeed!: string;
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

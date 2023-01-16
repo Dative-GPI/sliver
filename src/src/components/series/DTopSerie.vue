@@ -12,7 +12,8 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, sortValues, textColor } from "../../helpers";
-import { PositionEnum, SerieEnum } from "../../enums";
+import { ColorSets, GetHashedColor } from "@/colors";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DTopSerie extends Vue {
@@ -93,6 +94,18 @@ export default class DTopSerie extends Vue {
   @Watch("templateWidth")
   onTemplateWidthChange = this.setTemplateWidth;
 
+  @Prop({ required: false, default: ColorSets.Default })
+  colorSet!: ColorSets;
+
+  @Watch("colorSet")
+  onColorSetChange = this.setColor;
+
+  @Prop({ required: false, default: "" })
+  colorSeed!: string;
+
+  @Watch("colorSeed")
+  onColorSeedChange = this.setColor;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -107,6 +120,7 @@ export default class DTopSerie extends Vue {
   setName(): void {
     this.serie!.set("name", this.name);
     this.setLegendLabelText();
+    this.setColor();
   }
 
   setShowTooltip(): void {
@@ -155,6 +169,17 @@ export default class DTopSerie extends Vue {
     this.serie!.columns.template.set("width", this.templateWidth);
   }
 
+  setColor(): void {
+    if ([ColorSets.Hash].includes(this.colorSet)) {
+      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+    }
+    else {
+      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+    }
+  }
+
   setData(): void {
     let sortedData = this.data.slice().sort((a: any, b: any) => {
       if (a[this.closeValueXField] < b[this.closeValueXField]) return -1;
@@ -162,7 +187,7 @@ export default class DTopSerie extends Vue {
       return 0;
     });
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, sortedData, this.categoryYField, this.categoryCodeYField, this.openValueXField, this.valueXField, this.serieId, false, PositionEnum.Abscissa)
+      updateCategories(this.yAxis.data.values, sortedData, this.categoryYField, this.categoryCodeYField, this.openValueXField, this.valueXField, this.serieId, false)
     );
     this.yAxis.data.setAll(
       sortValues(this.yAxis.data.values)
@@ -215,7 +240,7 @@ export default class DTopSerie extends Vue {
 
     // Remove from axis
     this.yAxis.data.setAll(
-      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.categoryCodeYField, this.valueXField, this.closeValueXField, this.serieId, false, PositionEnum.Abscissa)
+      updateCategories(this.yAxis.data.values, [], this.categoryYField, this.categoryCodeYField, this.valueXField, this.closeValueXField, this.serieId, false)
     );
 
     // Dispose

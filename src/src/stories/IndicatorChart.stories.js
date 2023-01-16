@@ -13,6 +13,8 @@ const Template = (args, { argTypes }) => ({
       :data="data"
       :minHeight="minHeight"
       :locale="locale"
+      :colorSet="colorSet"
+      :colorSeed="colorSeed"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -49,18 +51,21 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [{
-      serie: "A",
-      data: [{
-        valueX: 0
-      }]
-    },{
       serie: "B",
       data: [{
         valueX: 100
       }]
+    },{
+      serie: "A",
+      data: [{
+        valueX: 0
+      }]
     }]
   },
   minHeight: '300px',
+  locale: "fr-FR",
+  colorSet: 5,
+  colorSeed: "tango",
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

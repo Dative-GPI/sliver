@@ -14,6 +14,8 @@ const Template = (args, { argTypes }) => ({
       :subSeries="data.series.slice(1)"
       :minHeight="minHeight"
       :locale="locale"
+      :colorSet="colorSet"
+      :colorSeed="colorSeed"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -75,6 +77,8 @@ Default.args = {
   },
   minHeight: '400px',
   locale: "fr-FR",
+  colorSet: 5,
+  colorSeed: "delta",
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

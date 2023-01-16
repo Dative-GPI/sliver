@@ -23,7 +23,6 @@ import DColumnSerie from "./components/series/DColumnSerie.vue";
 import DHeatmapSerie from "./components/series/DHeatmapSerie.vue";
 import DHistogramSerie from "./components/series/DHistogramSerie.vue";
 import DLineSerie from "./components/series/DLineSerie.vue";
-import DPieSerie from "./components/series/DPieSerie.vue";
 import DPlanningSerie from "./components/series/DPlanningSerie.vue";
 import DProgressIndicator from "./components/series/DProgressIndicator.vue";
 import DRangeSerie from "./components/series/DRangeSerie.vue";
@@ -67,7 +66,6 @@ const Sliver = {
     vue.component("d-histogram-serie", DHistogramSerie);
     vue.component("d-progress-indicator", DProgressIndicator);
     vue.component("d-line-serie", DLineSerie);
-    vue.component("d-pie-serie", DPieSerie);
     vue.component("d-planning-serie", DPlanningSerie);
     vue.component("d-range-serie", DRangeSerie);
     vue.component("d-scatter-plot-serie", DScatterPlotSerie)

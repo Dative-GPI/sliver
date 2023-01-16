@@ -15,7 +15,6 @@ const Template = (args, { argTypes }) => ({
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
-      :seriesLabels="seriesLabels"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -323,7 +322,6 @@ Default.args = {
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "tango",
-  seriesLabels: ["Level 1", "Level 4", "Level 6"],
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

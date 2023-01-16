@@ -13,6 +13,8 @@ const Template = (args, { argTypes }) => ({
       :data="data"
       :minHeight="minHeight"
       :locale="locale"
+      :colorSet="colorSet"
+      :colorSeed="colorSeed"
       :chartLayout="chartLayout"
       :legend="legend"
       :legendLayout="legendLayout"
@@ -57,7 +59,7 @@ Default.args = {
     series: [
       { ...makeExplodingPieSerie(
         "Expenses",
-        ["First company", "Second company"],
+        ["Société Cairotte d'Elevage de Poulets", "Société Egyptienne d'Elevage de Boeufs"],
         ["Employees well-being", "Dividends", "Salaries & compensations", "Raw materials", "Wrongful terminations suing costs", "Public relations & marketing", "Miscellaneous"],
         500
       )},
@@ -65,6 +67,8 @@ Default.args = {
   },
   minHeight: '400px',
   locale: "fr-FR",
+  colorSet: 5,
+  colorSeed: "papa",
   chartLayout: 2,
   legend: true,
   legendLayout: 0,

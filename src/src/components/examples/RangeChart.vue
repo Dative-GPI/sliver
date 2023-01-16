@@ -5,9 +5,11 @@
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-xy-chart
+      :chartId="Math.random().toString()"
       :min-height="minHeight"
-      :layout="chartLayout"
       :locale="locale"
+      :colorSet="colorSet"
+      :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -46,6 +48,8 @@
                 :showTooltip="serieShowTooltip"
                 :tooltipText="serieTooltipText"
                 :subTooltipText="serieSubTooltipText"
+                :colorSet="colorSet"
+                :colorSeed="colorSeed"
               />
             </d-value-y-axis>
           </d-date-x-axis>
@@ -66,6 +70,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
 import { AxisRange } from "../../models";
+import { ColorSets } from "@/colors";
 
 import Spinner from "./Spinner.vue";
 
@@ -82,6 +87,12 @@ export default class RangeChart extends Vue {
 
   @Prop({ required: true })
   locale!: string;
+
+  @Prop({ required: true })
+  colorSet!: ColorSets;
+
+  @Prop({ required: true })
+  colorSeed!: string;
 
   @Prop({ required: true })
   chartLayout!: LayoutEnum;

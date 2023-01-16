@@ -9,8 +9,6 @@
       :min-height="minHeight"
       :locale="locale"
       :colorSet="colorSet"
-      :colorSeed="colorSeed"
-      :seriesLabels="seriesLabels"
       :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
@@ -33,6 +31,8 @@
           <d-clock-hand
             :name="firstName"
             :colorIndex="firstColorIndex"
+            :colorSet="colorSet"
+            :colorSeed="colorSeed"
             :pinRadius="firstPinRadius"
             :bottomWidth="firstBottomWidth"
             :clockHandRadius="firstClockHandRadius"
@@ -44,6 +44,8 @@
             v-if="secondClockHand"
             :name="secondName"
             :colorIndex="secondColorIndex"
+            :colorSet="colorSet"
+            :colorSeed="colorSeed"
             :pinRadius="secondPinRadius"
             :bottomWidth="secondBottomWidth"
             :clockHandRadius="secondClockHandRadius"
@@ -79,9 +81,6 @@ export default class RadarChart extends Vue {
 
   @Prop({ required: true })
   colorSeed!: string;
-
-  @Prop({ required: true })
-  seriesLabels!: string[];
 
   @Prop({ required: true })
   panX!: boolean;
