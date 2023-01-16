@@ -1,39 +1,49 @@
 <template>
-  <div class="w-100" :class="{ 'd-flex justify-center flex-column': dataCount == 1 }" :style="{minHeight}">
-    <div v-for="(ds, dsIndex) in data" :key="dsIndex">
+  <div style="width: 100%; position: relative"
+    :style="{ minHeight: minHeight ? `${minHeight}px` : undefined, height: solo ? '100%' : undefined }">
+    <div v-for="(ds, dsIndex) in data"
+      :key="dsIndex"
+      :class="{ centered: solo }">
       <template v-if="series[dsIndex] != null">
-        <v-row no-gutters justify="center" align="center" v-for="(dop, dopIndex) in ds.operands" :key="dopIndex"
-          class="flex-nowrap" :style="{ height: solo ? undefined : '55px' }">
-          <div v-if="!solo" :style="{ 'max-width': `${maxWidth}px` }">
+        <div v-for="(dop, dopIndex) in ds.operands"
+          :key="dopIndex"
+          :class="[solo ? '' : 'd-flex flex-nowrap items-center justify-center']"
+          :style="{ height: solo ? undefined : '55px', width: solo ? clientWidth + 'px' : undefined }">
+          <div v-if="!solo"
+            :style="{ 'max-width': `${maxWidth}px` }">
             <div class="text-h6 text-truncate">{{ dop.label }}</div>
-            <div class="text-truncate">{{
+            <div class="text-truncate text-body-1">{{
               [format(dop.data[0].timestampX), format(dop.data[0].closeTimestampX)].filter(t => !!t).join(" → ")
             }}
             </div>
           </div>
           <v-spacer v-if="!solo" />
           <div ref="data">
-            <div class="d-flex align-center justify-center">
-              <span class="text-h3" :style="{
-                whiteSpace: 'nowrap', color: color(dop.data[0].valueY, series[dsIndex]),
-                fontSize: solo ? `${clientWidth / formatNumber(dop.data[0].valueY, locale, series[dsIndex].decimalPlaces).length}px !important` : undefined,
-                lineHeight: solo ? `${clientWidth / formatNumber(dop.data[0].valueY, locale, series[dsIndex].decimalPlaces).length}px !important` : undefined
-              }">
+            <div class="d-flex justify-center align-center">
+              <span class="text-h3"
+                :style="{
+                  whiteSpace: 'nowrap', color: color(dop.data[0].valueY, series[dsIndex]),
+                  fontSize: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit || series[dsIndex].operationUnit)}px !important` : undefined,
+                  lineHeight: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit || series[dsIndex].operationUnit)}px !important` : undefined
+                }">
                 {{ formatNumber(dop.data[0].valueY, locale, series[dsIndex].decimalPlaces) }} {{
                   dop.unit ||
                     series[dsIndex].operationUnit
                 }}
               </span>
-              <v-icon :size="solo ? clientWidth * 0.75 / formatNumber(dop.data[0].valueY, locale, series[dsIndex].decimalPlaces).length : 26" class="ml-5" :color="color(dop.data[0].valueY, series[dsIndex])">
+              <v-icon :size="solo ? soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit || series[dsIndex].operationUnit) * 0.8 : 26"
+                style="margin-left: max(1%, 8px)"
+                :color="color(dop.data[0].valueY, series[dsIndex])">
                 {{ series[dsIndex].icon }}
               </v-icon>
             </div>
-            <div class="text-truncate mt-3 text-center" v-if="solo">{{
-              [format(dop.data[0].timestampX), format(dop.data[0].closeTimestampX)].filter(t => !!t).join(" → ")
-            }}
+            <div class="text-truncate text-center text-body-1" :class="{small: clientHeight < 80}"
+              v-if="solo">{{
+  [format(dop.data[0].timestampX), format(dop.data[0].closeTimestampX)].filter(t => !!t).join(" → ")
+              }}
             </div>
           </div>
-        </v-row>
+        </div>
       </template>
     </div>
   </div>
@@ -67,6 +77,9 @@ export default class DScoreCard extends Vue {
   @Prop({ required: true })
   series!: Serie[];
 
+  @Prop({ required: false, default: 1.5 })
+  fontRatio!: number;
+
   @Prop({ required: true })
   data!: { operands: { label: string, unit: string, data: { valueY: number, timestampX: number, closeTimestampX: number }[] }[] }[];
 
@@ -74,7 +87,8 @@ export default class DScoreCard extends Vue {
   debounceResize: number | null = null;
   shortFormat = false;
   maxWidth = 450;
-  clientWidth = 1000
+  clientWidth = 0
+  clientHeight = 0;
 
   get dataCount() {
     return this.data.reduce((current, pv) => current + pv.operands.length, 0)
@@ -105,6 +119,7 @@ export default class DScoreCard extends Vue {
       this.debounceResize = setTimeout(this.resize, this.resizeDebounce);
     });
     this.resizeObserver.observe(this.$el);
+    this.resize();
   }
 
   destroyed(): void {
@@ -137,12 +152,15 @@ export default class DScoreCard extends Vue {
 
   resize() {
     this.shortFormat = this.hasMultipleTimestamp && this.$el.clientWidth < 600
-    this.clientWidth = this.$el.clientWidth
+    this.clientWidth = this.$el.clientWidth;
+    this.clientHeight = this.$el.clientHeight;
 
     if (this.$refs.data && Array.isArray(this.$refs.data)) {
       let maxWidth = Math.max(...(this.$refs.data as unknown as HTMLElement[]).map(el => el.clientWidth))
       this.maxWidth = this.$el.clientWidth - maxWidth - 20
     }
+
+    console.log("Updated", this.clientWidth, this.clientHeight)
   }
 
   format(time: number | null) {
@@ -152,6 +170,15 @@ export default class DScoreCard extends Vue {
       else
         return DateTools.formatLongTimeEpoch(this.locale, this.timeOffset, time);
     }
+  }
+
+  soloFontSize(value: number, decimalPlaces: number, unit: string) {
+
+    let formattedNumber = [formatNumber(value, this.locale, decimalPlaces), unit].filter(el => el).join(" ");
+    let maxCharacterWidth = Math.floor(this.clientWidth / (formattedNumber.length + 2) * Math.log10(formattedNumber.length * 2));
+    let maxCharacterHeight = this.clientHeight - (this.clientHeight < 80 ? 12 : 20)
+
+    return Math.max(Math.min(maxCharacterWidth, maxCharacterHeight), 1);
   }
 }
 
@@ -167,3 +194,17 @@ interface Serie {
   operationUnit: string
 }
 </script>
+
+<style scoped>
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.text-body-1.small {
+  line-height: 0.7rem!important; 
+  font-size: 0.6rem!important;
+}
+</style>
