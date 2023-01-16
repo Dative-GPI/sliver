@@ -22,13 +22,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
+    "@fontsource/montserrat": "^4.5.1",
+    "@fontsource/open-sans": "^4.5.2",
     "@mdi/font": "^6.7.96",
     "@storybook/addon-a11y": "^6.4.13",
     "@storybook/addon-actions": "^6.4.9",
     "@storybook/addon-essentials": "^6.4.9",
     "@storybook/addon-links": "^6.4.9",
-    "@fontsource/montserrat": "^4.5.1",
-    "@fontsource/open-sans": "^4.5.2",
     "@storybook/addon-storysource": "^6.4.13",
     "@storybook/vue": "^6.4.9",
     "@types/color": "^3.0.3",
@@ -62,7 +62,7 @@
     "vuetify-loader": "^1.7.0"
   },
   "dependencies": {
-    "@amcharts/amcharts5": "^5.2.45",
+    "@amcharts/amcharts5": "^5.2.47",
     "@types/resize-observer-browser": "^0.1.7",
     "color": "^4.2.3",
     "date-fns": "^2.23.0",
