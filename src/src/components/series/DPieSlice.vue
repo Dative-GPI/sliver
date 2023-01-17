@@ -12,7 +12,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 
 import { AMROOT, CHART, LEGEND, SERIE } from "../../literals";
-import { ColorSets, GetHashedColor } from "../../colors";
+import { ColorSets, GetColors, GetHashedColor } from "../../colors";
 import { uuidv4 } from "../../helpers";
 
 @Component({})
@@ -228,6 +228,12 @@ export default class DPieSlice extends Vue {
       });
     }
 
+    if (![ColorSets.Default, ColorSets.Hash].includes(this.colorSet)) {
+      this.serie!.set("colors", am5.ColorSet.new(this.root!, { colors: GetColors(this.colorSet) }));
+    }
+    else if ([ColorSets.Default].includes(this.colorSet)) {
+      this.serie!.set("colors", am5.ColorSet.new(this.root!, {}))!;
+    }
     let colors: number[] = [];
     this.serie!.data.setAll(
       _.cloneDeep(this.serie!.data.values)

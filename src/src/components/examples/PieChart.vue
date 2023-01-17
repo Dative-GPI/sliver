@@ -21,7 +21,7 @@
         :y="legendY"
         :centerY="legendCenterY"
       >
-        <d-pie-serie-extended :colorSet="colorSet">
+        <d-pie-serie-extended>
           <template v-slot="{ clickedData }">
             <d-pie-slice
               v-for="(serie, index) in data.series"

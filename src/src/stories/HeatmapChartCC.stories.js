@@ -15,7 +15,12 @@ const Template = (args, { argTypes }) => ({
       :locale="locale"
       :chartLayout="chartLayout"
       :legend="legend"
+      :legendLayout="legendLayout"
       :legendPosition="legendPosition"
+      :legendX="legendX"
+      :legendCenterX="legendCenterX"
+      :legendY="legendY"
+      :legendCenterY="legendCenterY"
       :cursor="cursor"
       :cursorBehavior="cursorBehavior"
       :cursorXVisible="cursorXVisible"
@@ -73,7 +78,12 @@ Default.args = {
   locale: "fr-FR",
   chartLayout: 2,
   legend: true,
+  legendLayout: 0,
   legendPosition: 1,
+  legendX: 50,
+  legendCenterX: 50,
+  legendY: 50,
+  legendCenterY: 50,
   cursor: true,
   cursorBehavior: "zoomX",
   cursorXVisible: true,

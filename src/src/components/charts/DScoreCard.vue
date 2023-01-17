@@ -159,8 +159,6 @@ export default class DScoreCard extends Vue {
       let maxWidth = Math.max(...(this.$refs.data as unknown as HTMLElement[]).map(el => el.clientWidth))
       this.maxWidth = this.$el.clientWidth - maxWidth - 20
     }
-
-    console.log("Updated", this.clientWidth, this.clientHeight)
   }
 
   format(time: number | null) {

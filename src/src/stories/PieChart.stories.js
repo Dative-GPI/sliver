@@ -76,7 +76,7 @@ Default.args = {
   },
   minHeight: '400px',
   locale: "fr-FR",
-  colorSet: 5,
+  colorSet: 3,
   colorSeed: "papa",
   chartLayout: 2,
   legend: true,

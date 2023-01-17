@@ -15,7 +15,6 @@ import * as am5percent from "@amcharts/amcharts5/percent";
 import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 import { AMROOT, CHART, LEGEND, SERIE } from "../../literals";
-import { ColorSets, GetColors } from "../../colors";
 import { SerieEnum } from "../../enums";
 
 @Component({})
@@ -37,9 +36,6 @@ export default class DPieSerieExtended extends Vue {
 
   @Prop({ required: false, default: "valueY" })
   valueField!: string;
-
-  @Prop({ required: false, default: ColorSets.Default })
-  colorSet!: ColorSets;
 
   @Prop({ required: false, default: true })
   alignLabels!: boolean;
@@ -171,13 +167,6 @@ export default class DPieSerieExtended extends Vue {
       tooltipX: am5.percent(75),
       tooltipY: am5.percent(75)
     });
-
-    if (![ColorSets.Default, ColorSets.Hash].includes(this.colorSet)) {
-      this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
-    }
-    else if ([ColorSets.Default].includes(this.colorSet)) {
-      this.chart!.set("colors", am5.ColorSet.new(this.root!, {}))!;
-    }
 
     this.serie.slices.template.events.on("click", this.onClick);
 

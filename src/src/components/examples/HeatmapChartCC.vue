@@ -5,6 +5,7 @@
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-xy-chart
+      :chartId="Math.random().toString()"
       :min-height="minHeight"
       :layout="chartLayout"
       :locale="locale"
