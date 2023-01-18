@@ -190,26 +190,30 @@ export default class DRangeSerie extends Vue {
   }
 
   setColor(): void {
-    if ([ColorSets.Hash].includes(this.colorSet)) {
-      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
-      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+    switch (this.colorSet) {
+      case ColorSets.Hash: {
+        this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+        this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
 
-      for (let i = 0; i < this.subSeries.length; i++) {
-        if (this.subDatas[i] != null) {
-          this.subSeries[i].set("fill", GetHashedColor(this.colorSeed, this.subNames[i]));
-          this.subSeries[i].set("stroke", GetHashedColor(this.colorSeed, this.subNames[i]));
+        for (let i = 0; i < this.subSeries.length; i++) {
+          if (this.subDatas[i] != null) {
+            this.subSeries[i].set("fill", GetHashedColor(this.colorSeed, this.subNames[i]));
+            this.subSeries[i].set("stroke", GetHashedColor(this.colorSeed, this.subNames[i]));
+          }
         }
+        break;
       }
-    }
-    else {
-      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
-      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+      default: {
+        this.serie!.set("fill", this.chart!.get("colors")!.getIndex(this.chart!.series.indexOf(this.serie!)));
+        this.serie!.set("stroke", this.chart!.get("colors")!.getIndex(this.chart!.series.indexOf(this.serie!)));
 
-      for (let i = 0; i < this.subSeries.length; i++) {
-        if (this.subDatas[i] != null) {
-          this.subSeries[i].set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.subSeries[i])]);
-          this.subSeries[i].set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.subSeries[i])]);
+        for (let i = 0; i < this.subSeries.length; i++) {
+          if (this.subDatas[i] != null) {
+            this.subSeries[i].set("fill", this.chart!.get("colors")!.getIndex(this.chart!.series.indexOf(this.subSeries[i])));
+            this.subSeries[i].set("stroke", this.chart!.get("colors")!.getIndex(this.chart!.series.indexOf(this.subSeries[i])));
+          }
         }
+        break;
       }
     }
   }

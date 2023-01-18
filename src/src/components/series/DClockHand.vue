@@ -124,9 +124,7 @@ export default class DClockHand extends Vue {
       this.legend.data.removeValue(this.axisDataItem);
     }
 
-    let color = [ColorSets.Hash].includes(this.colorSet) ?
-      GetHashedColor(this.colorSeed, this.name) :
-      this.chart!.get("colors")!.getIndex(this.colorIndex);
+    let color = this.getColor();
 
     this.clockHand!.pin.set("fill", color);
     this.clockHand!.hand.set("fill", color);
@@ -135,6 +133,13 @@ export default class DClockHand extends Vue {
     // Add to legend (otherwise the color is not updated)
     if (this.legend != null) {
       this.legend.data.push(this.axisDataItem);
+    }
+  }
+
+  getColor(): am5.Color {
+    switch (this.colorSet) {
+      case ColorSets.Hash: return GetHashedColor(this.colorSeed, this.name);
+      default: return this.chart!.get("colors")!.getIndex(this.colorIndex);
     }
   }
 

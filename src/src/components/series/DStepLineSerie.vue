@@ -175,13 +175,17 @@ export default class DStepLineSerie extends Vue {
   }
 
   setColor(): void {
-    if ([ColorSets.Hash].includes(this.colorSet)) {
-      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
-      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
-    }
-    else {
-      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
-      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+    switch (this.colorSet) {
+      case ColorSets.Hash: {
+        this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+        this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+        break;
+      }
+      default: {
+        this.serie!.set("fill", this.chart!.get("colors")!.getIndex(this.chart!.series.indexOf(this.serie!)));
+        this.serie!.set("stroke", this.chart!.get("colors")!.getIndex(this.chart!.series.indexOf(this.serie!)));
+        break;
+      }
     }
   }
 

@@ -28,5 +28,6 @@ export enum SerieEnum {
 export enum HeatRule {
   None = 0,
   Gradient = 1,
-  Ranges = 2
+  Ranges = 2,
+  Fixed = 3
 }

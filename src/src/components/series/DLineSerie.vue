@@ -117,6 +117,12 @@ export default class DLineSerie extends Vue {
   @Watch("ranges")
   onHeatRangesChange = this.setHeatRule;
 
+  @Prop({ required: false, default: "#ffff00" })
+  fixedColor!: string;
+
+  @Watch("fixedColor")
+  onFixedColorChange = this.setHeatRule;
+
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;
 
@@ -214,26 +220,41 @@ export default class DLineSerie extends Vue {
         }));
         break;
       }
+      case HeatRule.Fixed: {
+        this.serie!.strokes.template.set("strokeGradient", am5.LinearGradient.new(this.root, {
+          stops: [
+            { color: am5.color(this.fixedColor) },
+            { color: am5.color(this.fixedColor) }
+          ],
+          target: this.chart!.plotContainer
+        }));
+        break;
+      }
     }
 
     this.setData();
   }
 
   setColor(): void {
-    if ([ColorSets.Hash].includes(this.colorSet)) {
-      this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
-      this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
-    }
-    else {
-      this.serie!.set("fill", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
-      this.serie!.set("stroke", this.chart!.get("colors")!.get("colors")![this.chart!.series.indexOf(this.serie!)])
+    switch (this.colorSet) {
+      case ColorSets.Hash: {
+        this.serie!.set("fill", GetHashedColor(this.colorSeed, this.name));
+        this.serie!.set("stroke", GetHashedColor(this.colorSeed, this.name));
+        break;
+      }
+      default: {
+        this.serie!.set("fill", this.chart!.get("colors")!.getIndex(this.chart!.series.indexOf(this.serie!)));
+        this.serie!.set("stroke", this.chart!.get("colors")!.getIndex(this.chart!.series.indexOf(this.serie!)));
+        break;
+      }
     }
   }
 
   setData(): void {
     switch (this.heatRule) {
       case HeatRule.None:
-      case HeatRule.Gradient: {
+      case HeatRule.Gradient:
+      case HeatRule.Fixed: {
         this.serie!.data.setAll(this.data);
         break;
       }

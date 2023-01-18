@@ -112,3 +112,20 @@ export interface TableDataRow {
   entity: string;
   values: string[];
 }
+
+export interface ScoreCardSerie {
+  icon: string,
+  iconSize: string,
+  decimalPlaces: number,
+  heatRule: number,
+  minColor: string,
+  maxColor: string,
+  heatRanges: {
+    startValue: number,
+    endValue: number,
+    color: string,
+    opacity: number
+  }[],
+  fixedColor: string,
+  operationUnit: string
+}

@@ -96,9 +96,7 @@ export default class DProgressIndicator extends Vue {
       this.legend.data.removeValue(this.progressIndicator!);
     }
 
-    let color = [ColorSets.Hash].includes(this.colorSet) ?
-      GetHashedColor(this.colorSeed, this.name) : 
-      this.chart!.get("colors")!.getIndex(this.colorIndex);
+    let color = this.getColor();
 
     this.progressIndicator!.set("fill", color);
     this.progressIndicator!.get("bullet").get("sprite").set("fill", color);
@@ -108,6 +106,13 @@ export default class DProgressIndicator extends Vue {
     // Add to legend (otherwise the name is not updated)
     if (this.legend != null) {
       this.legend.data.push(this.progressIndicator!);
+    }
+  }
+
+  getColor(): am5.Color {
+    switch (this.colorSet) {
+      case ColorSets.Hash: return GetHashedColor(this.colorSeed, this.name);
+      default: return this.chart!.get("colors")!.getIndex(this.colorIndex);
     }
   }
 

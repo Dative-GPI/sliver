@@ -49,7 +49,7 @@ const Template = (args, { argTypes }) => ({
     />`,
 });
 
-const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
+const makeLineSerie = (label, tZero, vZero, elapsedTime, rangeValue, values) => {
   var data = [];
   for (let i = 0; i < values; i++) {
     data.push({
@@ -64,7 +64,7 @@ const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
   }
 
   return {
-    serie: name,
+    label: label,
     data: data
   };
 }
@@ -73,254 +73,14 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      {
-        label: "Level 1",
-        data: [
-          {
-            valueY: 163.6,
-            timestampX: 1671680092000,
-            subs: []
-          },
-          {
-            valueY: 165.7,
-            timestampX: 1671680211000,
-            subs: []
-          },
-          {
-            valueY: 166.7,
-            timestampX: 1671680332000,
-            subs: []
-          },
-          {
-            valueY: 167.5,
-            timestampX: 1671680452000,
-            subs: []
-          },
-          {
-            valueY: 171,
-            timestampX: 1671680572000,
-            subs: []
-          },
-          {
-            valueY: 182.2,
-            timestampX: 1671680693000,
-            subs: []
-          },
-          {
-            valueY: 189.2,
-            timestampX: 1671680812000,
-            subs: []
-          },
-          {
-            valueY: 191.8,
-            timestampX: 1671680932000,
-            subs: []
-          },
-          {
-            valueY: 193.1,
-            timestampX: 1671681052000,
-            subs: []
-          },
-          {
-            valueY: 193.6,
-            timestampX: 1671681172000,
-            subs: []
-          },
-          {
-            valueY: 199.7,
-            timestampX: 1671681292000,
-            subs: []
-          },
-          {
-            valueY: 208.8,
-            timestampX: 1671681411000,
-            subs: []
-          },
-          {
-            valueY: 212.2,
-            timestampX: 1671681532000,
-            subs: []
-          },
-          {
-            valueY: 212.8,
-            timestampX: 1671681652000,
-            subs: []
-          },
-          {
-            valueY: 212.5,
-            timestampX: 1671681772000,
-            subs: []
-          }
-        ],
-        subOperands: []
-      },
-      {
-        label: "Level 4",
-        data: [
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671680092000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671680212000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671680333000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671680452000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671680573000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671680692000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671680812000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671680933000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671681052000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671681172000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671681293000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671681412000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671681533000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671681653000,
-            subs: []
-          },
-          {
-            valueY: Math.ceil(Math.random() * 50),
-            timestampX: 1671681772000,
-            subs: []
-          }
-        ],
-        subOperands: []
-      },
-      {
-        label: "Level 6",
-        data: [
-          {
-            valueY: 0,
-            timestampX: 1671680092000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671680212000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671680333000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671680452000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671680573000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671680692000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671680812000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671680933000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671681052000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671681172000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671681293000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671681412000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671681533000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671681653000,
-            subs: []
-          },
-          {
-            valueY: 0,
-            timestampX: 1671681772000,
-            subs: []
-          }
-        ],
-        subOperands: []
-      }
+      makeLineSerie("Level 1", 1674028800000, 225000, 36000000, 10000, 50),
+      makeLineSerie("Level 2", 1674028800000, 250000, 36000000, 10000, 50),
+      makeLineSerie("Level 3", 1674028800000, 275000, 36000000, 10000, 50)
     ]
   },
   minHeight: '400px',
   locale: "fr-FR",
-  colorSet: 5,
+  colorSet: 0,
   colorSeed: "tango",
   chartLayout: 2,
   legend: true,

@@ -18,8 +18,8 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { LayoutEnum } from "../../enums";
 import { AMROOT, CHART } from "../../literals";
+import { ColorSets, GetColors } from "../../colors";
 import { getLocale, getTimezone } from "../../helpers";
-import { ColorSets, GetColors, GetHashedColors } from "../../colors";
 
 @Component({})
 export default class DXYChart extends Vue {
@@ -76,12 +76,7 @@ export default class DXYChart extends Vue {
   upAndRunning: boolean = false;
 
   setColors(): void {
-    if (![ColorSets.Default, ColorSets.Hash].includes(this.colorSet)) {
-      this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
-    }
-    else if ([ColorSets.Default].includes(this.colorSet)) {
-      this.chart!.set("colors", am5.ColorSet.new(this.root!, {}))!;
-    }
+    this.chart!.get("colors")!.set("colors", GetColors(this.colorSet));
   }
 
   setLayout(): void {
@@ -115,7 +110,14 @@ export default class DXYChart extends Vue {
 
   mounted(): void {
     // Create root
-    this.root = am5.Root.new((this.$refs.xychart as HTMLElement));
+    this.root = am5.Root.new((this.$refs.xychart as HTMLElement), {
+      tooltipContainerBounds: {
+        top: 50,
+        bottom: 50,
+        left: 100,
+        right: 100
+      }
+    });
     this.root.locale = getLocale(this.locale);
     this.root.timezone = getTimezone(this.timeOffset);
     this.root.autoResize = false;

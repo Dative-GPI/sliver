@@ -90,6 +90,12 @@ export default class DHeatLegend extends Vue {
   @Watch("ranges")
   onHeatRangesChange = this.setEnabled;
 
+  @Prop({ required: false, default: "#ffff00" })
+  fixedColor!: string;
+
+  @Watch("fixedColor")
+  onFixedColorChange = this.setEnabled;
+
   @ProvideReactive(LEGEND)
   legend: am5.HeatLegend | am5.Legend | null = null;
 
@@ -116,9 +122,7 @@ export default class DHeatLegend extends Vue {
     }
     if (this.enabled) {
       switch (this.heatRule) {
-        case HeatRule.None:
         case HeatRule.Gradient: {
-          // Add to chart
           this.legend = this.chart.children.push(am5.HeatLegend.new(this.root, {
             startColor: am5.color(this.minColor),
             endColor: am5.color(this.maxColor),
@@ -168,6 +172,36 @@ export default class DHeatLegend extends Vue {
               color: am5.color(r.color)
             })));
           }
+          break;
+        }
+        case HeatRule.Fixed: {
+          this.legend = this.chart.children.push(am5.Legend.new(this.root, {
+            nameField: "name",
+            fillField: "color",
+            strokeField: "color",
+          }));
+
+          switch (this.position) {
+            case PositionEnum.Abscissa: {
+              this.legend!.set("x", undefined);
+              this.legend!.set("y", am5.percent(this.y));
+              this.legend!.set("centerX", undefined);
+              this.legend!.set("centerY", am5.percent(this.centerY));
+              break;
+            }
+            case PositionEnum.Ordinate: {
+              this.legend!.set("x", am5.percent(this.x));
+              this.legend!.set("y", undefined);
+              this.legend!.set("centerX", am5.percent(this.centerX));
+              this.legend!.set("centerY", undefined);
+            }
+
+            this.legend.data.setAll([{
+              name: "",
+              color: am5.color(this.fixedColor)
+            }]);
+          }
+          break;
         }
       }
     }

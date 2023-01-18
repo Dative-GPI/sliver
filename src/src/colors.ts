@@ -9,6 +9,31 @@ export enum ColorSets {
   Hash = 5
 }
 
+const AmChartsSet: string[] = [
+  "#67b7dc",
+  "#6794dc",
+  "#6771dc",
+  "#8067dc",
+  "#a367dc",
+  "#c767dc",
+  "#dc67ce",
+  "#dc67ab",
+  "#dc6788",
+  "#dc6967",
+  "#dc8c67",
+  "#dcaf67",
+  "#dcd267",
+  "#c3dc67",
+  "#a0dc67",
+  "#7ddc67",
+  "#67dc75",
+  "#67dc98",
+  "#67dcbb",
+  "#67dadc",
+  "#c667dc",
+  "#7cdc67"
+];
+
 const GrafanaSet: string[] = [
   "#7EB26D",
   "#EAB839",
@@ -153,23 +178,8 @@ export const GetColors = (set: ColorSets): am5.Color[] => {
     case ColorSets.Kelly: return KellySet.map(c => am5.color(c));
     case ColorSets.Armytage: return ArmytageSet.map(c => am5.color(c));
     case ColorSets.ZeileisHornikMurrell: return ZeileisHornikMurrellSet.map(c => am5.color(c));
-    default: return [];
+    default: return AmChartsSet.map(c => am5.color(c));
   }
-}
-
-export const GetHashedColors = (seed: string, labels: string[]): am5.Color[] => {
-  let colors: am5.Color[] = [];
-  for (let i = 0; i < labels.length; i++) {
-    let hash = unsecureHash(labels[i] + unsecureHash(seed));
-    let r = 0, g = 0, b = 0;
-    r = hash % 255;
-    hash = Math.ceil(hash * 359);
-    g = hash % 255;
-    hash = Math.ceil(hash * 7789);
-    b = hash % 255
-    colors.push(am5.color(`#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`));
-  }
-  return colors;
 }
 
 export const GetHashedColor = (seed: string, label: string): am5.Color => {

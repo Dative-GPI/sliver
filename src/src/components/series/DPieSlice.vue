@@ -228,13 +228,10 @@ export default class DPieSlice extends Vue {
       });
     }
 
-    if (![ColorSets.Default, ColorSets.Hash].includes(this.colorSet)) {
+    if (![ColorSets.Hash].includes(this.colorSet)) {
       this.serie!.set("colors", am5.ColorSet.new(this.root!, { colors: GetColors(this.colorSet) }));
     }
-    else if ([ColorSets.Default].includes(this.colorSet)) {
-      this.serie!.set("colors", am5.ColorSet.new(this.root!, {}))!;
-    }
-    let colors: number[] = [];
+
     this.serie!.data.setAll(
       _.cloneDeep(this.serie!.data.values)
         .filter(d => (d as any).serieId !== this.guid)
@@ -242,19 +239,10 @@ export default class DPieSlice extends Vue {
         .sort(this.sortData)
         .map((c: any, i: number) => {
           if ([ColorSets.Hash].includes(this.colorSet)) {
-            let color = GetHashedColor(this.colorSeed, c[this.categoryField]);
-            colors.push(color.hex);
-            return { ...c, color, index: i };
+            return { ...c, color: GetHashedColor(this.colorSeed, c[this.categoryField]), index: i };
           }
           else {
-            let offset = 0;
-            let color = this.serie!.get("colors")!.getIndex(offset);
-            while (colors.includes(color.hex)) {
-              offset++;
-              color = this.serie!.get("colors")!.getIndex(offset);
-            }
-            colors.push(color.hex);
-            return { ...c, color, index: i };
+            return { ...c, color: this.serie!.get("colors")!.getIndex(i), index: i };
           }
         })
     );

@@ -103,6 +103,12 @@ export default class DHeatmapSerie extends Vue {
   @Watch("ranges")
   onHeatRangesChange = this.setHeatRule;
 
+  @Prop({ required: false, default: "#ffff00" })
+  fixedColor!: string;
+
+  @Watch("fixedColor")
+  onFixedColorChange = this.setHeatRule;
+
   @Prop({ required: true })
   data!: unknown[];
 
@@ -131,7 +137,9 @@ export default class DHeatmapSerie extends Vue {
     this.serie!.set("heatRules", undefined);
 
     switch(this.heatRule) {
-      case HeatRule.None:
+      case HeatRule.None: {
+        break;
+      }
       case HeatRule.Gradient: {
         this.serie!.set("heatRules", [{
           target: this.serie!.columns.template,
@@ -158,6 +166,16 @@ export default class DHeatmapSerie extends Vue {
         }
         break;
       }
+      case HeatRule.Fixed: {
+        this.serie!.set("heatRules", [{
+          target: this.serie!.columns.template,
+          min: am5.color(this.fixedColor),
+          max: am5.color(this.fixedColor),
+          dataField: "value",
+          key: "fill"
+        }]);
+        break;
+      }
     }
 
     this.setData();
@@ -180,7 +198,7 @@ export default class DHeatmapSerie extends Vue {
   }
 
   setLegend(): void {
-    if (this.legend != null && [HeatRule.None, HeatRule.Gradient].includes(this.heatRule)) {
+    if (this.legend != null && [HeatRule.Gradient].includes(this.heatRule)) {
       if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
         this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
       }

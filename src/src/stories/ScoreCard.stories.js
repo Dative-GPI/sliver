@@ -29,7 +29,10 @@ const makeScoreCardChart = (labels, icon, iconSize, decimalPlaces, heatRule, val
   return {
     data: [{ operands }],
     series: [{
-      icon, iconSize, decimalPlaces, heatRule,
+      icon,
+      iconSize,
+      decimalPlaces,
+      heatRule,
       minColor: "#FF0000",
       maxColor: "#00FF00",
       heatRanges: [
@@ -45,7 +48,8 @@ const makeScoreCardChart = (labels, icon, iconSize, decimalPlaces, heatRule, val
           color: "#FF0000",
           opacity: 0.5,
         }
-      ]
+      ],
+      fixedColor: "#FF00FF"
     }]
   }
 }
@@ -90,4 +94,12 @@ SingleValueConstrainted.args = {
   minHeight: 0,
   locale: "fr-FR",
   containerStyle: "height: 40px; width: 150px;"
+};
+
+export const FixedHeatRule = Template.bind({});
+FixedHeatRule.args = {
+  chart: makeScoreCardChart(["Line 1", "Line 2", "Line 3"], "mdi-pen", 24, 2, 3, 50, 100),
+  minHeight: 0,
+  locale: "fr-FR",
+  containerStyle: ""
 };

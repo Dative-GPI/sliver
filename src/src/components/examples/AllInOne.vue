@@ -61,7 +61,14 @@ export default class AllInOne extends Vue {
   mounted(): void {
     // Chart
     {
-      this.root = am5.Root.new((this.$refs.xychart as HTMLElement));
+      this.root = am5.Root.new((this.$refs.xychart as HTMLElement), {
+      tooltipContainerBounds: {
+        top: 50,
+        bottom: 50,
+        left: 100,
+        right: 100
+      }
+    });
       this.root.locale = getLocale("en-us");
       this.root.timezone = getTimezone("UTC");
       this.root.numberFormatter.setAll({
