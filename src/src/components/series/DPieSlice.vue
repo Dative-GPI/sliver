@@ -242,7 +242,11 @@ export default class DPieSlice extends Vue {
             return { ...c, color: GetHashedColor(this.colorSeed, c[this.categoryField]), index: i };
           }
           else {
-            return { ...c, color: this.serie!.get("colors")!.getIndex(i), index: i };
+            return {
+              ...c,
+              color: this.serie!.get("colors")!.getIndex(i % this.serie!.get("colors")!.get("colors")!.length),
+              index: i
+            };
           }
         })
     );

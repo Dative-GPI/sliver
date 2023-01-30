@@ -139,6 +139,7 @@ export default class DPieSerieExtended extends Vue {
 
   setForceHidden(): void {
     this.serie!.labels.template.set("forceHidden", this.forceHidden);
+    this.serie!.ticks.template.set("forceHidden", this.forceHidden);
   }
 
   setOversizedBehavior(): void {
