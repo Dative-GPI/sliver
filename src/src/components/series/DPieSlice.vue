@@ -107,6 +107,8 @@ export default class DPieSlice extends Vue {
         parentId: null,
         topDownValues: [d[this.valueField]],
         topDownIds: [dataId],
+        labelSettings: { forceHidden: this.hideLabels },
+        tickSettings: { forceHidden: this.hideLabels },
         index: -1
       };
       dataWithIds.subs = this.setSubs(dataWithIds);
@@ -131,6 +133,8 @@ export default class DPieSlice extends Vue {
             parentId: data.dataId,
             topDownValues: data.topDownValues.concat(otherDataValue),
             topDownIds: data.topDownIds.concat(otherDataId),
+            labelSettings: { forceHidden: this.hideLabels },
+            tickSettings: { forceHidden: this.hideLabels },
             index: -1
           };
           otherData.subs = others.map((o: any) => {
@@ -142,6 +146,8 @@ export default class DPieSlice extends Vue {
               parentId: otherData.dataId,
               topDownValues: otherData.topDownValues.concat(o[this.valueField]),
               topDownIds: otherData.topDownIds.concat(otherSubDataId),
+              labelSettings: { forceHidden: this.hideLabels },
+              tickSettings: { forceHidden: this.hideLabels },
               index: -1,
             }
             otherSubData.subs = this.setSubs(otherSubData);
@@ -160,6 +166,8 @@ export default class DPieSlice extends Vue {
               parentId: data.dataId,
               topDownValues: data.topDownValues.concat(s[this.valueField]),
               topDownIds: data.topDownIds.concat(subDataId),
+              labelSettings: { forceHidden: this.hideLabels },
+              tickSettings: { forceHidden: this.hideLabels },
               index: -1
             };
             subData.subs = this.setSubs(subData);
@@ -184,6 +192,8 @@ export default class DPieSlice extends Vue {
             parentId: data.dataId,
             topDownValues: data.topDownValues.concat(s[this.valueField]),
             topDownIds: data.topDownIds.concat(subDataId),
+            labelSettings: { forceHidden: this.hideLabels },
+            tickSettings: { forceHidden: this.hideLabels },
             index: -1
           };
           subData.subs = this.setSubs(subData);
@@ -201,7 +211,6 @@ export default class DPieSlice extends Vue {
     let current = _.cloneDeep(this.localData);
     let index = current.findIndex((d: any) => d.dataId === newValue.id);
     if (index !== -1) {
-
       let data = current[index];
       if (data != null) {
         if (data.subs != null && data.subs.length > 0) {
@@ -245,14 +254,16 @@ export default class DPieSlice extends Vue {
         .sort(this.sortData)
         .map((c: any, i: number) => {
           if ([ColorSets.Hash].includes(this.colorSet)) {
-            return { ...c, color: GetHashedColor(this.colorSeed, c[this.categoryField]), index: i };
+            return {
+              ...c,
+              color: GetHashedColor(this.colorSeed, c[this.categoryField]),
+              index: i
+            };
           }
           else {
             return {
               ...c,
               color: this.serie!.get("colors")!.getIndex(i % this.serie!.get("colors")!.get("colors")!.length),
-              labelSettings: { forceHidden: this.hideLabels },
-              tickSettings: { forceHidden: this.hideLabels },
               index: i
             };
           }

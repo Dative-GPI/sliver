@@ -28,10 +28,10 @@ const Template = (args, { argTypes }) => ({
     />`,
 });
 
-const makePieSerie = (name, categories, rangeValue) => {
+const makePieSerie = (name, categories, rangeValue, hideLabels) => {
   var data = [];
   for (let i = 0; i < categories.length; i++) {
-    let subs = makePieSubs(categories[i], ["A", "B"], 5);
+    let subs = makePieSubs(categories[i], ["A", "B"], rangeValue);
     data.push({
       categoryX: categories[i],
       valueY: subs.reduce((acc, cur) => acc + cur.valueY, 0),
@@ -41,6 +41,7 @@ const makePieSerie = (name, categories, rangeValue) => {
 
   return {
     serie: name,
+    hideLabels: hideLabels,
     data: data
   };
 }
@@ -70,13 +71,13 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makePieSerie("Categories", ["Société Cairotte d'Elevage de Poulets"], 5 ) },
-      { ...makePieSerie("Categories", ["Société Egyptienne d'Elevage de Boeufs"], 5 ) }
+      { ...makePieSerie("Categories", ["Société Cairotte d'Elevage de Poulets"], 5, true) },
+      { ...makePieSerie("Categories", ["Société Egyptienne d'Elevage de Boeufs"], 5, false) }
     ]
   },
   minHeight: '400px',
   locale: "fr-FR",
-  colorSet: 0,
+  colorSet: 5,
   colorSeed: "alphonse",
   chartLayout: 2,
   legend: true,

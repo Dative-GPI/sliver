@@ -26,10 +26,11 @@
             <d-pie-slice
               v-for="(serie, index) in data.series"
               :key="index"
+              :data="serie.data"
+              :hideLabels="serie.hideLabels"
+              :clickedData="clickedData"
               :colorSet="colorSet"
               :colorSeed="colorSeed"
-              :data="serie.data"
-              :clickedData="clickedData"
             />
           </template>
         </d-pie-serie-extended>
