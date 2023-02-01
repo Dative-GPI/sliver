@@ -61,12 +61,6 @@ export default class DPieSerieExtended extends Vue {
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
 
-  @Prop({ required: false, default: false })
-  forceHidden!: boolean;
-
-  @Watch("forceHidden")
-  onForceHiddenChange = this.setForceHidden;
-
   @Prop({ required: false, default: "truncate" })
   oversizedBehavior!: "none" | "hide" | "fit" | "wrap" | "truncate";
 
@@ -137,11 +131,6 @@ export default class DPieSerieExtended extends Vue {
     this.serie!.set("legendLabelText", this.legendLabelText ? this.legendLabelText : "");
   }
 
-  setForceHidden(): void {
-    this.serie!.labels.template.set("forceHidden", this.forceHidden);
-    this.serie!.ticks.template.set("forceHidden", this.forceHidden);
-  }
-
   setOversizedBehavior(): void {
     this.serie!.labels.template.set("oversizedBehavior", this.oversizedBehavior);
   }
@@ -169,12 +158,14 @@ export default class DPieSerieExtended extends Vue {
       tooltipY: am5.percent(75)
     });
 
+    this.serie!.labels.template.set("templateField", "labelSettings");
+    this.serie!.ticks.template.set("templateField", "tickSettings");
+
     this.serie.slices.template.events.on("click", this.onClick);
 
     this.setShowTooltip();
     this.setAlignLabels();
 
-    this.setForceHidden();
     this.setOversizedBehavior();
     this.setText();
     this.setTextType();

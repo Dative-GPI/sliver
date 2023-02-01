@@ -41,6 +41,12 @@ export default class DPieSlice extends Vue {
   @Watch("allSlicesSum")
   onAllSlicesSumChange = this.setData;
 
+  @Prop({ required: false, default: false })
+  hideLabels!: boolean;
+
+  @Watch("hideLabels")
+  onHideLabelsChange = this.setData;
+
   @Prop({ required: false, default: "Other" })
   otherLabel!: string;
 
@@ -245,6 +251,8 @@ export default class DPieSlice extends Vue {
             return {
               ...c,
               color: this.serie!.get("colors")!.getIndex(i % this.serie!.get("colors")!.get("colors")!.length),
+              labelSettings: { forceHidden: this.hideLabels },
+              tickSettings: { forceHidden: this.hideLabels },
               index: i
             };
           }
