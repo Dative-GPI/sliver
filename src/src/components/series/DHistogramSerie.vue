@@ -73,7 +73,7 @@ export default class DHistogramSerie extends Vue {
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
 
-  @Prop({ required: false, default: 1 })
+  @Prop({ required: false, default: 0.5 })
   fillOpacity!: number;
 
   @Watch("fillOpacity")
@@ -184,6 +184,10 @@ export default class DHistogramSerie extends Vue {
       sequencedInterpolation: true,
       userData: { serie: SerieEnum.HistogramSerie }
     }));
+
+    this.serie.columns.template.setAll({
+      width: am5.percent(0)
+    });
 
     this.serie.events.on("datavalidated", this.xAxisValidated);
 
