@@ -107,20 +107,23 @@ export default class DExportData extends Vue {
           this.chartData.plots[0].series[0].operands.forEach((operand: ChartDataOperand) => {
             headers.push(operand.label);
             operand.data.forEach((data: ChartDataData) => {
-              let row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
-                if ((data as any)[h.id] != null) {
-                  if (h.date) {
-                    return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
+              let row: string[] = this.findRow(groupByHeaders, rows, data);
+              if (row == null) {
+                row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
+                  if ((data as any)[h.id] != null) {
+                    if (h.date) {
+                      return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
+                    }
+                    return (data as any)[h.id].toString();
                   }
-                  return (data as any)[h.id].toString();
-                }
-                return "";
-              });
+                  return "";
+                });
+                rows.push(row);
+              }
               if (row.length < headers.length) {
                 row.push(...Array(headers.length - row.length).fill(""));
               }
               row[headers.length - 1] = data.valueZ != null ? data.valueZ!.toString() : "";
-              rows.push(row);
             });
           });
           break;
@@ -131,22 +134,25 @@ export default class DExportData extends Vue {
           this.chartData.plots[0].series[0].operands.forEach((operand: ChartDataOperand) => {
             headers.push(operand.label);
             operand.data.forEach((data: ChartDataData) => {
-              let row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
-                if ((data as any)[h.id] != null) {
-                  if (h.date) {
-                    return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
+              let row: string[] = this.findRow(groupByHeaders, rows, data);
+              if (row == null) {
+                row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
+                  if ((data as any)[h.id] != null) {
+                    if (h.date) {
+                      return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
+                    }
+                    return (data as any)[h.id].toString();
                   }
-                  return (data as any)[h.id].toString();
-                }
-                return "";
-              });
+                  return "";
+                });
+                rows.push(row);
+              }
               if (row.length < headers.length) {
                 row.push(...Array(headers.length - row.length).fill(""));
               }
               if (data.valueY != null) {
                 row[headers.length - 1] = data.valueY.toString();
               }
-              rows.push(row);
             });
           });
           break;
@@ -267,8 +273,11 @@ export default class DExportData extends Vue {
     return [];
   }
 
-  findRow(groupByHeaders: { id: string }[], rows: any[], data: ChartDataData): any | null {
+  findRow(groupByHeaders: { id: string, label: string, date: boolean }[], rows: any[], data: ChartDataData): any | null {
     return rows.find((r: any) => !groupByHeaders.some((h, i: number) => {
+      if (h.date) {
+        return r[i] != ((data as any)[h.id] != null ? DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]) : "");
+      }
       return r[i] != ((data as any)[h.id] != null ? (data as any)[h.id] : "");
     }));
   }

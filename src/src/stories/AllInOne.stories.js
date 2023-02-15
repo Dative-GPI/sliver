@@ -245,15 +245,17 @@ Default.args = {
     ]
   },
   chartData: {
-    chartType: 5,
-    xAxisType: 0,
+    chartType: 3,
+    xAxisType: 3,
     plots: [{
-      yAxisType: 0,
+      yAxisType: 3,
       series: [{
-        serieType: 14,
-        operands: [{
-          ...makeScoreCardOperand("Gauffre", 1660860000000, 86400000)
-        }]
+        serieType: 12,
+        operands: [
+          // { ...makeScoreCardOperand("Gauffre", 1660860000000, 86400000) },
+          { ...makeHeatmapCCOperand("Line 1", ["A", "B", "C"], ["1", "2", "3"], 50) },
+          { ...makeHeatmapCCOperand("Line 2", ["A", "B", "C"], ["1", "2", "3"], 10) }
+        ]
       }]
     }]
   },
