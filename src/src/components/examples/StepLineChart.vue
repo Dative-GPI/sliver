@@ -68,7 +68,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
-import { AxisRange, TimeRange } from "../../models";
+import { ValueRange, TimeRange } from "../../models";
 import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
@@ -160,7 +160,7 @@ export default class LineChart extends Vue {
   yAxisTooltipNumberFormat!: string;
 
   @Prop({ required: true })
-  yAxisRanges!: AxisRange[] | undefined;
+  yAxisRanges!: ValueRange[] | undefined;
 
   @Prop({ required: true })
   serieShowBullets!: boolean;

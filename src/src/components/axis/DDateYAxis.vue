@@ -11,8 +11,8 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, YAXIS, YAXISVALIDATED } from "../../literals";
-import { textColor } from "../../helpers";
-import { TimeRange } from "../../models";
+import { isEmptyString, textColor } from "../../helpers";
+import { IconLine, TimeRange } from "../../models";
 
 @Component({})
 export default class DDateYAxis extends Vue {
@@ -30,6 +30,12 @@ export default class DDateYAxis extends Vue {
 
   @Watch("opposite")
   onOppositeChange = this.setOpposite;
+
+  @Prop({ required: false, default: false })
+  scrollbar!: boolean;
+
+  @Watch("scrollbar")
+  onScrollbarChange = this.setLines;
 
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
@@ -62,6 +68,12 @@ export default class DDateYAxis extends Vue {
   onMaxZoomFactorChange = this.setMaxZoomFactor;
 
   @Prop({ required: false, default: undefined })
+  lines!: IconLine[] | undefined;
+
+  @Watch("lines", { deep: true })
+  onLinesChange = this.setLines;
+
+  @Prop({ required: false, default: undefined })
   ranges!: TimeRange[] | undefined;
 
   @Watch("ranges", { deep: true })
@@ -71,10 +83,11 @@ export default class DDateYAxis extends Vue {
   axis: any = null;
 
   @ProvideReactive(YAXISVALIDATED)
-  serieValidated: () => void = this.setRanges;
+  serieValidated: () => void = () => { this.setLines(); this.setRanges(); }
 
   tooltip: am5.Tooltip | null = null;
-  dataItems: am5.DataItem<am5xy.IDateAxisDataItem>[] = [];
+  lineItems: am5.DataItem<am5xy.IDateAxisDataItem>[] = [];
+  rangeItems: am5.DataItem<am5xy.IDateAxisDataItem>[] = [];
 
   upAndRunning: boolean = false;
 
@@ -132,13 +145,54 @@ export default class DDateYAxis extends Vue {
     this.axis!.set("maxZoomFactor", this.maxZoomFactor);
   }
 
-  setRanges(): void {
-    // If there is no more ranges, remove all and return
-    if (this.ranges == null || !this.ranges.length) {
-      for (let i = 0; i < this.dataItems.length; i++) {
-        this.dataItems[i].dispose();
+  setLines(): void {
+    // Remove former lines
+    for (let i = 0; i < this.lineItems.length; i++) {
+      this.lineItems[i].dispose();
+    }
+    this.lineItems = [];
+
+    if (this.lines == null || this.lines.length < 1) {
+      return;
+    }
+
+    am5.array.each(this.lines, (line: IconLine): void => {
+      // Create a line
+      let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
+        above: true,
+        value: line.value
+      })) as am5.DataItem<am5xy.IDateAxisDataItem>;
+      axisRange.get("grid")!.setAll({
+        strokeDasharray: [5, 3, 1, 3],
+        strokeOpacity: 1,
+        strokeWidth: 1,
+        stroke: am5.color(line.color)
+      });
+      if (!isEmptyString(line.icon)) {
+        axisRange.get("label")!.setAll({
+          html: `
+            <div class="${this.scrollbar ? "dy-line-container-large" : "dy-line-container-small"}">
+              <i class="material-icons dy-line-icon" style="color: ${line.color};">
+                ${line.icon}
+              </i>
+              <div class="dy-line-tooltip" style="background-color: ${line.color}7A; color: ${textColor(line.color)};">
+                ${line.tooltip.map(s => `<span>${s}</span>`).join("")}
+              </div>
+            </div>`
+        });
       }
-      this.dataItems = [];
+      this.lineItems.push(axisRange);
+    });
+  }
+
+  setRanges(): void {
+    // Remove former ranges
+    for (let i = 0; i < this.rangeItems.length; i++) {
+      this.rangeItems[i].dispose();
+    }
+    this.rangeItems = [];
+
+    if (this.ranges == null || this.ranges.length < 1) {
       return;
     }
 
@@ -149,12 +203,6 @@ export default class DDateYAxis extends Vue {
     gs.setDate(gs.getDate() - gs.getDay() - 6);
     ge.setDate(ge.getDate() - ge.getDay() + 14);
 
-    // Remove former ranges
-    for (let i = 0; i < this.dataItems.length; i++) {
-      this.dataItems[i].dispose();
-    }
-    this.dataItems = [];
-
     // Get first monday of boundaries at midnight
     let current = new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate()));
 
@@ -162,7 +210,7 @@ export default class DDateYAxis extends Vue {
     let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate())));
 
     while (current < ge) {
-      am5.array.each(this.ranges!, (range : TimeRange) => {
+      am5.array.each(this.ranges, (range : TimeRange): void => {
         let start = new Date(current);
         start.setDate(start.getDate() + range.startDay);
         start.setHours(start.getHours() + range.startHour);
@@ -179,27 +227,27 @@ export default class DDateYAxis extends Vue {
         end.setMinutes(end.getMinutes() + range.endMinute);
 
         // Create a range
-        let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
-        axisRange.set("value", start.getTime() + (offset * 60 * 1000));
-        axisRange.set("endValue", end.getTime() + (offset * 60 * 1000));
-        axisRange.get("grid")!.set("strokeOpacity", 0);
-
-        axisRange.get("axisFill")!.setAll({
+        let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
+          value: start.getTime() + (offset * 60 * 1000),
+          endValue: end.getTime() + (offset * 60 * 1000)
+        }));
+        axisRange.get("grid").setAll({
+          strokeOpacity: 0
+        });
+        axisRange.get("axisFill").setAll({
           visible: true,
           fillOpacity: range.opacity,
           fill: am5.color(range.color)
         });
-
-        if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
-          axisRange.get("label")!.setAll({
+        if (!isEmptyString(range.label)) {
+          axisRange.get("label").setAll({
             text: range.label,
             inside: true,
-            centerY: 30,
-            fill: textColor(range.color)
+            centerX: 23,
+            fill: am5.color(range.color)
           });
         }
-
-        this.dataItems.push(axisRange);
+        this.rangeItems.push(axisRange);
       });
 
       // Iterate
@@ -210,8 +258,10 @@ export default class DDateYAxis extends Vue {
   mounted(): void {
     // Add to chart
     this.axis = this.chart.yAxes.push(am5xy.DateAxis.new(this.root, {
-      renderer: am5xy.AxisRendererY.new(this.root, {}),
-      tooltipIntervalOffset: 0,
+      renderer: am5xy.AxisRendererX.new(this.root, {
+        cellStartLocation: 0.1,
+        cellEndLocation: 0.9
+      }),
       baseInterval: { timeUnit: "second", count: 1 },
       gridIntervals: [
         { timeUnit: "second", count: 1 },
@@ -232,7 +282,7 @@ export default class DDateYAxis extends Vue {
     }));
 
     // Add to cursor
-    if (this.cursor) {
+    if (this.cursor != null) {
       this.cursor!.set("yAxis", this.axis);
     }
 
@@ -260,3 +310,48 @@ export default class DDateYAxis extends Vue {
   }
 }
 </script>
+
+<style>
+.am5-html-container > div:has(.dy-line-container-large) {
+  overflow: visible !important;
+  right: 30px !important;
+}
+
+.am5-html-container > div:has(.dy-line-container-small) {
+  overflow: visible !important;
+  right: -8px !important;
+}
+
+.dy-line-container-large,
+.dy-line-container-small {
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+}
+
+.dy-line-icon {
+  font-size: 20px !important;
+  user-select: none;
+}
+
+.dy-line-tooltip {
+  position: absolute;
+  top: 23px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.dy-line-icon:hover + .dy-line-tooltip {
+  display: flex;
+}
+
+.dy-line-tooltip > * {
+  white-space:nowrap;
+}
+</style>

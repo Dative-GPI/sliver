@@ -14,7 +14,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGEND, LEGEND_DEBUG } from "../../literals";
 import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
-import { AxisRange } from "../../models";
+import { ValueRange } from "../../models";
 
 @Component({})
 export default class DHeatLegend extends Vue {
@@ -85,7 +85,7 @@ export default class DHeatLegend extends Vue {
   onMaxColorChange = this.setEnabled;
 
   @Prop({ required: false, default: undefined })
-  heatRanges!: AxisRange[] | undefined;
+  heatRanges!: ValueRange[] | undefined;
 
   @Watch("ranges")
   onHeatRangesChange = this.setEnabled;

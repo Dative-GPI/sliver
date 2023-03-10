@@ -13,7 +13,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
 import { HeatRule, SerieEnum } from "../../enums";
-import { AxisRange } from "../../models";
+import { ValueRange } from "../../models";
 
 @Component({})
 export default class DHeatmapSerie extends Vue {
@@ -98,7 +98,7 @@ export default class DHeatmapSerie extends Vue {
   onMaxColorChange = this.setHeatRule;
 
   @Prop({ required: false, default: undefined })
-  heatRanges!: AxisRange[] | undefined;
+  heatRanges!: ValueRange[] | undefined;
 
   @Watch("ranges")
   onHeatRangesChange = this.setHeatRule;

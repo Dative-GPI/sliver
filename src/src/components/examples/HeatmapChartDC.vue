@@ -67,7 +67,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
-import { AxisRange } from "../../models";
+import { ValueRange } from "../../models";
 
 import Spinner from "./Spinner.vue";
 
@@ -149,7 +149,7 @@ export default class HeatmapChart extends Vue {
   maxColor!: string;
 
   @Prop({ required: true })
-  heatRanges!: AxisRange[] | undefined;
+  heatRanges!: ValueRange[] | undefined;
 
   ready: boolean = false;
 }

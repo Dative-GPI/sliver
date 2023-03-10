@@ -8,7 +8,7 @@
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
 import { HeatRule, PositionEnum } from "../../enums";
-import { AxisRange } from "../../models";
+import { ValueRange } from "../../models";
 
 import WrappedLegend from "./DHeatLegend.vue";
 
@@ -44,7 +44,7 @@ export default class DHeatLegendWrapper extends Vue {
   maxColor!: string;
 
   @Prop({ required: false, default: undefined })
-  heatRanges!: AxisRange[] | undefined;
+  heatRanges!: ValueRange[] | undefined;
 
   @Watch("enabled")
   onEnabledChange() {

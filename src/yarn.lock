@@ -11,13 +11,14 @@
     "event-pubsub" "4.3.0"
     "js-message" "1.0.7"
 
-"@amcharts/amcharts5@^5.2.47":
-  "integrity" "sha512-oVLeIZjo7Vu9UC93vMTjEWl3p9PIxuJYufMtQg+pHpRO5RnOJHErwjMb/4shWhgE1fdjQGPej70H1zFzCH1zmw=="
-  "resolved" "https://registry.npmjs.org/@amcharts/amcharts5/-/amcharts5-5.2.47.tgz"
-  "version" "5.2.47"
+"@amcharts/amcharts5@^5.3.6":
+  "integrity" "sha512-Et/0OgTUQm7r9xVKk8GlJqyL2lGo7RBRSjjd0yI0A+orNGNdohuQeNkKURp2AgZYXkak4IPmc0ataRD8xzh8xg=="
+  "resolved" "https://registry.npmjs.org/@amcharts/amcharts5/-/amcharts5-5.3.6.tgz"
+  "version" "5.3.6"
   dependencies:
     "@types/d3" "^7.0.0"
     "@types/d3-chord" "^3.0.0"
+    "@types/d3-hierarchy" "3.1.1"
     "@types/d3-sankey" "^0.11.1"
     "@types/d3-shape" "^3.0.0"
     "@types/geojson" "^7946.0.8"
@@ -2460,10 +2461,10 @@
   dependencies:
     "@types/geojson" "*"
 
-"@types/d3-hierarchy@*":
-  "integrity" "sha512-g+sey7qrCa3UbsQlMZZBOHROkFqx7KZKvUpRzI/tAp/8erZWpYq7FgNKvYwebi2LaEiVs1klhUfd3WCThxmmWQ=="
-  "resolved" "https://registry.npmjs.org/@types/d3-hierarchy/-/d3-hierarchy-3.1.0.tgz"
-  "version" "3.1.0"
+"@types/d3-hierarchy@*", "@types/d3-hierarchy@3.1.1":
+  "integrity" "sha512-QwjxA3+YCKH3N1Rs3uSiSy1bdxlLB1uUiENXeJudBoAFvtDuswUxLcanoOaR2JYn1melDTuIXR8VhnVyI3yG/A=="
+  "resolved" "https://registry.npmjs.org/@types/d3-hierarchy/-/d3-hierarchy-3.1.1.tgz"
+  "version" "3.1.1"
 
 "@types/d3-interpolate@*":
   "integrity" "sha512-jx5leotSeac3jr0RePOH1KdR9rISG91QIE4Q2PYTu4OymLTZfA3SrnURSLzKH48HmXVUru50b8nje4E79oQSQw=="

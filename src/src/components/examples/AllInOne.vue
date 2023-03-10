@@ -15,7 +15,7 @@ import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { getLocale, getTimezone, textColor } from "../../helpers";
 import { ISpritePointerEvent } from "@amcharts/amcharts5";
-import { AxisRange } from "../../models";
+import { ValueRange } from "../../models";
 
 @Component({})
 export default class AllInOne extends Vue {
@@ -45,10 +45,10 @@ export default class AllInOne extends Vue {
   data!: any;
 
   @Prop({ required: false, default: () => [] })
-  yAxisRanges!: AxisRange[];
+  yAxisRanges!: ValueRange[];
 
   @Prop({ required: false, default: () => [] })
-  heatRanges!: AxisRange[]
+  heatRanges!: ValueRange[]
 
   debouncedResize = _.debounce(this.resize, 250);
 
@@ -170,8 +170,10 @@ export default class AllInOne extends Vue {
       this.yAxis.set("tooltip", this.yAxisTooltip);
       this.cursor.set("yAxis", this.yAxis);
 
-      am5.array.each(this.yAxisRanges, (range : AxisRange) => {
-        let axisRange = this.yAxis.createAxisRange(this.yAxis.makeDataItem({}));
+      am5.array.each(this.yAxisRanges, (range : ValueRange) => {
+        let axisRange = this.yAxis.createAxisRange(this.yAxis.makeDataItem({
+          above: true
+        }));
         if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
           axisRange.get("label")!.setAll({
             text: range.label,

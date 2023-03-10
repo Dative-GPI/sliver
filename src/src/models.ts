@@ -1,4 +1,11 @@
-export interface AxisRange {
+export interface IconLine {
+  value: number;
+  color: string;
+  tooltip: string[];
+  icon: string;
+}
+
+export interface ValueRange {
   startValue: number;
   endValue: number;
   color: string;

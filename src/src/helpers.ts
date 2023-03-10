@@ -163,6 +163,12 @@ export const getTimezone = (timeOffset: string): am5.Timezone  => {
 }
 
 export const formatNumber = (value: number, locale: string, decimalPlaces: number): string => {
-  if (isNaN(value)) return value.toString();
+  if (isNaN(value)) {
+    return value.toString();
+  }
   return new Intl.NumberFormat(locale, { maximumFractionDigits: decimalPlaces }).format(value);
+}
+
+export const isEmptyString = (value: string | undefined): boolean => {
+  return (value == null || value === "" || /^\s*$/.test(value));
 }

@@ -39,6 +39,8 @@
               :opposite="xAxisOpposite"
               :showTooltip="xAxisShowTooltip"
               :tooltipDateFormat="xAxisTooltipDateFormat"
+              :scrollbar="scrollbar"
+              :lines="xAxisLines"
               :ranges="xAxisRanges"
             >
               <d-line-serie
@@ -73,7 +75,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
-import { AxisRange, TimeRange } from "../../models";
+import { IconLine, TimeRange, ValueRange } from "../../models";
 import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
@@ -153,6 +155,9 @@ export default class LineChart extends Vue {
   xAxisTooltipDateFormat!: string;
 
   @Prop({ required: true })
+  xAxisLines!: IconLine[];
+
+  @Prop({ required: true })
   xAxisRanges!: TimeRange[];
 
   @Prop({ required: true })
@@ -165,7 +170,7 @@ export default class LineChart extends Vue {
   yAxisTooltipNumberFormat!: string;
 
   @Prop({ required: true })
-  yAxisRanges!: AxisRange[] | undefined;
+  yAxisRanges!: ValueRange[] | undefined;
 
   @Prop({ required: true })
   yAxisUnit!: string | undefined;
@@ -186,7 +191,7 @@ export default class LineChart extends Vue {
   maxColor!: string;
 
   @Prop({ required: true })
-  heatRanges!: AxisRange[] | undefined;
+  heatRanges!: ValueRange[] | undefined;
   
   ready: boolean = false;
 }

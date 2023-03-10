@@ -79,7 +79,8 @@ export default class DYScrollbar extends Vue {
     if (this.enabled) {
       // Add to chart
       this.scrollbar = this.chart.set("scrollbarY", am5xy.XYChartScrollbar.new(this.root, {
-        orientation: "vertical"
+        orientation: "vertical",
+        x: 5
       }));
       
       this.scrollbar.startGrip.set("width", 10);

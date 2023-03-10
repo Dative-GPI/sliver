@@ -12,8 +12,8 @@ import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, XAXIS } from "../../literals";
+import { ValueRange } from "../../models";
 import { textColor } from "../../helpers";
-import { AxisRange } from "../../models";
 
 @Component({})
 export default class DValueTAxis extends Vue {
@@ -114,7 +114,7 @@ export default class DValueTAxis extends Vue {
   onLabelsRadiusChange = this.setLabelsRadius;
 
   @Prop({ required: false, default: undefined })
-  ranges!: AxisRange[] | undefined;
+  ranges!: ValueRange[] | undefined;
 
   @Watch("ranges")
   onRangesChange = this.setRanges;
@@ -199,7 +199,7 @@ export default class DValueTAxis extends Vue {
     }
     
     if (this.ranges && this.ranges!.length > 0) {
-      am5.array.each(this.ranges!, (range : AxisRange) => {
+      am5.array.each(this.ranges!, (range : ValueRange) => {
         let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
 
         axisRange.setAll({

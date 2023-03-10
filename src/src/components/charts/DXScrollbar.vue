@@ -11,7 +11,6 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART } from "../../literals";
-import { ISpritePointerEvent } from "@amcharts/amcharts5/.internal/core/render/Sprite";
 
 @Component({})
 export default class DXScrollbar extends Vue {
@@ -79,7 +78,8 @@ export default class DXScrollbar extends Vue {
     if (this.enabled) {
       // Add to chart
       this.scrollbar = this.chart.set("scrollbarX", am5xy.XYChartScrollbar.new(this.root, {
-        orientation: "horizontal"
+        orientation: "horizontal",
+        y: 5,
       }));
       
       this.scrollbar.startGrip.set("width", 10);

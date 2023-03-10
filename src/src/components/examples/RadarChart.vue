@@ -63,7 +63,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
-import { AxisRange } from "../../models";
+import { ValueRange } from "../../models";
 import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
@@ -104,7 +104,7 @@ export default class RadarChart extends Vue {
   axisMax!: number;
 
   @Prop({ required: true })
-  ranges!: AxisRange[] | undefined;
+  ranges!: ValueRange[] | undefined;
 
   @Prop({ required: true })
   unit!: string | undefined;

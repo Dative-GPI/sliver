@@ -70,7 +70,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
-import { AxisRange } from "../../models";
+import { ValueRange } from "../../models";
 import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
@@ -150,7 +150,7 @@ export default class ScatterPlotChart extends Vue {
   xAxisTooltipNumberFormat!: string;
 
   @Prop({ required: true })
-  xAxisRanges!: AxisRange[] | undefined;
+  xAxisRanges!: ValueRange[] | undefined;
 
   @Prop({ required: true })
   xAxisUnit!: string | undefined;
@@ -165,7 +165,7 @@ export default class ScatterPlotChart extends Vue {
   yAxisTooltipNumberFormat!: string;
 
   @Prop({ required: true })
-  yAxisRanges!: AxisRange[] | undefined;
+  yAxisRanges!: ValueRange[] | undefined;
 
   @Prop({ required: true })
   yAxisUnit!: string | undefined;

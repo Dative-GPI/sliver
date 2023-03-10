@@ -112,10 +112,10 @@ export default class DXYChart extends Vue {
     // Create root
     this.root = am5.Root.new((this.$refs.xychart as HTMLElement), {
       tooltipContainerBounds: {
-        top: 50,
+        top: 150,
         bottom: 50,
-        left: 100,
-        right: 100
+        left: 150,
+        right: 150
       }
     });
     this.root.locale = getLocale(this.locale);

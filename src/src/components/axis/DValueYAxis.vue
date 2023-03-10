@@ -10,8 +10,9 @@ import { Component, InjectReactive, Vue, Prop, ProvideReactive, Watch } from "vu
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, YAXIS } from "../../literals";
-import { AxisRange } from "../../models";
+import { AMROOT, CHART, CURSOR, YAXIS, YAXISVALIDATED } from "../../literals";
+import { ValueRange } from "../../models";
+import { isEmptyString } from "@/helpers";
 
 @Component({})
 export default class DValueYAxis extends Vue {
@@ -79,7 +80,7 @@ export default class DValueYAxis extends Vue {
   onHeightChange = this.setHeight;
 
   @Prop({ required: false, default: undefined })
-  ranges!: AxisRange[] | undefined;
+  ranges!: ValueRange[] | undefined;
 
   @Watch("ranges")
   onRangesChange = this.setRanges;
@@ -93,7 +94,11 @@ export default class DValueYAxis extends Vue {
   @ProvideReactive(YAXIS)
   axis: any = null;
 
+  @ProvideReactive(YAXISVALIDATED)
+  serieValidated: () => void = this.setRanges;
+
   tooltip: am5.Tooltip | null = null;
+  rangeItems: am5.DataItem<am5xy.IValueAxisDataItem>[] = [];
 
   upAndRunning: boolean = false;
 
@@ -177,35 +182,40 @@ export default class DValueYAxis extends Vue {
   }
   
   setRanges(): void {
-    for (let i = this.axis!.axisRanges.values.length - 1; i >= 0; i--) {
-      let range = this.axis!.axisRanges.values[i];
-      this.axis!.axisRanges.removeValue(range!);
-      range!.dispose();
+    // Remove former ranges
+    for (let i = 0; i < this.rangeItems.length; i++) {
+      this.rangeItems[i].dispose();
+    }
+    this.rangeItems = [];
+
+    if (this.ranges == null || this.ranges.length < 1) {
+      return;
     }
     
     if (this.ranges && this.ranges!.length > 0) {
-      am5.array.each(this.ranges!, (range : AxisRange) => {
-        let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
-
-        if (range.label != null && range.label != "") {
-          axisRange.get("label")!.setAll({
-            text: range.label,
-            inside: true,
-            centerX: 0,
-            fill: am5.color("#000000")
-          });
-        }
-
-        axisRange.get("axisFill")!.setAll({
+      am5.array.each(this.ranges!, (range : ValueRange) => {
+        let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
+          above: true,
+          value: range.startValue,
+          endValue: range.endValue
+        }));
+        axisRange.get("grid").setAll({
+          strokeOpacity: 0
+        });
+        axisRange.get("axisFill").setAll({
           visible: true,
           fillOpacity: range.opacity,
           fill: am5.color(range.color)
         });
-
-        axisRange.setAll({
-          value: range.startValue,
-          endValue: range.endValue
-        });
+        if (!isEmptyString(range.label)) {
+          axisRange.get("label").setAll({
+            text: range.label,
+            inside: true,
+            centerX: 0,
+            fill: am5.color(range.color)
+          });
+        }
+        this.rangeItems.push(axisRange);
       });
     }
   }
@@ -251,7 +261,6 @@ export default class DValueYAxis extends Vue {
     this.setMax();
     this.setStrictMinMax();
     this.setHeight();
-    this.setRanges();
     this.setUnit();
 
     this.upAndRunning = true;

@@ -69,7 +69,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
-import { AxisRange } from "../../models";
+import { ValueRange } from "../../models";
 import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
@@ -163,7 +163,7 @@ export default class IndicatorChart extends Vue {
   xAxisMax!: number | undefined;
 
   @Prop({ required: true })
-  xAxisRanges!: AxisRange[] | undefined;
+  xAxisRanges!: ValueRange[] | undefined;
 
   @Prop({ required: true })
   xAxisUnit!: string | undefined;
@@ -184,7 +184,7 @@ export default class IndicatorChart extends Vue {
   yAxisMax!: number | undefined;
 
   @Prop({ required: true })
-  yAxisRanges!: AxisRange[] | undefined;
+  yAxisRanges!: ValueRange[] | undefined;
 
   ready: boolean = false;
 }

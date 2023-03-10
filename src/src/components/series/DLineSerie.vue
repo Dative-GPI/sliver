@@ -10,11 +10,11 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
+import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS, YAXISVALIDATED } from "../../literals";
 import { ColorSets, GetHashedColor } from "../../colors";
 import { HeatRule, SerieEnum } from "../../enums";
+import { ValueRange } from "../../models";
 import { textColor } from "../../helpers";
-import { AxisRange } from "../../models";
 
 @Component({})
 export default class DLineSerie extends Vue {
@@ -32,6 +32,9 @@ export default class DLineSerie extends Vue {
 
   @InjectReactive(YAXIS)
   yAxis!: am5xy.ValueAxis<am5xy.AxisRendererY>;
+
+  @InjectReactive(YAXISVALIDATED)
+  yAxisValidated!: () => void;
 
   @InjectReactive(CURSOR)
   cursor!: am5xy.XYCursor | null;
@@ -112,7 +115,7 @@ export default class DLineSerie extends Vue {
   onMaxColorChange = this.setHeatRule;
 
   @Prop({ required: false, default: undefined })
-  heatRanges!: AxisRange[] | undefined;
+  heatRanges!: ValueRange[] | undefined;
 
   @Watch("ranges")
   onHeatRangesChange = this.setHeatRule;
@@ -169,7 +172,7 @@ export default class DLineSerie extends Vue {
         centerY: 25
       });
       this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
-      this.tooltip.get("background")!.set("fillOpacity", 0.50);
+      this.tooltip.get("background")!.set("fillOpacity", 0.5);
       
       this.serie!.set("tooltip", this.tooltip);
     }
@@ -296,7 +299,10 @@ export default class DLineSerie extends Vue {
       userData: { serie: SerieEnum.LineSerie }
     }));
 
-    this.serie.events.on("datavalidated", this.xAxisValidated);
+    this.serie.events.on("datavalidated", () => {
+      this.xAxisValidated();
+      this.yAxisValidated();
+    });
 
     // Set updatable properties
     this.setName();
