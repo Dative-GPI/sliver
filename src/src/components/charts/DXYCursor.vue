@@ -56,6 +56,8 @@ export default class DXYCursor extends Vue {
   @ProvideReactive(CURSOR)
   cursor: am5xy.XYCursor | null = null;
 
+  visibleBullets: am5.Bullet[] = [];
+
   upAndRunning = false;
 
   setBehavior(): void {
@@ -97,6 +99,40 @@ export default class DXYCursor extends Vue {
       this.cursor = this.chart.set("cursor", am5xy.XYCursor.new(this.root, {
         snapToSeries: []
       }));
+
+      this.cursor.events.on("cursormoved", () => {
+        for (let bullet of this.visibleBullets) {
+          bullet.get("sprite").set("opacity", 0);
+        }
+        this.visibleBullets = [];
+        this.chart.series.each(serie => {
+          if (serie instanceof am5xy.LineSeries)
+            if (serie!.get("userData")!.showTooltipBullet) {
+              if (serie!.get("tooltip") != null) {
+                if (serie!.get("tooltip")!.isVisible()) {
+                  if (serie!.get("tooltip")!.dataItem != null) {
+                    if (serie!.get("tooltip")!.dataItem!.bullets != null) {
+                      if (serie!.get("tooltip")!.dataItem!.bullets!.length > 0) {
+                        let tooltipBullet = serie!.get("tooltip")!.dataItem!.bullets!.find(bullet => {
+                          if (bullet != null) {
+                            if (bullet!.get("userData") != null) {
+                              return bullet!.get("userData")!.tooltipBullet != null ? bullet!.get("userData")!.tooltipBullet : false;
+                            }
+                          }
+                          return false;
+                        });
+                        if (tooltipBullet != null) {
+                          tooltipBullet.get("sprite")!.set("opacity", serie!.get("opacity"));
+                          this.visibleBullets.push(tooltipBullet);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        });
+      });
 
       this.setBehavior();
       this.setSharedZoom();

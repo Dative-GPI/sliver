@@ -1,4 +1,5 @@
 import * as am5 from "@amcharts/amcharts5";
+import * as am5xy from "@amcharts/amcharts5/xy";
 
 import am5locales_en_US from "@amcharts/amcharts5/locales/en_US";
 import am5locales_fr_FR from "@amcharts/amcharts5/locales/fr_FR";
@@ -171,4 +172,103 @@ export const formatNumber = (value: number, locale: string, decimalPlaces: numbe
 
 export const isEmptyString = (value: string | undefined): boolean => {
   return (value == null || value === "" || /^\s*$/.test(value));
+}
+
+export const setLineSerieBullets = (serie: am5xy.LineSeries, root: am5.Root): void => {
+  serie.bullets.clear();
+  if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
+    return;
+  }
+
+  if (serie.get("userData").showBullets) {
+    serie.bullets.push(() => {
+      return am5.Bullet.new(root, {
+        sprite: am5.Circle.new(root, {
+          opacity: serie.get("opacity"),
+          radius: serie.get("userData").bulletRadius,
+          fill: serie.get("fill")
+        })
+      })
+    });
+  }
+  else if (serie.get("userData").showTooltipBullet) {
+    serie.bullets.push(() => {
+      return am5.Bullet.new(root, {
+        userData: {
+          tooltipBullet: true
+        },
+        sprite: am5.Circle.new(root, {
+          opacity: 0,
+          radius: serie.get("userData").bulletRadius,
+          fill: serie.get("fill")
+        })
+      })
+    });
+  }
+}
+
+export const setStepLineSerieBullets = (serie: am5xy.StepLineSeries, root: am5.Root): void => {
+  serie.bullets.clear();
+  if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
+    return;
+  }
+
+  if (serie.get("userData").showBullets) {
+    serie.bullets.push(() => {
+      return am5.Bullet.new(root, {
+        sprite: am5.Circle.new(root, {
+          opacity: serie.get("opacity"),
+          radius: serie.get("userData").bulletRadius,
+          fill: serie.get("fill")
+        })
+      })
+    });
+  }
+  else if (serie.get("userData").showTooltipBullet) {
+    serie.bullets.push(() => {
+      return am5.Bullet.new(root, {
+        userData: {
+          tooltipBullet: true
+        },
+        sprite: am5.Circle.new(root, {
+          opacity: 0,
+          radius: serie.get("userData").bulletRadius,
+          fill: serie.get("fill")
+        })
+      })
+    });
+  }
+}
+
+export const setScatterPlotSerieBullets = (serie: am5xy.LineSeries, root: am5.Root): void => {
+  serie.bullets.clear();
+
+  if (serie.get("userData").showTooltip) {
+    let tooltip = am5.Tooltip.new(root, {
+      autoTextColor: false
+    });
+    tooltip.label.set("fill", textColor(serie.get("fill")!.toCSSHex()));
+    tooltip.get("background")!.set("fillOpacity", 0.50);
+
+    serie.bullets.push(() => {
+      return am5.Bullet.new(root, {
+        sprite: am5.Circle.new(root, {
+          tooltip: tooltip,
+          tooltipText: serie.get("userData").tooltipText,
+          opacity: serie.get("opacity"),
+          fill: serie.get("fill")
+        }, serie.get("userData").circleTemplate)
+      });
+    });
+  }
+  else {
+    serie.bullets.push(() => {
+      return am5.Bullet.new(root, {
+        sprite: am5.Circle.new(root, {
+          opacity: serie.get("opacity"),
+          fill: serie.get("fill")
+        }, serie.get("userData").circleTemplate)
+      });
+    });
+  }
 }

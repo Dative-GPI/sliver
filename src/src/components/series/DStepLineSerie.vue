@@ -11,9 +11,9 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
-import { textColor } from "../../helpers";
-import { SerieEnum } from "../../enums";
+import { setStepLineSerieBullets, textColor } from "../../helpers";
 import { ColorSets, GetHashedColor } from "../../colors";
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DStepLineSerie extends Vue {
@@ -84,13 +84,19 @@ export default class DStepLineSerie extends Vue {
   showBullets!: boolean;
 
   @Watch("showBullets")
-  onShowBulletsChange = this.setShowBullets;
+  onShowBulletsChange = this.setBullets;
+
+  @Prop({ required: false, default: true })
+  showTooltipBullet!: boolean;
+
+  @Watch("showTooltipBullet")
+  onShowTooltipBulletChange = this.setBullets;
 
   @Prop({ required: false, default: 5 })
   bulletsRadius!: number;
 
   @Watch("bulletsRadius")
-  onBulletsRadiusChange = this.setShowBullets;
+  onBulletsRadiusChange = this.setBullets;
 
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;
@@ -110,7 +116,7 @@ export default class DStepLineSerie extends Vue {
   @Watch("data")
   onDataChange = this.setData;
 
-  serie: am5xy.LineSeries | null = null;
+  serie: am5xy.StepLineSeries | null = null;
   tooltip: am5.Tooltip | null = null;
   bullets: am5.Bullet | null = null;
 
@@ -155,23 +161,17 @@ export default class DStepLineSerie extends Vue {
     this.serie!.set("connect", this.connect);
   }
 
-  setShowBullets(): void {
-    this.serie!.bullets.clear();
+  setBullets(): void {
+    let { bulletRadius, showBullets, showTooltipBullet, ...userData } = this.serie!.get("userData");
 
-    if (this.showBullets) {
-      this.serie!.set("userData", {
-        ...this.serie!.get("userData"),
-        bulletRadius: this.bulletsRadius
-      });
-      this.serie!.bullets.push((root: am5.Root): am5.Bullet => {
-        return am5.Bullet.new(root, {
-          sprite: am5.Circle.new(root, {
-            radius: this.bulletsRadius,
-            fill: this.serie!.get("fill")
-          })
-        });
-      });
-    }
+    this.serie!.set("userData", {
+      ...userData,
+      bulletRadius: this.bulletsRadius,
+      showBullets: this.showBullets,
+      showTooltipBullet: this.showTooltipBullet
+    });
+    
+    setStepLineSerieBullets(this.serie!, this.root);
   }
 
   setColor(): void {
@@ -211,7 +211,7 @@ export default class DStepLineSerie extends Vue {
     this.setShowTooltip();
     this.setSnapTooltip();
     this.setConnect();
-    this.setShowBullets();
+    this.setBullets();
 
     // Add to legend
     if (this.legend != null) {

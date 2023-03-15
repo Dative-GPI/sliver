@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, LEGEND_DEBUG, XAXIS, YAXIS } from "../../literals";
-import { updateCategories, addSerie, removeSerie, textColor } from "../../helpers";
+import { updateCategories, addSerie, removeSerie, textColor, setScatterPlotSerieBullets } from "../../helpers";
 import { ColorSets, GetHashedColor } from "../../colors";
 import { SerieEnum } from "../../enums";
 
@@ -122,7 +122,6 @@ export default class DScatterPlotSerie extends Vue {
   onDataChange = this.setData;
 
   serie: am5xy.LineSeries | null = null;
-  tooltip: am5.Tooltip | null = null;
 
   upAndRunning: boolean = false;
 
@@ -137,45 +136,16 @@ export default class DScatterPlotSerie extends Vue {
   }
 
   setBullets(): void {
-    this.serie!.bullets.clear();
+    let { circleTemplate, showTooltip, tooltip, tooltipText, ...userData } = this.serie!.get("userData");
 
     this.serie!.set("userData", {
-      ...this.serie!.get("userData"),
-      circleTemplate: am5.Template.new<am5.Circle>({ radius: this.bulletRadius })
+      ...userData,
+      circleTemplate: am5.Template.new<am5.Circle>({ radius: this.bulletRadius }),
+      showTooltip: this.showTooltip,
+      tooltipText: this.tooltipText
     });
-
-    // Quelqu'un m'explique pourquoi les tooltips disparaissent lorsque la légende est survolée ?
-    if (!this.showTooltip) {
-      if (this.tooltip != null && !this.tooltip.isDisposed()) {
-        this.tooltip!.dispose();
-        this.tooltip = null;
-      }
-      this.serie!.bullets.push(() => {
-        return am5.Bullet.new(this.root, {
-          sprite: am5.Circle.new(this.root, {
-            fill: this.serie!.get("fill")
-          }, this.serie!.get("userData").circleTemplate)
-        });
-      });
-    }
-    else {
-      this.tooltip = am5.Tooltip.new(this.root, {
-        autoTextColor: false
-      });
-      this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
-      this.tooltip.get("background")!.set("fillOpacity", 0.50);
-      
-      this.serie!.bullets.push(() => {
-        return am5.Bullet.new(this.root, {
-          sprite: am5.Circle.new(this.root, {
-            tooltip: this.tooltip!,
-            tooltipText: this.tooltipText,
-            fill: this.serie!.get("fill")
-          }, this.serie!.get("userData").circleTemplate)
-        });
-      });
-    }
     
+    setScatterPlotSerieBullets(this.serie!, this.root);
     this.setHeatRules();
   }
 
@@ -287,9 +257,6 @@ export default class DScatterPlotSerie extends Vue {
     }
 
     // Dispose
-    if (this.tooltip != null && !this.tooltip!.isDisposed()) {
-      this.tooltip!.dispose();
-    }
     if (this.serie != null && !this.serie!.isDisposed()) {
       this.serie!.dispose();
     }

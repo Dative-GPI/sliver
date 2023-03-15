@@ -11,10 +11,10 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS, YAXISVALIDATED } from "../../literals";
+import { setLineSerieBullets, textColor } from "../../helpers";
 import { ColorSets, GetHashedColor } from "../../colors";
 import { HeatRule, SerieEnum } from "../../enums";
 import { ValueRange } from "../../models";
-import { textColor } from "../../helpers";
 
 @Component({})
 export default class DLineSerie extends Vue {
@@ -88,13 +88,19 @@ export default class DLineSerie extends Vue {
   showBullets!: boolean;
 
   @Watch("showBullets")
-  onShowBulletsChange = this.setShowBullets;
+  onShowBulletsChange = this.setBullets;
+
+  @Prop({ required: false, default: true })
+  showTooltipBullet!: boolean;
+
+  @Watch("showTooltipBullet")
+  onShowTooltipBulletChange = this.setBullets;
 
   @Prop({ required: false, default: 5 })
   bulletsRadius!: number;
 
   @Watch("bulletsRadius")
-  onBulletsRadiusChange = this.setShowBullets;
+  onBulletsRadiusChange = this.setBullets;
 
   @Prop({ required: false, default: HeatRule.None })
   heatRule!: HeatRule;
@@ -190,23 +196,17 @@ export default class DLineSerie extends Vue {
     this.serie!.set("connect", this.connect);
   }
 
-  setShowBullets(): void {
-    this.serie!.bullets.clear();
+  setBullets(): void {
+    let { bulletRadius, showBullets, showTooltipBullet, ...userData } = this.serie!.get("userData");
 
-    if (this.showBullets) {
-      this.serie!.set("userData", {
-        ...this.serie!.get("userData"),
-        bulletRadius: this.bulletsRadius
-      });
-      this.serie!.bullets.push((root: am5.Root): am5.Bullet => {
-        return am5.Bullet.new(root, {
-          sprite: am5.Circle.new(root, {
-            radius: this.bulletsRadius,
-            fill: this.serie!.get("fill")
-          })
-        });
-      });
-    }
+    this.serie!.set("userData", {
+      ...userData,
+      bulletRadius: this.bulletsRadius,
+      showBullets: this.showBullets,
+      showTooltipBullet: this.showTooltipBullet
+    });
+    
+    setLineSerieBullets(this.serie!, this.root);
   }
 
   setHeatRule(): void {
@@ -308,7 +308,7 @@ export default class DLineSerie extends Vue {
     this.setName();
     this.setSnapTooltip();
     this.setConnect();
-    this.setShowBullets();
+    this.setBullets();
     this.setHeatRule();
 
     // Add to legend

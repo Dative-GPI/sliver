@@ -77,9 +77,9 @@ Default.args = {
       makeLineSerie("Level 1", 1674028800000, 225000, 36000000, 10000, 50),
       makeLineSerie("Level 2", 1674028800000, 250000, 36000000, 10000, 50),
       makeLineSerie("Level 3", 1674028800000, 275000, 36000000, 10000, 50),
-      makeLineSerie("Level 4", 1674028800000, 275000, 36000000, 10000, 50),
-      makeLineSerie("Level 5", 1674028800000, 275000, 36000000, 10000, 50),
-      makeLineSerie("Level 6", 1674028800000, 275000, 36000000, 10000, 50),
+      // makeLineSerie("Level 4", 1674028800000, 275000, 36000000, 10000, 50),
+      // makeLineSerie("Level 5", 1674028800000, 275000, 36000000, 10000, 50),
+      // makeLineSerie("Level 6", 1674028800000, 275000, 36000000, 10000, 50),
     ]
   },
   minHeight: '400px',
@@ -106,17 +106,17 @@ Default.args = {
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   xAxisLines: [
-    { value: 1674388800000, color: "#000000", tooltip: ["Triggered", "January 22nd 2023 12:00"], icon: "error_outline" },
-    { value: 1674748800000, color: "#0000FF", tooltip: ["Resolved", "January 26th 2023 16:00"], icon: "check_circle_outline" }
+    // { value: 1674388800000, color: "#000000", tooltip: ["Triggered", "January 22nd 2023 12:00"], icon: "error_outline" },
+    // { value: 1674748800000, color: "#0000FF", tooltip: ["Resolved", "January 26th 2023 16:00"], icon: "check_circle_outline" }
   ],
   xAxisRanges: [
-    { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.5, color: "#0000FF", label: "X"}
+    // { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.5, color: "#0000FF", label: "X"}
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisRanges: [
-    { startValue: 200000, endValue: 225000, opacity: 0.5, color: "#0000FF", label: "Y" }
+    // { startValue: 200000, endValue: 225000, opacity: 0.5, color: "#0000FF", label: "Y" }
   ],
   yAxisUnit: "mL",
   serieShowBullets: false,
