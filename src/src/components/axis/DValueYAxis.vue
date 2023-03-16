@@ -11,8 +11,8 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, YAXIS, YAXISVALIDATED } from "../../literals";
+import { isEmptyString } from "../../helpers";
 import { ValueRange } from "../../models";
-import { isEmptyString } from "@/helpers";
 
 @Component({})
 export default class DValueYAxis extends Vue {
