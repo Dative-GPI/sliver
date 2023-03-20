@@ -49,13 +49,13 @@ export default class DDateXAxis extends Vue {
   @Watch("tooltipDateFormat")
   onTooltipDateFormatChange = this.setTooltipDateFormat;
 
-  @Prop({ required: false, default: null })
+  @Prop({ required: false, default: 1679266800000 })
   min!: number | null;
 
   @Watch("min")
   onMinChange = this.setMin;
 
-  @Prop({ required: false, default: null })
+  @Prop({ required: false, default: 1679326500000 })
   max!: number | null;
 
   @Watch("max")
@@ -146,6 +146,9 @@ export default class DDateXAxis extends Vue {
   }
 
   setLines(): void {
+    console.log(`############## In setLines`);
+    console.log(this.lines);
+
     // Remove former lines
     for (let i = 0; i < this.lineItems.length; i++) {
       this.lineItems[i].dispose();
@@ -156,7 +159,11 @@ export default class DDateXAxis extends Vue {
       return;
     }
 
+    console.log(`Lines length: ${this.lines.length}`);
+
     am5.array.each(this.lines, (line: IconLine): void => {
+      console.log(`Creating line at ${line.value} with icon ${line.icon} and color ${line.color}`);
+      console.log(`Is line between min and max ? ${this.min} < ${line.value} < ${this.max} ### ${this.min! < line.value} && ${line.value < this.max!}`);
       // Create a line
       let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
         above: true,
@@ -169,6 +176,8 @@ export default class DDateXAxis extends Vue {
         stroke: am5.color(line.color)
       });
       if (!isEmptyString(line.icon)) {
+        console.log(`Setting line icon ${line.icon}`);
+        console.log(`Setting line tooltip ${line.tooltip.map(s => `<span>${s}</span>`).join("")}`)
         axisRange.get("label")!.setAll({
           html: `
             <div class="${this.scrollbar ? "dx-line-container-large" : "dx-line-container-small"}">
@@ -181,6 +190,7 @@ export default class DDateXAxis extends Vue {
             </div>`
         });
       }
+      console.log(`Pushing line to lineItems`);
       this.lineItems.push(axisRange);
     });
   }
