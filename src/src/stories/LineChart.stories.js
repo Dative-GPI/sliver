@@ -110,7 +110,8 @@ Default.args = {
     { value: 1674748800000, color: "#0000FF", tooltip: ["Resolved", "January 26th 2023 16:00"], icon: "block" }
   ],
   xAxisRanges: [
-    // { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.5, color: "#0000FF", label: "X"}
+    { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.5, color: "#0000FF", label: "X"},
+    { startDay: 7, startHour: 20, startMinute: 30, endDay: 0, endHour: 22, endMinute: 30, opacity: 0.5, color: "#FF0000", label: "Y"}
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,

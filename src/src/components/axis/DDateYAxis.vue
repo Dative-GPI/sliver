@@ -11,8 +11,8 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, YAXIS, YAXISVALIDATED } from "../../literals";
+import { Days, IconLine, TimeRange } from "../../models";
 import { isEmptyString, textColor } from "../../helpers";
-import { IconLine, TimeRange } from "../../models";
 
 @Component({})
 export default class DDateYAxis extends Vue {
@@ -209,8 +209,18 @@ export default class DDateYAxis extends Vue {
     // Get timezone offset
     let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate())));
 
+    // Map all days ranges
+    let mappedRanges = this.ranges
+      .filter(r => r.startDay === Days.AllDays)
+      .map((r: TimeRange): TimeRange[] =>
+        Object.values(Days).filter((d: string | Days) => typeof(d) === "number" && d !== Days.AllDays)
+          .map((d: string | Days): TimeRange => ({ ...r, startDay: d as Days, endDay: ((d as Days)++)%7 }))
+      )
+      .reduce((acc: TimeRange[], val: TimeRange[]): TimeRange[] => acc.concat(val), [])
+      .concat(this.ranges.filter(r => r.startDay !== Days.AllDays && r.endDay !== Days.AllDays));
+
     while (current < ge) {
-      am5.array.each(this.ranges, (range : TimeRange): void => {
+      am5.array.each(mappedRanges, (range : TimeRange): void => {
         let start = new Date(current);
         start.setDate(start.getDate() + range.startDay);
         start.setHours(start.getHours() + range.startHour);

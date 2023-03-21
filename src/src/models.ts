@@ -14,10 +14,10 @@ export interface ValueRange {
 }
 
 export interface TimeRange {
-  startDay: number;
+  startDay: Days;
   startHour: number;
   startMinute: number;
-  endDay: number;
+  endDay: Days;
   endHour: number;
   endMinute: number;
   color: string;
@@ -25,15 +25,26 @@ export interface TimeRange {
   label?: string;
 }
 
+export enum Days {
+  Monday    = 0,
+  Tuesday   = 1,
+  Wednesday = 2,
+  Thursday  = 3,
+  Friday    = 4,
+  Saturday  = 5,
+  Sunday    = 6,
+  AllDays   = 7
+}
+
 export enum ChartType {
-  None = 0,
-  XY = 1,
-  Pie = 2,
-  Heatmap = 3,
-  Slider = 4,
-  Gauge = 5,
+  None      = 0,
+  XY        = 1,
+  Pie       = 2,
+  Heatmap   = 3,
+  Slider    = 4,
+  Gauge     = 5,
   ScoreCard = 6,
-  Table = 7
+  Table     = 7
 }
 
 export enum AxisType {
