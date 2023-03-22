@@ -214,7 +214,7 @@ export default class DDateYAxis extends Vue {
       .filter(r => r.startDay === Days.AllDays)
       .map((r: TimeRange): TimeRange[] =>
         Object.values(Days).filter((d: string | Days) => typeof(d) === "number" && d !== Days.AllDays)
-          .map((d: string | Days): TimeRange => ({ ...r, startDay: d as Days, endDay: ((d as Days)++)%7 }))
+          .map((d: string | Days): TimeRange => ({ ...r, startDay: d as Days, endDay: (++(d as Days))%7 }))
       )
       .reduce((acc: TimeRange[], val: TimeRange[]): TimeRange[] => acc.concat(val), [])
       .concat(this.ranges.filter(r => r.startDay !== Days.AllDays && r.endDay !== Days.AllDays));

@@ -60,7 +60,7 @@ const makeLineSerie = (label, tZero, vZero, elapsedTime, rangeValue, values) => 
 
     let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
 
-    tZero += elapsedTime;
+    tZero += elapsedTime + (i%10 === 1 ? elapsedTime : 0);
     vZero += (Math.random() * rangeValue * plusOrMinus);
   }
 
@@ -74,12 +74,12 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      makeLineSerie("Level 1", 1674028800000, 225000, 36000000, 10000, 50),
-      makeLineSerie("Level 2", 1674028800000, 250000, 36000000, 10000, 50),
-      makeLineSerie("Level 3", 1674028800000, 275000, 36000000, 10000, 50),
-      // makeLineSerie("Level 4", 1674028800000, 275000, 36000000, 10000, 50),
-      // makeLineSerie("Level 5", 1674028800000, 275000, 36000000, 10000, 50),
-      // makeLineSerie("Level 6", 1674028800000, 275000, 36000000, 10000, 50),
+      makeLineSerie("Level 1", 1674028800000, 225000, 3600000, 10000, 50),
+      makeLineSerie("Level 2", 1674028800000, 250000, 3600000, 10000, 50),
+      makeLineSerie("Level 3", 1674028800000, 275000, 3600000, 10000, 50),
+      // makeLineSerie("Level 4", 1674028800000, 275000, 3600000, 10000, 50),
+      // makeLineSerie("Level 5", 1674028800000, 275000, 3600000, 10000, 50),
+      // makeLineSerie("Level 6", 1674028800000, 275000, 3600000, 10000, 50),
     ]
   },
   minHeight: '400px',
@@ -106,12 +106,12 @@ Default.args = {
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   xAxisLines: [
-    { value: 1674388800000, color: "#000000", tooltip: ["Triggered", "January 22nd 2023 12:00"], icon: "schedule" },
-    { value: 1674748800000, color: "#0000FF", tooltip: ["Resolved", "January 26th 2023 16:00"], icon: "block" }
+    // { value: 1674388800000, color: "#000000", tooltip: ["Triggered", "January 22nd 2023 12:00"], icon: "schedule" },
+    // { value: 1674748800000, color: "#0000FF", tooltip: ["Resolved", "January 26th 2023 16:00"], icon: "block" }
   ],
   xAxisRanges: [
-    { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.5, color: "#0000FF", label: "X"},
-    { startDay: 7, startHour: 20, startMinute: 30, endDay: 0, endHour: 22, endMinute: 30, opacity: 0.5, color: "#FF0000", label: "Y"}
+    // { startDay: 0, startHour: 6, startMinute: 30, endDay: 0, endHour: 20, endMinute: 30, opacity: 0.5, color: "#0000FF", label: "X"},
+    { startDay: 7, startHour: 20, startMinute: 30, endDay: 7, endHour: 6, endMinute: 30, opacity: 0, color: "#5f5f5f", label: "Nuit"}
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
