@@ -113,8 +113,6 @@ export default class DScoreCard extends Vue {
   }
 
   mounted(): void {
-    console.log(this.data);
-    
     this.resizeObserver = new ResizeObserver(() => {
       if (this.debounceResize != null) {
         clearTimeout(this.debounceResize);
