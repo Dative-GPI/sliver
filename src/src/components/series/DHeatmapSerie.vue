@@ -91,11 +91,23 @@ export default class DHeatmapSerie extends Vue {
   @Watch("minColor")
   onMinColorChange = this.setHeatRule;
 
+  @Prop({ required: false, default: undefined })
+  minValue!: number | undefined;
+
+  @Watch("minValue")
+  onMinValueChange = this.setLegend;
+
   @Prop({ required: false, default: "#ff0000" })
   maxColor!: string;
 
   @Watch("maxColor")
   onMaxColorChange = this.setHeatRule;
+
+  @Prop({ required: false, default: undefined })
+  maxValue!: number | undefined;
+
+  @Watch("maxValue")
+  onMaxValueChange = this.setLegend;
 
   @Prop({ required: false, default: undefined })
   heatRanges!: ValueRange[] | undefined;
@@ -145,6 +157,8 @@ export default class DHeatmapSerie extends Vue {
           target: this.serie!.columns.template,
           min: am5.color(this.minColor),
           max: am5.color(this.maxColor),
+          minValue: this.minValue,
+          maxValue: this.maxValue,
           dataField: "value",
           key: "fill"
         }]);
@@ -198,11 +212,17 @@ export default class DHeatmapSerie extends Vue {
   }
 
   setLegend(): void {
-    if (this.legend != null && [HeatRule.Gradient].includes(this.heatRule)) {
-      if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
+    if ([HeatRule.Gradient].includes(this.heatRule) && this.legend != null) {
+      if (this.minValue != null) {
+        this.legend!.set("startValue", this.minValue);
+      }
+      else if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
         this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
       }
-      if (this.legend!.get("endValue") == null || this.legend!.get("endValue")! < this.serie!.getPrivate("valueHigh")!) {
+      if (this.maxValue != null) {
+        this.legend!.set("endValue", this.maxValue);
+      }
+      else if (this.legend!.get("endValue") == null || this.legend!.get("endValue")! < this.serie!.getPrivate("valueHigh")!) {
         this.legend!.set("endValue", this.serie!.getPrivate("valueHigh")!);
       }
     }
