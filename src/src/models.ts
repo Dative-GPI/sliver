@@ -137,7 +137,9 @@ export interface ScoreCardSerie {
   decimalPlaces: number,
   heatRule: number,
   minColor: string,
+  minValue?: number,
   maxColor: string,
+  maxValue?: number,
   heatRanges: {
     startValue: number,
     endValue: number,

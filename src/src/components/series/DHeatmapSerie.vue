@@ -153,8 +153,25 @@ export default class DHeatmapSerie extends Vue {
         break;
       }
       case HeatRule.Gradient: {
+        let startColor = am5.color(this.minColor);
+        let endColor = am5.color(this.maxColor);
+
         this.serie!.set("heatRules", [{
           target: this.serie!.columns.template,
+          customFunction: (sprite: any, min, max, value) => {
+            if (value >= max) {
+              sprite.set("fill", am5.color(this.maxColor));
+              return;
+            }
+            if (value <= min) {
+              sprite.set("fill", am5.color(this.minColor));
+              return;
+            }
+            let r = startColor.r + (value / (max + min)) * (endColor.r - startColor.r);
+            let g = startColor.g + (value / (max + min)) * (endColor.g - startColor.g);
+            let b = startColor.b + (value / (max + min)) * (endColor.b - startColor.b);
+            sprite.set("fill", am5.Color.fromRGB(r, g, b));
+          },
           min: am5.color(this.minColor),
           max: am5.color(this.maxColor),
           minValue: this.minValue,
@@ -225,6 +242,7 @@ export default class DHeatmapSerie extends Vue {
       else if (this.legend!.get("endValue") == null || this.legend!.get("endValue")! < this.serie!.getPrivate("valueHigh")!) {
         this.legend!.set("endValue", this.serie!.getPrivate("valueHigh")!);
       }
+      this.legend!.show(75);
     }
   }
 

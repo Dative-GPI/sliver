@@ -113,6 +113,8 @@ export default class DScoreCard extends Vue {
   }
 
   mounted(): void {
+    console.log(this.data);
+    
     this.resizeObserver = new ResizeObserver(() => {
       if (this.debounceResize != null) {
         clearTimeout(this.debounceResize);
@@ -133,11 +135,20 @@ export default class DScoreCard extends Vue {
 
   color(value: number, serie: ScoreCardSerie): string {
     let result = "";
+    let minValue = serie.minValue != null ? serie.minValue : this.minValue;
+    let maxValue = serie.maxValue != null ? serie.maxValue : this.maxValue;
+
     switch (serie.heatRule) {
       case HeatRule.Gradient: {
-        const ratio = (value - this.minValue) / (this.maxValue - this.minValue);
-        const color = Color(serie.minColor).mix(Color(serie.maxColor), ratio);
-        result = color.hex();
+        if (value >= maxValue) {
+          result = serie.maxColor;
+          break;
+        }
+        if (value <= minValue) {
+          result = serie.minColor;
+          break;
+        }
+        result = Color(serie.minColor).mix(Color(serie.maxColor), (value - minValue) / (maxValue - minValue)).hex();
         break;
       }
       case HeatRule.Ranges: {
