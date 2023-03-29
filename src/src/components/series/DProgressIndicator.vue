@@ -10,9 +10,10 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, LEGEND, XAXIS } from "../../literals";
+import { AMROOT, CHART, LEGEND, XAXIS, XAXISVALIDATED, YAXIS, YAXISVALIDATED } from "../../literals";
 import { ColorSets, GetHashedColor } from "../../colors";
 import { textColor } from "../../helpers";
+import { SerieEnum } from "../../enums";
 
 
 @Component({})
@@ -26,8 +27,14 @@ export default class DProgressIndicator extends Vue {
   @InjectReactive(XAXIS)
   xAxis!: am5xy.ValueAxis<am5xy.AxisRendererX>;
 
-  @InjectReactive(XAXIS)
+  @InjectReactive(XAXISVALIDATED)
+  xAxisValidated!: () => void | undefined;
+
+  @InjectReactive(YAXIS)
   yAxis!: am5xy.ValueAxis<am5xy.AxisRendererY>;
+
+  @InjectReactive(YAXISVALIDATED)
+  yAxisValidated!: () => void | undefined;
 
   @InjectReactive(LEGEND)
   legend!: am5.Legend | null;
@@ -38,11 +45,11 @@ export default class DProgressIndicator extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
-  @Prop({ required: false, default: 0 })
-  value!: number;
+  @Prop({ required: false, default: "{name}: [bold]{value}[/]" })
+  tooltipText!: string;
 
-  @Watch("value")
-  onValueChange = this.setValue;
+  @Watch("tooltipText")
+  onTooltipTextChange = this.setTooltipText;
 
   @Prop({ required: false, default: 0 })
   colorIndex!: number;
@@ -62,7 +69,24 @@ export default class DProgressIndicator extends Vue {
   @Watch("colorSeed")
   onColorSeedChange = this.setColor;
 
-  progressIndicator: any = null;
+  @Prop({ required: false, default: false })
+  defaultHidden!: boolean;
+
+  @Prop({ required: false, default: 0 })
+  value!: number;
+
+  @Watch("value")
+  onValueChange = this.setValue;
+
+  get color(): am5.Color {
+    switch (this.colorSet) {
+      case ColorSets.Hash: return GetHashedColor(this.colorSeed, this.name);
+      default: return this.chart!.get("colors")!.getIndex(this.colorIndex);
+    }
+  }
+
+  progressIndicator: am5.Graphics | null = null;
+  axisDataItem: any = null;
   tooltip: am5.Tooltip | null = null;
 
   upAndRunning: boolean = false;
@@ -70,19 +94,40 @@ export default class DProgressIndicator extends Vue {
   setName(): void {
     // Remove from legend
     if (this.legend != null) {
-      this.legend.data.removeValue(this.progressIndicator!);
+      this.legend.data.removeValue(this.axisDataItem!);
     }
 
-    this.progressIndicator!.set("name", this.name);
+    this.axisDataItem!.set("name", this.name);
 
     // Add to legend (otherwise the name is not updated)
     if (this.legend != null) {
-      this.legend.data.push(this.progressIndicator!);
+      this.legend.data.push(this.axisDataItem!);
+    }
+  }
+
+  setTooltipText(): void {
+    this.progressIndicator!.set("tooltipText", this.tooltipText);
+  }
+
+  setColor(): void {
+    // Remove from legend
+    if (this.legend != null) {
+      this.legend.data.removeValue(this.axisDataItem!);
+    }
+
+    this.axisDataItem!.set("fill", this.color);
+    this.axisDataItem!.get("bullet").get("sprite").set("fill", this.color);
+    this.tooltip!.label.set("fill", textColor(this.color.toCSSHex()));
+    this.tooltip!.get("background")!.set("fill", this.color);
+
+    // Add to legend (otherwise the name is not updated)
+    if (this.legend != null) {
+      this.legend.data.push(this.axisDataItem!);
     }
   }
 
   setValue(): void {
-    this.progressIndicator!.animate({
+    this.axisDataItem!.animate({
       key: "value",
       to: this.value,
       duration: 500,
@@ -90,58 +135,46 @@ export default class DProgressIndicator extends Vue {
     });
   }
 
-  setColor(): void {
-    // Remove from legend
-    if (this.legend != null) {
-      this.legend.data.removeValue(this.progressIndicator!);
-    }
-
-    let color = this.getColor();
-
-    this.progressIndicator!.set("fill", color);
-    this.progressIndicator!.get("bullet").get("sprite").set("fill", color);
-    this.tooltip!.label.set("fill", textColor(color.toCSSHex()));
-    this.tooltip!.get("background")!.set("fill", color);
-
-    // Add to legend (otherwise the name is not updated)
-    if (this.legend != null) {
-      this.legend.data.push(this.progressIndicator!);
-    }
-  }
-
-  getColor(): am5.Color {
-    switch (this.colorSet) {
-      case ColorSets.Hash: return GetHashedColor(this.colorSeed, this.name);
-      default: return this.chart!.get("colors")!.getIndex(this.colorIndex);
-    }
-  }
-
   mounted(): void {
     this.tooltip = am5.Tooltip.new(this.root, {
       autoTextColor: false
     });
 
+    this.progressIndicator = am5.Graphics.new(this.root, {
+      tooltip: this.tooltip!,
+      tooltipY: 0,
+      centerY: 80,
+      centerX: am5.p50,
+      svgPath: "M40.8 20.4C40.8 9.1 31.7 0 20.4 0C9.1 0 0 9.1 0 20.4C0 31.7 20.4 52.8 20.4 52.8C20.4 52.8 40.8 31.7 40.8 20.4Z",
+      userData: { serie: SerieEnum.ProgressIndicator }
+    });
+
     // Add to axis
-    this.progressIndicator = this.xAxis.makeDataItem({
+    this.axisDataItem = this.xAxis.makeDataItem({
       bullet: am5xy.AxisBullet.new(this.root, {
-        sprite: am5.Graphics.new(this.root, {
-          tooltip: this.tooltip!,
-          tooltipText: "{name}: [bold]{value}[/]",
-          tooltipY: 0,
-          centerY: 85,
-          centerX: am5.p50,
-          svgPath: "M40.8 20.4C40.8 9.1 31.7 0 20.4 0C9.1 0 0 9.1 0 20.4C0 31.7 20.4 52.8 20.4 52.8C20.4 52.8 40.8 31.7 40.8 20.4Z"
-        })
+        sprite: this.progressIndicator
       })
     });
 
     this.setName();
+    this.setTooltipText();
     this.setColor();
 
-    this.xAxis.createAxisRange(this.progressIndicator);
-
-    this.setValue();
+    this.xAxis.createAxisRange(this.axisDataItem);
     
+    this.setValue();
+
+    if (this.xAxisValidated != null) {
+      this.xAxisValidated();
+    }
+    if (this.yAxisValidated != null) {
+      this.yAxisValidated();
+    }
+    
+    if (this.defaultHidden) {
+      this.progressIndicator.hide();
+      this.axisDataItem.hide();
+    }
     this.upAndRunning = true;
   }
 
@@ -152,14 +185,14 @@ export default class DProgressIndicator extends Vue {
     }
 
     // Remove from axis
-    this.xAxis.axisRanges.removeValue(this.progressIndicator!);
+    this.xAxis.axisRanges.removeValue(this.axisDataItem!);
 
     // Dispose
     if(this.tooltip != null && !this.tooltip!.isDisposed()) {
       this.tooltip!.dispose();
     }
     if (this.progressIndicator != null && !this.progressIndicator!.isDisposed()) {
-      this.xAxis!.disposeDataItem(this.progressIndicator!);
+      this.xAxis!.disposeDataItem(this.axisDataItem!);
     }
   }
 }

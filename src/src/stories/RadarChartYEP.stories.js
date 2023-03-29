@@ -61,11 +61,11 @@ Default.args = {
   axisMin: 0,
   axisMax: 200,
   ranges: [
-    { startValue: 0,   endValue: 40,  opacity: 1, color: "#ff3c3c", label: "Bad" },
-    { startValue: 40,  endValue: 80,  opacity: 1, color: "#ff8c3c", label: "Somewhat bad" },
-    { startValue: 80,  endValue: 120, opacity: 1, color: "#b4b4b4", label: "Just meh" },
-    { startValue: 120, endValue: 160, opacity: 1, color: "#aaff64", label: "Somewhat good" },
-    { startValue: 160, endValue: 200, opacity: 1, color: "#64ff8c", label: "Good" }
+    { startValue: 0,   endValue: 40,  opacity: 0.5, color: "#ff3c3c", label: "Bad" },
+    { startValue: 40,  endValue: 80,  opacity: 0.5, color: "#ff8c3c", label: "Somewhat bad" },
+    { startValue: 80,  endValue: 120, opacity: 0.5, color: "#b4b4b4", label: "Just meh" },
+    { startValue: 120, endValue: 160, opacity: 0.5, color: "#aaff64", label: "Somewhat good" },
+    { startValue: 160, endValue: 200, opacity: 0.5, color: "#64ff8c", label: "Good" }
   ],
   unit: "mA",
   minHeight: '400px',

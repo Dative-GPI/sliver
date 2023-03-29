@@ -5,14 +5,15 @@
 </template>
 
 <script lang="ts">
+import _ from "lodash";
 import { Component, InjectReactive, Vue, Prop, ProvideReactive, Watch } from "vue-property-decorator";
 
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, XAXIS } from "../../literals";
+import { AMROOT, CHART, CURSOR, XAXIS, XAXISVALIDATED } from "../../literals";
+import { isEmptyString } from "../../helpers";
 import { ValueRange } from "../../models";
-import { textColor } from "../../helpers";
 
 @Component({})
 export default class DValueXAxis extends Vue {
@@ -98,11 +99,15 @@ export default class DValueXAxis extends Vue {
   onUnitChange = this.setUnit;
 
   @ProvideReactive(XAXIS)
-  axis: any | null = null;
+  axis: any = null;
+
+  @ProvideReactive(XAXISVALIDATED)
+  serieValidated: () => void = _.debounce(this.setRanges, 500);
 
   tooltip: am5.Tooltip | null = null;
+  rangeItems: am5.DataItem<am5xy.IValueAxisDataItem>[] = [];
 
-  upAndRunning = false;
+  upAndRunning: boolean = false;
 
   setOpposite(): void {
     this.axis!.get("renderer").set("opposite", this.opposite);
@@ -183,36 +188,37 @@ export default class DValueXAxis extends Vue {
   }
   
   setRanges(): void {
-    for (let i = this.axis!.axisRanges.values.length - 1; i >= 0; i--) {
-      let range = this.axis!.axisRanges.values[i];
-      this.axis!.axisRanges.removeValue(range!);
-      range!.dispose();
+    // Remove former ranges
+    for (let rangeItem of this.rangeItems) {
+      this.axis!.axisRanges!.removeValue(rangeItem);
+      rangeItem.dispose();
     }
-    
-    if (this.ranges && this.ranges!.length > 0) {
-      am5.array.each(this.ranges!, (range : ValueRange) => {
-        let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
+    this.rangeItems = [];
 
-        if (!(range.label == null || range.label === "" || /^\s*$/.test(range.label))) {
-          axisRange.get("label")!.setAll({
-            text: range.label,
-            inside: true,
-            centerY: 30,
-            fill: textColor(range.color)
-          });
-        }
+    if (this.ranges == null || this.ranges.length < 1) {
+      return;
+    }
 
-        axisRange.get("axisFill")!.setAll({
-          visible: true,
-          fillOpacity: range.opacity,
+    for (let range of this.ranges) {
+      let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
+        value: range.startValue,
+        endValue: range.endValue
+      }));
+      axisRange.get("grid").set("strokeOpacity", 0);
+      axisRange.get("axisFill").setAll({
+        visible: true,
+        fillOpacity: range.opacity,
+        fill: am5.color(range.color)
+      });
+      if (!isEmptyString(range.label)) {
+        axisRange.get("label").setAll({
+          text: range.label,
+          inside: true,
+          centerY: 23 + this.strokeWidth,
           fill: am5.color(range.color)
         });
-
-        axisRange.setAll({
-          value: range.startValue,
-          endValue: range.endValue
-        });
-      });
+      }
+      this.rangeItems.push(axisRange);
     }
   }
 
@@ -264,7 +270,6 @@ export default class DValueXAxis extends Vue {
     this.setMin();
     this.setMax();
     this.setStrictMinMax();
-    this.setRanges();
     this.setStrokeOpacity();
     this.setStrokeWidth();
     this.setUnit();

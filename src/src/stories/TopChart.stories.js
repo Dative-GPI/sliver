@@ -51,7 +51,7 @@ const Template = (args, { argTypes }) => ({
 const makeColumnSerie = (name, categories, rangeValue) => {
   var data = [];
   for (let i = 0; i < categories.length; i++) {
-    let value = Math.floor(Math.random() * rangeValue) + 1;
+    let value = Math.floor(Math.random() * rangeValue) + 30;
     data.push({
       categoryY: categories[i],
       categoryCodeY: categories[i],

@@ -10,7 +10,7 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
+import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS, YAXISVALIDATED } from "../../literals";
 import { textColor } from "../../helpers";
 import { SerieEnum } from "../../enums";
 import { ColorSets, GetHashedColor } from "../../colors";
@@ -29,10 +29,13 @@ export default class DHistogramSerie extends Vue {
   xAxis!: am5xy.DateAxis<am5xy.AxisRendererX>;
 
   @InjectReactive(XAXISVALIDATED)
-  xAxisValidated!: () => void;
+  xAxisValidated!: () => void | undefined;
 
   @InjectReactive(YAXIS)
   yAxis!: am5xy.ValueAxis<am5xy.AxisRendererY>;
+
+  @InjectReactive(YAXISVALIDATED)
+  yAxisValidated!: () => void | undefined;
 
   @InjectReactive(CURSOR)
   cursor!: am5xy.XYCursor | null;
@@ -96,6 +99,9 @@ export default class DHistogramSerie extends Vue {
 
   @Watch("colorSeed")
   onColorSeedChange = this.setColor;
+
+  @Prop({ required: false, default: false })
+  defaultHidden!: boolean;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -181,7 +187,6 @@ export default class DHistogramSerie extends Vue {
       openValueXField: this.openDateXField,
       valueXField: this.closeDateXField,
       valueYField: this.valueYField,
-      sequencedInterpolation: true,
       userData: { serie: SerieEnum.HistogramSerie }
     }));
 
@@ -189,7 +194,15 @@ export default class DHistogramSerie extends Vue {
       width: am5.percent(0)
     });
 
-    this.serie.events.on("datavalidated", this.xAxisValidated);
+    this.serie.events.on("datavalidated", () => {
+      if (this.xAxisValidated != null) {
+        this.xAxisValidated();
+      }
+      if (this.yAxisValidated != null) {
+        this.yAxisValidated();
+      }
+    });
+
 
     // Set updatable properties
     this.setName();
@@ -204,6 +217,9 @@ export default class DHistogramSerie extends Vue {
     // Set data
     this.setData();
     
+    if (this.defaultHidden) {
+      this.serie.hide();
+    }
     this.upAndRunning = true;
   }
 

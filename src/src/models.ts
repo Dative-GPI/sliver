@@ -41,8 +41,8 @@ export enum ChartType {
   XY        = 1,
   Pie       = 2,
   Heatmap   = 3,
-  Slider    = 4,
-  Gauge     = 5,
+  Indicator = 4,
+  Radar     = 5,
   ScoreCard = 6,
   Table     = 7
 }
@@ -68,8 +68,8 @@ export enum SerieType {
   StackedBars = 10,
   Pie         = 11,
   Heatmap     = 12,
-  Slider      = 13,
-  Gauge       = 14,
+  Indicator   = 13,
+  Radar       = 14,
   ScoreCard   = 15,
   Table       = 16
 }

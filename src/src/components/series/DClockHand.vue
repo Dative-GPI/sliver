@@ -8,13 +8,12 @@
 import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decorator";
 
 import * as am5 from "@amcharts/amcharts5";
-import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
+import * as am5radar from "@amcharts/amcharts5/radar";
 
 import { AMROOT, CHART, LEGEND, XAXIS } from "../../literals";
-import { SerieEnum } from "../../enums";
 import { ColorSets, GetHashedColor } from "../../colors";
-
+import { SerieEnum } from "../../enums";
 
 @Component({})
 export default class DClockHand extends Vue {
@@ -35,12 +34,6 @@ export default class DClockHand extends Vue {
 
   @Watch("name")
   onNameChange = this.setName;
-
-  @Prop({ required: false, default: 0 })
-  value!: number;
-
-  @Watch("value")
-  onValueChange = this.setValue;
 
   @Prop({ required: false, default: 0 })
   colorIndex!: number;
@@ -90,6 +83,22 @@ export default class DClockHand extends Vue {
   @Watch("handTooltipX")
   onHandTooltipXChange = this.setHandTooltipX;
 
+  @Prop({ required: false, default: false })
+  defaultHidden!: boolean;
+
+  @Prop({ required: false, default: 0 })
+  value!: number;
+
+  @Watch("value")
+  onValueChange = this.setValue;
+
+  get color(): am5.Color {
+    switch (this.colorSet) {
+      case ColorSets.Hash: return GetHashedColor(this.colorSeed, this.name);
+      default: return this.chart.get("colors")!.getIndex(this.colorIndex);
+    }
+  }
+
   clockHand: am5radar.ClockHand | null = null;
   axisDataItem: any = null;
 
@@ -109,37 +118,19 @@ export default class DClockHand extends Vue {
     }
   }
 
-  setValue(): void {
-    this.axisDataItem!.animate({
-      key: "value",
-      to: this.value,
-      duration: 500,
-      easing: am5.ease.out(am5.ease.cubic)
-    });
-  }
-
   setColor(): void {
     // Remove from legend
     if (this.legend) {
       this.legend.data.removeValue(this.axisDataItem);
     }
 
-    let color = this.getColor();
-
-    this.clockHand!.pin.set("fill", color);
-    this.clockHand!.hand.set("fill", color);
-    this.axisDataItem!.set("fill", color);
+    this.clockHand!.pin.set("fill", this.color);
+    this.clockHand!.hand.set("fill", this.color);
+    this.axisDataItem!.set("fill", this.color);
 
     // Add to legend (otherwise the color is not updated)
     if (this.legend != null) {
       this.legend.data.push(this.axisDataItem);
-    }
-  }
-
-  getColor(): am5.Color {
-    switch (this.colorSet) {
-      case ColorSets.Hash: return GetHashedColor(this.colorSeed, this.name);
-      default: return this.chart!.get("colors")!.getIndex(this.colorIndex);
     }
   }
 
@@ -161,6 +152,15 @@ export default class DClockHand extends Vue {
 
   setHandTooltipX(): void {
     this.clockHand!.hand.set("tooltipX", am5.percent(this.handTooltipX));
+  }
+
+  setValue(): void {
+    this.axisDataItem!.animate({
+      key: "value",
+      to: this.value,
+      duration: 500,
+      easing: am5.ease.out(am5.ease.cubic)
+    });
   }
 
   mounted(): void {
@@ -187,6 +187,10 @@ export default class DClockHand extends Vue {
     
     this.setValue();
     
+    if (this.defaultHidden) {
+      this.clockHand.hide();
+      this.axisDataItem.hide();
+    }
     this.upAndRunning = true;
   }
 

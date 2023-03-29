@@ -39,16 +39,18 @@ const Template = (args, { argTypes }) => ({
       :yAxisOpposite="yAxisOpposite"
       :yAxisShowTooltip="yAxisShowTooltip"
       :yAxisTooltipNumberFormat="yAxisTooltipNumberFormat"
+      :yAxisRanges="yAxisRanges"
+      :yAxisUnit="yAxisUnit"
     />`,
 });
 
-const makeColumnSerie = (name, categories, rangeValue) => {
+const makeColumnSerie = (name, categories, rangeValue, minValue) => {
   var data = [];
   for (let i = 0; i < categories.length; i++) {
     data.push({
       categoryX: categories[i],
       categoryCodeX: categories[i],
-      valueY: Math.floor(Math.random() * rangeValue)
+      valueY: minValue + Math.floor(Math.random() * rangeValue)
     });
   }
 
@@ -62,9 +64,9 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeColumnSerie("Line 1", ["Grapefruit", "Coconut", "Passion fruit", "Banana"], 250000 ) },
-      { ...makeColumnSerie("Line 2", ["Grapefruit", "Apple", "Peach", "Pear"], 350000 ) },
-      { ...makeColumnSerie("Line 3", ["Grapefruit", "Pomelo", "Lime", "Lemon"], 350000 ) }
+      { ...makeColumnSerie("Line 1", ["Grapefruit", "Coconut", "Passion fruit", "Banana"], 250000, 0 ) },
+      { ...makeColumnSerie("Line 2", ["Grapefruit", "Apple", "Peach", "Pear"], 350000, 50000 ) },
+      { ...makeColumnSerie("Line 3", ["Grapefruit", "Pomelo", "Lime", "Lemon"], 350000, 0 ) }
     ]
   },
   minHeight: '400px',
@@ -94,5 +96,9 @@ Default.args = {
   xAxisLabelsTooltipText: "{categoryX}",
   yAxisOpposite: false,
   yAxisShowTooltip: true,
-  yAxisTooltipNumberFormat: "#,###.###### a"
+  yAxisTooltipNumberFormat: "#,###.###### a",
+  yAxisRanges: [
+    { startValue: 50000, endValue: 51000, opacity: 0.5, color: "#0000FF", label: "Target" }
+  ],
+  yAxisUnit: "",
 };

@@ -12,8 +12,8 @@ import * as am5percent from "@amcharts/amcharts5/percent";
 import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, LEGEND, LEGEND_DEBUG } from "../../literals";
 import { HeatRule, LayoutEnum, PositionEnum } from "../../enums";
+import { AMROOT, CHART, LEGEND } from "../../literals";
 import { ValueRange } from "../../models";
 
 @Component({})
@@ -98,9 +98,6 @@ export default class DHeatLegend extends Vue {
 
   @ProvideReactive(LEGEND)
   legend: am5.HeatLegend | am5.Legend | null = null;
-
-  @ProvideReactive(LEGEND_DEBUG)
-  legendDebug: number = 0;
 
   upAndRunning: boolean = false;
 

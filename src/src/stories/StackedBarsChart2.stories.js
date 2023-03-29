@@ -64,7 +64,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeColumnSerie("Mission success", ["Captain America", "Iron Man", "Black panther", "Captain Marvel", "Ant-man", "Spider-Man", "Black widow", "Hulk", "Thor", "Hawkeye", "Scarlet witch", "Vision", "Doctor strange"], 10 ) }
+      { ...makeColumnSerie("Mission success",  ["Ant-man", "Captain America", "Iron Man", "Black panther", "Captain Marvel", "Spider-Man", "Black widow", "Hulk", "Thor", "Hawkeye", "Scarlet witch", "Vision", "Doctor strange"], 10 ) },
+      { ...makeColumnSerie("Mission failures", ["Ant-man", "Captain America", "Iron Man", "Black panther", "Captain Marvel", "Spider-Man", "Black widow", "Hulk", "Thor", "Hawkeye", "Scarlet witch", "Vision", "Doctor strange"], 2 ) }
     ]
   },
   minHeight: '400px',

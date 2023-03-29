@@ -10,7 +10,7 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS } from "../../literals";
+import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS, YAXISVALIDATED } from "../../literals";
 import { setStepLineSerieBullets, textColor } from "../../helpers";
 import { ColorSets, GetHashedColor } from "../../colors";
 import { SerieEnum } from "../../enums";
@@ -27,10 +27,13 @@ export default class DStepLineSerie extends Vue {
   xAxis!: am5xy.DateAxis<am5xy.AxisRendererX>;
 
   @InjectReactive(XAXISVALIDATED)
-  xAxisValidated!: () => void;
+  xAxisValidated!: () => void | undefined;
 
   @InjectReactive(YAXIS)
   yAxis!: am5xy.ValueAxis<am5xy.AxisRendererY>;
+
+  @InjectReactive(YAXISVALIDATED)
+  yAxisValidated!: () => void | undefined;
 
   @InjectReactive(CURSOR)
   cursor!: am5xy.XYCursor | null;
@@ -109,6 +112,9 @@ export default class DStepLineSerie extends Vue {
 
   @Watch("colorSeed")
   onColorSeedChange = this.setColor;
+  
+  @Prop({ required: false, default: false })
+  defaultHidden!: boolean;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -200,11 +206,17 @@ export default class DStepLineSerie extends Vue {
       yAxis: this.yAxis,
       valueXField: this.dateXField,
       valueYField: this.valueYField,
-      sequencedInterpolation: true,
       userData: { serie: SerieEnum.StepLineSerie }
     }));
 
-    this.serie.events.on("datavalidated", this.xAxisValidated);
+    this.serie.events.on("datavalidated", () => {
+      if (this.xAxisValidated != null) {
+        this.xAxisValidated();
+      }
+      if (this.yAxisValidated != null) {
+        this.yAxisValidated();
+      }
+    });
 
     // Set updatable properties
     this.setName();
@@ -220,7 +232,10 @@ export default class DStepLineSerie extends Vue {
     
     // Set data
     this.setData();
-    
+
+    if (this.defaultHidden) {
+      this.serie.hide();
+    }
     this.upAndRunning = true;
   }
 

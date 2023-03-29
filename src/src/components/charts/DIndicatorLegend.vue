@@ -7,23 +7,22 @@
 <script lang="ts">
 import { Component, InjectReactive, Vue, Prop, ProvideReactive, Watch } from "vue-property-decorator";
 
-import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
+import * as am5 from "@amcharts/amcharts5";
 
-import { setLineSerieBullets, setScatterPlotSerieBullets, setStepLineSerieBullets } from "../../helpers";
+import { CHART, LEGEND, LEGENDROOT } from "../../literals";
 import { LayoutEnum, PositionEnum, SerieEnum } from "../../enums";
-import { AMROOT, CHART, LEGEND } from "../../literals";
 import { ChartType } from "../../models";
 
 @Component({})
 export default class DLegend extends Vue {
-  @InjectReactive(AMROOT)
+  @InjectReactive(LEGENDROOT)
   root!: am5.Root;
 
   @InjectReactive(CHART)
-  chart!: am5xy.XYChart | am5percent.PieChart | am5radar.RadarChart;
+  chart!: am5xy.XYChart;
 
   @Prop({ required: false, default: true })
   enabled!: boolean;
@@ -113,35 +112,15 @@ export default class DLegend extends Vue {
 
   setEnabled(): void {
     if (this.enabled && this.legend == null) {
-      // Add to chart
-      this.legend = this.chart.children.push(am5.Legend.new(this.root, {}));
+      // Add to container
+      this.legend = this.root.container.children.push(am5.Legend.new(this.root, {}));
 
       this.legend.itemContainers.template.events.on("click", (event: am5.ISpritePointerEvent) => {
-        switch ((this.chart! as any).get("userData").chartType) {
-          case ChartType.Radar: {
+        switch (this.chart!.get("userData").chartType) {
+          case ChartType.Indicator: {
             var eventClockHand = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
             if (eventClockHand.isHidden()) {
               eventClockHand.get("bullet")!.get("sprite")!.show();
-            }
-            return;
-          }
-          case ChartType.XY: {
-            var eventSerie = event!.target!.dataItem!.dataContext as am5.Series;
-            if (eventSerie.isHidden()) {
-              switch (eventSerie.get("userData").serie) {
-                case SerieEnum.LineSerie: {
-                  setLineSerieBullets(eventSerie, this.root);
-                  break;
-                }
-                case SerieEnum.ScatterPlotSerie: {
-                  setScatterPlotSerieBullets(eventSerie, this.root);
-                  break;
-                }
-                case SerieEnum.StepLineSerie: {
-                  setStepLineSerieBullets(eventSerie, this.root);
-                  break;
-                }
-              }
             }
             return;
           }
@@ -149,19 +128,19 @@ export default class DLegend extends Vue {
       });
 
       this.legend.itemContainers.template.events.on("dblclick", (event: am5.ISpritePointerEvent) => {
-        switch ((this.chart! as any).get("userData").chartType) {
-          case ChartType.Radar: {
-            var eventClockHand = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
-            eventClockHand.show();
-            for (let xAxis of (this.chart! as am5radar.RadarChart).xAxes) {
+        switch (this.chart!.get("userData").chartType) {
+          case ChartType.Indicator: {
+            var eventIndicator = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
+            eventIndicator.show();
+            for (let xAxis of this.chart!.xAxes) {
               for (let axisRange of xAxis.axisRanges) {
-                if (axisRange === eventClockHand) {
+                if (axisRange === eventIndicator) {
                   continue;
                 }
                 if (axisRange.get("bullet") != null) {
                   if (axisRange.get("bullet")!.get("sprite") != null) {
                     if (axisRange.get("bullet")!.get("sprite")!.get("userData") != null) {
-                      if (axisRange.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ClockHand) {
+                      if (axisRange.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ProgressIndicator) {
                         axisRange.hide();
                       }
                     }
@@ -171,35 +150,25 @@ export default class DLegend extends Vue {
             }
             return;
           }
-          case ChartType.XY: {
-            var eventSerie = event!.target!.dataItem!.dataContext as am5.Series;
-            eventSerie.show();
-            this.chart!.series.each((serie: am5.Series) => {
-              if (serie != eventSerie && !serie.isHidden()) {
-                serie.hide();
-              }
-            });
-            return;
-          }
         }
       });
 
       this.legend.itemContainers.template.events.on("pointerover", (event: am5.ISpritePointerEvent) => {
-        switch ((this.chart! as any).get("userData").chartType) {
-          case ChartType.Radar: {
-            var eventClockHand = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
-            if (eventClockHand.isHidden()) {
+        switch (this.chart!.get("userData").chartType) {
+          case ChartType.Indicator: {
+            var eventIndicator = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
+            if (eventIndicator.isHidden()) {
               return;
             }
-            for (let xAxis of (this.chart! as am5radar.RadarChart).xAxes) {
+            for (let xAxis of this.chart!.xAxes) {
               for (let axisRange of xAxis.axisRanges) {
-                if (axisRange === eventClockHand) {
+                if (axisRange === eventIndicator) {
                   continue;
                 }
                 if (axisRange.get("bullet") != null) {
                   if (axisRange.get("bullet")!.get("sprite") != null) {
                     if (axisRange.get("bullet")!.get("sprite")!.get("userData") != null) {
-                      if (axisRange.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ClockHand) {
+                      if (axisRange.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ProgressIndicator) {
                         axisRange.get("bullet")!.get("sprite")!.set("opacity", 0);
                       }
                     }
@@ -209,44 +178,18 @@ export default class DLegend extends Vue {
             }
             return;
           }
-          case ChartType.XY: {
-            var eventSerie = (event!.target!.dataItem!.dataContext as am5.Series);
-            if (eventSerie.isHidden()) {
-              return;
-            }
-            this.chart!.series.each((serie: am5.Series) => {
-              if (serie != eventSerie) {
-                serie.set("opacity", 0);
-                switch (serie.get("userData").serie) {
-                  case SerieEnum.LineSerie: {
-                    setLineSerieBullets(serie, this.root);
-                    break;
-                  }
-                  case SerieEnum.ScatterPlotSerie: {
-                    setScatterPlotSerieBullets(serie, this.root);
-                    break;
-                  }
-                  case SerieEnum.StepLineSerie: {
-                    setStepLineSerieBullets(serie, this.root);
-                    break;
-                  }
-                }
-              }
-            });
-            return;
-          }
         }
       });
 
-      this.legend.itemContainers.template.events.on("pointerout", (event: am5.ISpritePointerEvent) => {
-        switch ((this.chart! as any).get("userData").chartType) {
-          case ChartType.Radar: {
-            for (let xAxis of (this.chart! as am5radar.RadarChart).xAxes) {
+      this.legend.itemContainers.template.events.on("pointerout", () => {
+        switch ((this.chart!as any).get("userData").chartType) {
+          case ChartType.Indicator: {
+            for (let xAxis of this.chart!.xAxes) {
               for (let axisRange of xAxis.axisRanges) {
                 if (axisRange.get("bullet") != null) {
                   if (axisRange.get("bullet")!.get("sprite") != null) {
                     if (axisRange.get("bullet")!.get("sprite")!.get("userData") != null) {
-                      if (axisRange.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ClockHand) {
+                      if (axisRange.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ProgressIndicator) {
                         axisRange.get("bullet")!.get("sprite")!.set("opacity", 1);
                       }
                     }
@@ -256,29 +199,6 @@ export default class DLegend extends Vue {
             }
             return;
           }
-          case ChartType.XY: {
-            var eventSerie = event!.target!.dataItem!.dataContext as am5.Series;
-            this.chart!.series.each((serie: am5.Series) => {
-              if (serie != eventSerie) {
-                serie.set("opacity", 1);
-                switch (serie.get("userData").serie) {
-                  case SerieEnum.LineSerie: {
-                    setLineSerieBullets(serie, this.root);
-                    break;
-                  }
-                  case SerieEnum.ScatterPlotSerie: {
-                    setScatterPlotSerieBullets(serie, this.root);
-                    break;
-                  }
-                  case SerieEnum.StepLineSerie: {
-                    setStepLineSerieBullets(serie, this.root);
-                    break;
-                  }
-                }
-              }
-            });
-            return;
-          }
         }
       });
 
@@ -286,8 +206,8 @@ export default class DLegend extends Vue {
       this.setPosition();
     }
     else if (!this.enabled && this.legend != null) {
-      // Remove from chart
-      this.chart!.children.removeValue(this.legend!);
+      // Remove from container
+      this.root.container.children.removeValue(this.legend!);
 
       // Dispose
       this.legend!.dispose();
@@ -303,8 +223,8 @@ export default class DLegend extends Vue {
 
   destroyed(): void {
     if (this.legend != null) {
-      // Remove from chart
-      this.chart!.children.removeValue(this.legend!);
+      // Remove from container
+      this.root.container.children.removeValue(this.legend!);
 
       // Dispose
       this.legend!.dispose();

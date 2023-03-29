@@ -10,7 +10,7 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, YAXIS } from "../../literals";
+import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS, YAXISVALIDATED } from "../../literals";
 import { updateCategories, addSerie, removeSerie } from "../../helpers";
 import { HeatRule, SerieEnum } from "../../enums";
 import { ValueRange } from "../../models";
@@ -28,8 +28,14 @@ export default class DHeatmapSerie extends Vue {
   @InjectReactive(XAXIS)
   xAxis!: am5xy.DateAxis<am5xy.AxisRendererX> | am5xy.CategoryAxis<am5xy.AxisRendererX>;
 
+  @InjectReactive(XAXISVALIDATED)
+  xAxisValidated!: () => void | undefined;
+
   @InjectReactive(YAXIS)
   yAxis!: am5xy.CategoryAxis<am5xy.AxisRendererY>;
+
+  @InjectReactive(YAXISVALIDATED)
+  yAxisValidated!: () => void | undefined;
 
   @InjectReactive(CURSOR)
   cursor!: am5xy.XYCursor | null;
@@ -250,9 +256,6 @@ export default class DHeatmapSerie extends Vue {
     this.serieId = Math.random();
 
     this.serie = this.chart.series.push(am5xy.ColumnSeries.new(this.root, {
-      calculateAggregates: true,
-      stroke: am5.color("#ffffff"),
-      clustered: false,
       name: this.name,
       xAxis: this.xAxis,
       yAxis: this.yAxis,
@@ -261,6 +264,9 @@ export default class DHeatmapSerie extends Vue {
       categoryXField: this.codeXField,
       categoryYField: this.codeYField,
       valueField: this.sizeField,
+      stroke: am5.color("#ffffff"),
+      clustered: false,
+      calculateAggregates: true,
       userData: { serie: SerieEnum.HeatmapSerie }
     }));
 
@@ -270,6 +276,16 @@ export default class DHeatmapSerie extends Vue {
       strokeOpacity: 0.1,
       strokeWidth: 2
     });
+
+    this.serie.events.on("datavalidated", () => {
+      if (this.xAxisValidated != null) {
+        this.xAxisValidated();
+      }
+      if (this.yAxisValidated != null) {
+        this.yAxisValidated();
+      }
+    });
+
 
     // Set updatable properties
     this.setName();

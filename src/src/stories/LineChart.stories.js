@@ -106,12 +106,12 @@ Default.args = {
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   xAxisLines: [
-    // { value: 1674388800000, color: "#000000", tooltip: ["Triggered", "January 22nd 2023 12:00"], icon: "schedule" },
-    // { value: 1674748800000, color: "#0000FF", tooltip: ["Resolved", "January 26th 2023 16:00"], icon: "block" }
+    { value: 1674028800000 + 2 * 3600000, color: "#000000", tooltip: ["Triggered", "January 22nd 2023 12:00"], icon: "schedule" },
+    { value: 1674028800000 + 5 * 3600000, color: "#0000FF", tooltip: ["Resolved", "January 26th 2023 16:00"], icon: "block" }
   ],
   xAxisRanges: [
-    // { startDay: 0, startHour: 6, startMinute: 30, endDay: 0, endHour: 20, endMinute: 30, opacity: 0.5, color: "#0000FF", label: "X"},
-    { startDay: 7, startHour: 20, startMinute: 30, endDay: 7, endHour: 6, endMinute: 30, opacity: 0, color: "#5f5f5f", label: "Nuit"}
+    { startDay: 3, startHour: 6, startMinute: 30, endDay: 3, endHour: 7, endMinute: 30, opacity: 0.15, color: "#0000FF", label: "X"},
+    { startDay: 7, startHour: 20, startMinute: 30, endDay: 7, endHour: 23, endMinute: 30, opacity: 0.15, color: "#5f5f5f", label: "Nuit"}
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,

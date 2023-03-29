@@ -28,13 +28,13 @@ export default class DLineSerie extends Vue {
   xAxis!: am5xy.DateAxis<am5xy.AxisRendererX>;
 
   @InjectReactive(XAXISVALIDATED)
-  xAxisValidated!: () => void;
+  xAxisValidated!: () => void | undefined;
 
   @InjectReactive(YAXIS)
   yAxis!: am5xy.ValueAxis<am5xy.AxisRendererY>;
 
   @InjectReactive(YAXISVALIDATED)
-  yAxisValidated!: () => void;
+  yAxisValidated!: () => void | undefined;
 
   @InjectReactive(CURSOR)
   cursor!: am5xy.XYCursor | null;
@@ -143,6 +143,9 @@ export default class DLineSerie extends Vue {
 
   @Watch("colorSeed")
   onColorSeedChange = this.setColor;
+
+  @Prop({ required: false, default: false })
+  defaultHidden!: boolean;
 
   @Prop({ required: true })
   data!: unknown[];
@@ -300,8 +303,12 @@ export default class DLineSerie extends Vue {
     }));
 
     this.serie.events.on("datavalidated", () => {
-      this.xAxisValidated();
-      this.yAxisValidated();
+      if (this.xAxisValidated != null) {
+        this.xAxisValidated();
+      }
+      if (this.yAxisValidated != null) {
+        this.yAxisValidated();
+      }
     });
 
     // Set updatable properties
@@ -316,6 +323,9 @@ export default class DLineSerie extends Vue {
       this.legend.data.push(this.serie);
     }
     
+    if (this.defaultHidden) {
+      this.serie.hide();
+    }
     this.upAndRunning = true;
   }
 

@@ -9,12 +9,12 @@ import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 
 import { LayoutEnum, PositionEnum } from "../../enums";
 
-import WrappedLegend from "./DLegend.vue";
+import WrappedLegend from "./DIndicatorLegend.vue";
 
 @Component({
   components: { WrappedLegend }
 })
-export default class DLegendWrapper extends Vue {
+export default class DIndicatorLegendWrapper extends Vue {
   @Prop({ required: false, default: true })
   enabled!: boolean;
 

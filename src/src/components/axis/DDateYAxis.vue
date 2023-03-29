@@ -147,8 +147,9 @@ export default class DDateYAxis extends Vue {
 
   setLines(): void {
     // Remove former lines
-    for (let i = 0; i < this.lineItems.length; i++) {
-      this.lineItems[i].dispose();
+    for (let lineItem of this.lineItems) {
+      this.axis!.axisRanges!.removeValue(lineItem);
+      lineItem.dispose();
     }
     this.lineItems = [];
 
@@ -156,12 +157,12 @@ export default class DDateYAxis extends Vue {
       return;
     }
 
-    am5.array.each(this.lines, (line: IconLine): void => {
+    for (let line of this.lines) {
       // Create a line
       let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
         above: true,
         value: line.value
-      })) as am5.DataItem<am5xy.IDateAxisDataItem>;
+      }));
       axisRange.get("grid")!.setAll({
         strokeDasharray: [5, 3, 1, 3],
         strokeOpacity: 1,
@@ -182,13 +183,14 @@ export default class DDateYAxis extends Vue {
         });
       }
       this.lineItems.push(axisRange);
-    });
+    }
   }
 
   setRanges(): void {
     // Remove former ranges
-    for (let i = 0; i < this.rangeItems.length; i++) {
-      this.rangeItems[i].dispose();
+    for (let rangeItem of this.rangeItems) {
+      this.axis!.axisRanges!.removeValue(rangeItem);
+      rangeItem.dispose();
     }
     this.rangeItems = [];
 
@@ -214,13 +216,16 @@ export default class DDateYAxis extends Vue {
       .filter(r => r.startDay === Days.AllDays)
       .map((r: TimeRange): TimeRange[] =>
         Object.values(Days).filter((d: string | Days) => typeof(d) === "number" && d !== Days.AllDays)
-          .map((d: string | Days): TimeRange => ({ ...r, startDay: d as Days, endDay: (++(d as Days))%7 }))
+          .map((d: string | Days): TimeRange => {
+            let endDay = (r.startHour * 60 + r.startMinute) > (r.endHour * 60 + r.endMinute) ? ((d as Days) + 1)%7 : (d as Days);
+            return { ...r, startDay: d as Days, endDay };
+          })
       )
       .reduce((acc: TimeRange[], val: TimeRange[]): TimeRange[] => acc.concat(val), [])
       .concat(this.ranges.filter(r => r.startDay !== Days.AllDays && r.endDay !== Days.AllDays));
 
     while (current < ge) {
-      am5.array.each(mappedRanges, (range : TimeRange): void => {
+      for (let range of mappedRanges) {
         let start = new Date(current);
         start.setDate(start.getDate() + range.startDay);
         start.setHours(start.getHours() + range.startHour);
@@ -241,9 +246,7 @@ export default class DDateYAxis extends Vue {
           value: start.getTime() + (offset * 60 * 1000),
           endValue: end.getTime() + (offset * 60 * 1000)
         }));
-        axisRange.get("grid").setAll({
-          strokeOpacity: 0
-        });
+        axisRange.get("grid").set("strokeOpacity", 0);
         axisRange.get("axisFill").setAll({
           visible: true,
           fillOpacity: range.opacity,
@@ -253,12 +256,12 @@ export default class DDateYAxis extends Vue {
           axisRange.get("label").setAll({
             text: range.label,
             inside: true,
-            centerX: 23,
+            centerX: 0,
             fill: am5.color(range.color)
           });
         }
         this.rangeItems.push(axisRange);
-      });
+      }
 
       // Iterate
       current.setDate(current.getDate() + 7);

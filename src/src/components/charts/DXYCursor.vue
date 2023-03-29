@@ -106,31 +106,30 @@ export default class DXYCursor extends Vue {
         }
         this.visibleBullets = [];
         this.chart.series.each(serie => {
-          if (serie instanceof am5xy.LineSeries)
-            if (serie!.get("userData")!.showTooltipBullet) {
-              if (serie!.get("tooltip") != null) {
-                if (serie!.get("tooltip")!.isVisible()) {
-                  if (serie!.get("tooltip")!.dataItem != null) {
-                    if (serie!.get("tooltip")!.dataItem!.bullets != null) {
-                      if (serie!.get("tooltip")!.dataItem!.bullets!.length > 0) {
-                        let tooltipBullet = serie!.get("tooltip")!.dataItem!.bullets!.find(bullet => {
-                          if (bullet != null) {
-                            if (bullet!.get("userData") != null) {
-                              return bullet!.get("userData")!.tooltipBullet != null ? bullet!.get("userData")!.tooltipBullet : false;
-                            }
+          if (serie!.get("userData")!.showTooltipBullet) {
+            if (serie!.get("tooltip") != null) {
+              if (serie!.get("tooltip")!.isVisible()) {
+                if (serie!.get("tooltip")!.dataItem != null) {
+                  if (serie!.get("tooltip")!.dataItem!.bullets != null) {
+                    if (serie!.get("tooltip")!.dataItem!.bullets!.length > 0) {
+                      let tooltipBullet = serie!.get("tooltip")!.dataItem!.bullets!.find(bullet => {
+                        if (bullet != null) {
+                          if (bullet!.get("userData") != null) {
+                            return bullet!.get("userData")!.tooltipBullet != null ? bullet!.get("userData")!.tooltipBullet : null;
                           }
-                          return false;
-                        });
-                        if (tooltipBullet != null) {
-                          tooltipBullet.get("sprite")!.set("opacity", serie!.get("opacity"));
-                          this.visibleBullets.push(tooltipBullet);
                         }
+                        return null;
+                      });
+                      if (tooltipBullet != null) {
+                        tooltipBullet.get("sprite")!.set("opacity", serie!.get("opacity"));
+                        this.visibleBullets.push(tooltipBullet);
                       }
                     }
                   }
                 }
               }
             }
+          }
         });
       });
 

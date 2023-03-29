@@ -15,6 +15,7 @@ import { Component, ProvideReactive, Vue, Prop, Watch } from "vue-property-decor
 import * as am5 from "@amcharts/amcharts5";
 import * as am5radar from "@amcharts/amcharts5/radar";
 
+import { ChartType } from "../../models";
 import { LayoutEnum } from "../../enums";
 import { getLocale } from "../../helpers";
 import { AMROOT, CHART } from "../../literals";
@@ -129,10 +130,10 @@ export default class DRadarChart extends Vue {
     // Create root
     this.root = am5.Root.new((this.$refs.radarchart as HTMLElement), {
       tooltipContainerBounds: {
-        top: 50,
+        top: 150,
         bottom: 50,
-        left: 100,
-        right: 100
+        left: 150,
+        right: 150
       }
     });
     this.root.locale = getLocale(this.locale);
@@ -156,7 +157,9 @@ export default class DRadarChart extends Vue {
     this.root.events.on("frameended", chartReady);
 
     // Add chart to root
-    this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {}));
+    this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {
+      userData: { chartType: ChartType.Radar }
+    }));
 
     this.setColors();
     this.setLayout();

@@ -4,7 +4,7 @@
       :min-height="minHeight"
       :style="{ display: ready ? 'none': 'flex' }"
     />
-    <d-xy-chart
+    <d-indicator-chart
       :chartId="Math.random().toString()"
       :min-height="minHeight"
       :locale="locale"
@@ -13,9 +13,8 @@
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
-      <d-legend
+      <d-indicator-legend
         :enabled="legend"
-        :singleColumn="true"
       >
         <d-xy-cursor
           :enabled="cursor"
@@ -45,7 +44,6 @@
               :min="yAxisMin"
               :max="yAxisMax"
               :strictMinMax="true"
-              :height="yAxisHeight"
               :ranges="yAxisRanges"
             >
               <d-progress-indicator
@@ -60,8 +58,8 @@
             </d-value-y-axis>
           </d-value-x-axis>
         </d-xy-cursor>
-      </d-legend>
-    </d-xy-chart>
+      </d-indicator-legend>
+    </d-indicator-chart>
   </div>
 </template>
 
@@ -81,14 +79,6 @@ export default class IndicatorChart extends Vue {
 
   @Prop({ required: true })
   minHeight!: string;
-
-  get numberMinHeight(): number {
-    return parseFloat(this.minHeight.substring(0, this.minHeight.length - 2));
-  }
-
-  get yAxisHeight(): number {
-    return this.numberMinHeight - (90 + 30 * this.data.series.length);
-  }
 
   @Prop({ required: true })
   locale!: string;

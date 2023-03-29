@@ -174,7 +174,7 @@ export const isEmptyString = (value: string | undefined): boolean => {
   return (value == null || value === "" || /^\s*$/.test(value));
 }
 
-export const setLineSerieBullets = (serie: am5xy.LineSeries, root: am5.Root): void => {
+export const setLineSerieBullets = (serie: am5.Series, root: am5.Root): void => {
   serie.bullets.clear();
   if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
     return;
@@ -207,22 +207,22 @@ export const setLineSerieBullets = (serie: am5xy.LineSeries, root: am5.Root): vo
   }
 }
 
-export const setStepLineSerieBullets = (serie: am5xy.StepLineSeries, root: am5.Root): void => {
+export const setStepLineSerieBullets = (serie: am5.Series, root: am5.Root): void => {
   serie.bullets.clear();
   if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
     return;
   }
 
   if (serie.get("userData").showBullets) {
-    serie.bullets.push(() => {
-      return am5.Bullet.new(root, {
-        sprite: am5.Circle.new(root, {
-          opacity: serie.get("opacity"),
-          radius: serie.get("userData").bulletRadius,
-          fill: serie.get("fill")
-        })
-      })
-    });
+    // serie.bullets.push(() => {
+    //   return am5.Bullet.new(root, {
+    //     sprite: am5.Circle.new(root, {
+    //       opacity: serie.get("opacity"),
+    //       radius: serie.get("userData").bulletRadius,
+    //       fill: serie.get("fill")
+    //     })
+    //   })
+    // });
   }
   else if (serie.get("userData").showTooltipBullet) {
     serie.bullets.push(() => {
@@ -240,7 +240,7 @@ export const setStepLineSerieBullets = (serie: am5xy.StepLineSeries, root: am5.R
   }
 }
 
-export const setScatterPlotSerieBullets = (serie: am5xy.LineSeries, root: am5.Root): void => {
+export const setScatterPlotSerieBullets = (serie: am5.Series, root: am5.Root): void => {
   serie.bullets.clear();
 
   if (serie.get("userData").showTooltip) {

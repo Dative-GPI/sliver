@@ -128,8 +128,8 @@ export default class DExportData extends Vue {
           });
           break;
         }
-        case ChartType.Slider:
-        case ChartType.Gauge:
+        case ChartType.Indicator:
+        case ChartType.Radar:
         case ChartType.ScoreCard: {
           this.chartData.plots[0].series[0].operands.forEach((operand: ChartDataOperand) => {
             headers.push(operand.label);
@@ -257,8 +257,8 @@ export default class DExportData extends Vue {
             }
           }
         }
-        case ChartType.Slider:
-        case ChartType.Gauge:
+        case ChartType.Indicator:
+        case ChartType.Radar:
         case ChartType.ScoreCard: {
           return [
             { id: "timestampX", label: "StartTime", date: true },

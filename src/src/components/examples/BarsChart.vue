@@ -39,6 +39,8 @@
               :opposite="yAxisOpposite"
               :showTooltip="yAxisShowTooltip"
               :tooltipNumberFormat="yAxisTooltipNumberFormat"
+              :ranges="yAxisRanges"
+              :unit="yAxisUnit"
             >
               <d-column-serie
                 v-for="(serie, index) in data.series"
@@ -63,6 +65,7 @@ import { LayoutEnum, PositionEnum } from "../../enums";
 import { ColorSets } from "../../colors";
 
 import Spinner from "./Spinner.vue";
+import { ValueRange } from "../../models";
 
 @Component({ components: { Spinner } })
 export default class BarsChart extends Vue {
@@ -152,6 +155,12 @@ export default class BarsChart extends Vue {
 
   @Prop({ required: true })
   yAxisTooltipNumberFormat!: string;
+
+  @Prop({ required: true })
+  yAxisRanges!: ValueRange[];
+
+  @Prop({ required: true })
+  yAxisUnit!: string;
 
   ready: boolean = false;
 }

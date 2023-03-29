@@ -62,7 +62,7 @@ Default.args = {
       }]
     }]
   },
-  minHeight: '300px',
+  minHeight: '200px',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "tango",
@@ -88,11 +88,11 @@ Default.args = {
   xAxisMin: 0,
   xAxisMax: 200,
   xAxisRanges: [
-    { startValue: 0,   endValue: 40,  opacity: 0.5, color: "#ff3c3c", label: "Bad" },
-    { startValue: 40,  endValue: 80,  opacity: 0.5, color: "#ff8c3c", label: "Somewhat bad" },
-    { startValue: 80,  endValue: 120, opacity: 0.5, color: "#b4b4b4", label: "Just meh" },
-    { startValue: 120, endValue: 160, opacity: 0.5, color: "#aaff64", label: "Somewhat good" },
-    { startValue: 160, endValue: 200, opacity: 0.5, color: "#64ff8c", label: "Good" }
+    { startValue: 0,   endValue: 40,  opacity: 0.15, color: "#ff3c3c", label: "Bad" },
+    { startValue: 40,  endValue: 80,  opacity: 0.15, color: "#ff8c3c", label: "Somewhat bad" },
+    { startValue: 80,  endValue: 120, opacity: 0.15, color: "#b4b4b4", label: "Just meh" },
+    { startValue: 120, endValue: 160, opacity: 0.15, color: "#aaff64", label: "Somewhat good" },
+    { startValue: 160, endValue: 200, opacity: 0.15, color: "#64ff8c", label: "Good" }
   ],
   xAxisUnit: "cm",
   yAxisOpposite: false,
@@ -101,6 +101,6 @@ Default.args = {
   yAxisMin: 0,
   yAxisMax: 10,
   yAxisRanges: [
-    { startValue: 0,   endValue: 10,  opacity: 1, color: "#ffffff", label: "Bad" },
+    { startValue: 3,   endValue: 10,  opacity: 1, color: "#ffffff", label: "Bad" },
   ]
 };

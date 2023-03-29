@@ -1,11 +1,18 @@
 <template>
-  <div
-    ref="xychart"
-    :id="chartId"
-    :style="{ minHeight: minHeight }"
-    style="width: 100%; height: 100%;"
-  >
-    <slot v-if="upAndRunning"> </slot>
+  <div style="display: flex; flex-direction: column;">
+    <div
+      ref="indicatorchart"
+      :id="chartId"
+      :style="{ minHeight: '150px' }"
+      style="width: 100%;"
+    >
+      <slot v-if="upAndRunning"> </slot>
+    </div>
+    <div
+      ref="indicatorlegend"
+      :style="{ minHeight: `calc(${minHeight} - 150px)` }"
+      style="width: 100%;"
+    />
   </div>
 </template>
 
@@ -16,16 +23,19 @@ import { Component, ProvideReactive, Vue, Prop, Watch } from "vue-property-decor
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { LayoutEnum } from "../../enums";
-import { AMROOT, CHART } from "../../literals";
-import { ColorSets, GetColors } from "../../colors";
+import { AMROOT, CHART, LEGENDROOT } from "../../literals";
 import { getLocale, getTimezone } from "../../helpers";
+import { ColorSets, GetColors } from "../../colors";
+import { LayoutEnum } from "../../enums";
 import { ChartType } from "../../models";
 
 @Component({})
-export default class DXYChart extends Vue {
+export default class DIndicatorChart extends Vue {
   @ProvideReactive(AMROOT)
   root: am5.Root | null = null;
+
+  @ProvideReactive(LEGENDROOT)
+  legendRoot: am5.Root | null = null;
 
   @ProvideReactive(CHART)
   chart: am5xy.XYChart | null = null;
@@ -107,11 +117,12 @@ export default class DXYChart extends Vue {
 
   resize(): void {
     this.root!.resize();
+    this.legendRoot!.resize();
   }
 
   mounted(): void {
     // Create root
-    this.root = am5.Root.new((this.$refs.xychart as HTMLElement), {
+    this.root = am5.Root.new((this.$refs.indicatorchart as HTMLElement), {
       tooltipContainerBounds: {
         top: 150,
         bottom: 50,
@@ -128,6 +139,16 @@ export default class DXYChart extends Vue {
       smallNumberThreshold: 0.001
     });
 
+    this.legendRoot = am5.Root.new((this.$refs.indicatorlegend as HTMLElement), {});
+    this.legendRoot.locale = getLocale(this.locale);
+    this.legendRoot.timezone = getTimezone(this.timeOffset);
+    this.legendRoot.autoResize = false;
+
+    this.legendRoot.numberFormatter.setAll({
+      numberFormat: "#,###.### a",
+      smallNumberThreshold: 0.001
+    });
+
     // Warn the parent when the chart is ready
     let timeout: number | undefined = undefined;
     let chartReady = () => {
@@ -136,14 +157,16 @@ export default class DXYChart extends Vue {
       }
       timeout = setTimeout(() => {
         this.root!.events.off("frameended", chartReady);
+        this.legendRoot!.events.off("frameended", chartReady);
         this.$emit("ready");
       }, this.readyTimeout);
     }
     this.root.events.on("frameended", chartReady);
+    this.legendRoot.events.on("frameended", chartReady);
 
     // Add chart to root
     this.chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {
-      userData: { chartType: ChartType.XY },
+      userData: { chartType: ChartType.Indicator },
       maxTooltipDistance: 0
     }));
 
@@ -176,6 +199,9 @@ export default class DXYChart extends Vue {
     // Dispose
     if (this.chart != null && !this.chart!.isDisposed()) {
       this.chart!.dispose();
+    }
+    if (this.legendRoot != null && !this.legendRoot!.isDisposed()) {
+      this.legendRoot!.dispose();
     }
     if (this.root != null && !this.root!.isDisposed()) {
       this.root!.dispose();

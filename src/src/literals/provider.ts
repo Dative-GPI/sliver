@@ -1,7 +1,7 @@
 export const AMROOT = "amroot";
+export const LEGENDROOT = "legendroot";
 export const CHART = "chart";
 export const LEGEND = "legend";
-export const LEGEND_DEBUG = "legendDebug";
 export const CURSOR = "cursor";
 export const XAXIS = "xaxis";
 export const XAXISVALIDATED = "xaxisvalidated";

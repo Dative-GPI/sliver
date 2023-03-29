@@ -18,6 +18,7 @@ import * as am5percent from "@amcharts/amcharts5/percent";
 import { AMROOT, CHART } from "../../literals";
 import { LayoutEnum } from "../../enums";
 import { getLocale } from "../../helpers";
+import { ChartType } from "../../models";
 
 @Component({})
 export default class DPieChart extends Vue {
@@ -95,7 +96,9 @@ export default class DPieChart extends Vue {
     this.root.events.on("frameended", chartReady);
 
     // Add chart to root
-    this.chart = this.root.container.children.push(am5percent.PieChart.new(this.root, {}));
+    this.chart = this.root.container.children.push(am5percent.PieChart.new(this.root, {
+      userData: { chartType: ChartType.Pie }
+    }));
 
     this.setLayout();
 

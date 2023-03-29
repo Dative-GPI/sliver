@@ -44,7 +44,7 @@ const Template = (args, { argTypes }) => ({
     />`,
 });
 
-const makeHistogramSerie = (name, tZero, vZero, elapsedTime, rangeValueStart, rangeValueEnd, values) => {
+const makeHistogramSerie = (name, tZero, elapsedTime, rangeValueStart, rangeValueEnd, values) => {
   var data = [];
   for (let i = 0; i < values; i++) {
     data.push({
@@ -53,9 +53,6 @@ const makeHistogramSerie = (name, tZero, vZero, elapsedTime, rangeValueStart, ra
       valueY: rangeValueStart + (Math.random() * rangeValueEnd)
     });
     tZero += elapsedTime;
-
-    // let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-    // vZero += (Math.floor(Math.random() * rangeValue) * plusOrMinus)
   }
 
   return {
@@ -68,8 +65,8 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      { ...makeHistogramSerie("Line 1", 1640815320000, 50, 2.16e+7, 0, 5, 50 ) },
-      { ...makeHistogramSerie("Line 2", 1640815320000, 50, 2.16e+7, 50000, 50000, 50 ) }
+      { ...makeHistogramSerie("Line 1", 1640815320000, 2.16e+7, 0, 5, 50 ) },
+      { ...makeHistogramSerie("Line 2", 1640815320000, 2.16e+7, 50000, 50000, 50 ) }
     ]
   },
   minHeight: '400px',

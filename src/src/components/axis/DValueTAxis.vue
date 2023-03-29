@@ -12,8 +12,8 @@ import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, XAXIS } from "../../literals";
+import { isEmptyString } from "../../helpers";
 import { ValueRange } from "../../models";
-import { textColor } from "../../helpers";
 
 @Component({})
 export default class DValueTAxis extends Vue {
@@ -123,9 +123,9 @@ export default class DValueTAxis extends Vue {
   unit!: string | undefined;
 
   @ProvideReactive(XAXIS)
-  axis: am5xy.ValueAxis<am5radar.AxisRendererCircular> | any | null = null;
+  axis: any = null;
 
-  debugLabel: number = 0;
+  rangeItems: am5.DataItem<am5xy.IValueAxisDataItem>[] = [];
 
   upAndRunning: boolean = false;
 
@@ -190,37 +190,38 @@ export default class DValueTAxis extends Vue {
   }
 
   setRanges(): void {
-    for (let i = this.axis!.axisRanges.values.length - 1; i >= 0; i--) {
-      let range = this.axis!.axisRanges.values[i];
-      if (!range.get("bullet")) {
-        this.axis!.axisRanges.removeValue(range!);
-        range!.dispose();
-      }
+    // Remove former ranges
+    for (let rangeItem of this.rangeItems) {
+      this.axis!.axisRanges!.removeValue(rangeItem);
+      rangeItem.dispose();
+    }
+    this.rangeItems = [];
+
+    if (this.ranges == null || this.ranges.length < 1) {
+      return;
     }
     
-    if (this.ranges && this.ranges!.length > 0) {
-      am5.array.each(this.ranges!, (range : ValueRange) => {
-        let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({}));
-
-        axisRange.setAll({
-          value: range.startValue,
-          endValue: range.endValue
-        });
-
-        axisRange.get("axisFill")!.setAll({
-          visible: true,
-          fillOpacity: range.opacity,
-          fill: am5.color(range.color)
-        });
-
-        axisRange.get("label")!.setAll({
+    for (let range of this.ranges) {
+      let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
+        value: range.startValue,
+        endValue: range.endValue
+      }));
+      axisRange.get("grid").set("strokeOpacity", 0);
+      axisRange.get("axisFill").setAll({
+        visible: true,
+        fillOpacity: range.opacity,
+        fill: am5.color(range.color)
+      });
+      if (!isEmptyString(range.label)) {
+        axisRange.get("label").setAll({
           text: range.label,
           inside: true,
           centerX: 0,
           radius: 10,
-          fill: textColor(range.color)
+          fill: am5.color(range.color)
         });
-      });
+      }
+      this.rangeItems.push(axisRange);
     }
   }
 
@@ -228,8 +229,7 @@ export default class DValueTAxis extends Vue {
     if (this.unit != null) {
       this.axis.get("renderer").labels.template.adapters.remove("text");
       this.axis.get("renderer").labels.template.adapters.add("text", (value?: string) => {
-        if (value != null && value.length > 0 && this.unit != null) {
-          this.debugLabel = Math.max(this.debugLabel, value.length);
+        if (value != null && !isNaN(parseInt(value))) {
           return value + this.unit;
         }
         return value;

@@ -11,8 +11,8 @@ import { Component, InjectReactive, Prop, Vue, Watch } from "vue-property-decora
 import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 
-import { AMROOT, CHART, LEGEND, SERIE } from "../../literals";
 import { ColorSets, GetColors, GetHashedColor } from "../../colors";
+import { AMROOT, CHART, LEGEND, SERIE } from "../../literals";
 import { uuidv4 } from "../../helpers";
 
 @Component({})
@@ -294,6 +294,7 @@ export default class DPieSlice extends Vue {
 
   mounted(): void {
     this.setData();
+
     this.upAndRunning = true;
   }
 
