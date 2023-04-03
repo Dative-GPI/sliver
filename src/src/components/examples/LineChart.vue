@@ -8,6 +8,7 @@
       :chartId="Math.random().toString()"
       :min-height="minHeight"
       :locale="locale"
+      :time-offset="timeOffset"
       :colorSet="colorSet"
       :layout="chartLayout"
       :style="{ display: ready ? 'flex': 'none' }"
@@ -90,6 +91,9 @@ export default class LineChart extends Vue {
 
   @Prop({ required: true })
   locale!: string;
+
+  @Prop({ required: true })
+  timeOffset!: string;
 
   @Prop({ required: true })
   colorSet!: ColorSets;

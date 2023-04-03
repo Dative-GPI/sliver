@@ -203,14 +203,14 @@ export default class DDateXAxis extends Vue {
     let gs = this.axis!.positionToDate(0);
     let ge = this.axis!.positionToDate(1);
 
-    gs.setDate(gs.getDate() - gs.getDay() - 6);
-    ge.setDate(ge.getDate() - ge.getDay() + 7);
+    gs.setDate(gs.getUTCDate() - gs.getDay() - 8);
+    ge.setDate(ge.getUTCDate() - ge.getDay() + 8);
 
     // Get first monday of boundaries at midnight
-    let current = new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate()));
+    let current = new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate(), 0));
 
     // Get timezone offset
-    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate())));
+    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate()))) * 60 * 1000;
 
     // Map all days ranges
     let mappedRanges = this.ranges
@@ -227,26 +227,27 @@ export default class DDateXAxis extends Vue {
 
     while (current < ge) {
       for (let range of mappedRanges) {
-        let start = new Date(current);
-        start.setDate(start.getDate() + range.startDay);
-        start.setHours(start.getHours() + range.startHour);
-        start.setMinutes(start.getMinutes() + range.startMinute);
+        let start = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth(), current.getUTCDate(), 0));
+        start.setUTCDate(start.getUTCDate() + range.startDay);
+        start.setUTCHours(start.getUTCHours() + range.startHour);
+        start.setUTCMinutes(start.getUTCMinutes() + range.startMinute);
 
-        let end = new Date(current);
+        let end = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth(), current.getUTCDate(), 0));
         if (range.startDay > range.endDay) {
-          end.setDate(end.getDate() + range.endDay + 7);
+          end.setUTCDate(end.getUTCDate() + range.endDay + 7);
         }
         else {
-          end.setDate(end.getDate() + range.endDay);
+          end.setUTCDate(end.getUTCDate() + range.endDay);
         }
-        end.setHours(end.getHours() + range.endHour);
-        end.setMinutes(end.getMinutes() + range.endMinute);
+        end.setUTCHours(end.getUTCHours() + range.endHour);
+        end.setUTCMinutes(end.getUTCMinutes() + range.endMinute);
 
         // Create a range
         let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
-          value: start.getTime() + (offset * 60 * 1000),
-          endValue: end.getTime() + (offset * 60 * 1000)
+          value: Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate(), start.getUTCHours(), start.getUTCMinutes()) + offset,
+          endValue: Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate(), end.getUTCHours(), end.getUTCMinutes()) + offset
         }));
+
         axisRange.get("grid").set("strokeOpacity", 0);
         axisRange.get("axisFill").setAll({
           visible: true,
@@ -265,7 +266,7 @@ export default class DDateXAxis extends Vue {
       }
 
       // Iterate
-      current.setDate(current.getDate() + 7);
+      current = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth(), current.getUTCDate() + 7, 0));
     }
   }
 
