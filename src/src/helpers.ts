@@ -174,14 +174,14 @@ export const isEmptyString = (value: string | undefined): boolean => {
   return (value == null || value === "" || /^\s*$/.test(value));
 }
 
-export const setLineSerieBullets = (serie: am5.Series, root: am5.Root): void => {
+export const setLineSerieBullets = (serie: am5.Series): void => {
   serie.bullets.clear();
+
   if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
     return;
   }
-
-  if (serie.get("userData").showBullets) {
-    serie.bullets.push(() => {
+  else if (serie.get("userData").showBullets) {
+    serie.bullets.push((root) => {
       return am5.Bullet.new(root, {
         sprite: am5.Circle.new(root, {
           opacity: serie.get("opacity"),
@@ -191,51 +191,114 @@ export const setLineSerieBullets = (serie: am5.Series, root: am5.Root): void => 
       })
     });
   }
-  else if (serie.get("userData").showTooltipBullet) {
-    serie.bullets.push(() => {
+  else if (serie.get("userData").showTooltipBullet && serie.get("tooltip") != null) {
+    serie.bullets.push((root, _, dataItem) => {
+      if (dataItem == serie.dataItems[serie.dataItems.length - 1]) {
+        serie.set("userData", { ...serie.get("userData"), tooltipBullet: am5.Bullet.new(root, {
+            sprite: am5.Circle.new(root, {
+              opacity: serie.get("opacity"),
+              radius: serie.get("userData").bulletRadius,
+              fill: serie.get("fill")
+            })
+          })
+        });
+        return serie.get("userData").tooltipBullet;
+      }
+    });
+    serie.get("tooltip")!.events.off("dataitemchanged");
+    serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
+      if (event.newDataItem != null) {
+        event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
+        serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
+        serie.data.push({});
+        serie.data.pop();
+      }
+    });
+  }
+}
+
+export const setRangeSerieBullets = (serie: am5.Series): void => {
+  serie.bullets.clear();
+
+  if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
+    return;
+  }
+  else if (serie.get("userData").showBullets) {
+    serie.bullets.push((root) => {
       return am5.Bullet.new(root, {
-        userData: {
-          tooltipBullet: true
-        },
         sprite: am5.Circle.new(root, {
-          opacity: 0,
+          opacity: serie.get("opacity"),
           radius: serie.get("userData").bulletRadius,
           fill: serie.get("fill")
         })
       })
     });
   }
+  else if (serie.get("userData").showTooltipBullet && serie.get("tooltip") != null) {
+    serie.bullets.push((root, _, dataItem) => {
+      if (dataItem == serie.dataItems[serie.dataItems.length - 1]) {
+        serie.set("userData", { ...serie.get("userData"), tooltipBullet: am5.Bullet.new(root, {
+            sprite: am5.Circle.new(root, {
+              opacity: serie.get("opacity"),
+              radius: serie.get("userData").bulletRadius,
+              fill: serie.get("fill")
+            })
+          })
+        });
+        return serie.get("userData").tooltipBullet;
+      }
+    });
+    serie.get("tooltip")!.events.off("dataitemchanged");
+    serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
+      if (event.newDataItem != null) {
+        event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
+        serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
+        serie.data.push({});
+        serie.data.pop();
+      }
+    });
+  }
 }
 
-export const setStepLineSerieBullets = (serie: am5.Series, root: am5.Root): void => {
+export const setStepLineSerieBullets = (serie: am5.Series): void => {
   serie.bullets.clear();
+
   if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
     return;
   }
-
-  if (serie.get("userData").showBullets) {
-    // serie.bullets.push(() => {
-    //   return am5.Bullet.new(root, {
-    //     sprite: am5.Circle.new(root, {
-    //       opacity: serie.get("opacity"),
-    //       radius: serie.get("userData").bulletRadius,
-    //       fill: serie.get("fill")
-    //     })
-    //   })
-    // });
-  }
-  else if (serie.get("userData").showTooltipBullet) {
-    serie.bullets.push(() => {
+  else if (serie.get("userData").showBullets) {
+    serie.bullets.push((root) => {
       return am5.Bullet.new(root, {
-        userData: {
-          tooltipBullet: true
-        },
         sprite: am5.Circle.new(root, {
-          opacity: 0,
+          opacity: serie.get("opacity"),
           radius: serie.get("userData").bulletRadius,
           fill: serie.get("fill")
         })
       })
+    });
+  }
+  else if (serie.get("userData").showTooltipBullet && serie.get("tooltip") != null) {
+    serie.bullets.push((root, _, dataItem) => {
+      if (dataItem == serie.dataItems[serie.dataItems.length - 1]) {
+        serie.set("userData", { ...serie.get("userData"), tooltipBullet: am5.Bullet.new(root, {
+            sprite: am5.Circle.new(root, {
+              opacity: serie.get("opacity"),
+              radius: serie.get("userData").bulletRadius,
+              fill: serie.get("fill")
+            })
+          })
+        });
+        return serie.get("userData").tooltipBullet;
+      }
+    });
+    serie.get("tooltip")!.events.off("dataitemchanged");
+    serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
+      if (event.newDataItem != null) {
+        event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
+        serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
+        serie.data.push({});
+        serie.data.pop();
+      }
     });
   }
 }

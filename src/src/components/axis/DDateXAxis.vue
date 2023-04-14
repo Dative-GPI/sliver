@@ -164,12 +164,14 @@ export default class DDateXAxis extends Vue {
         above: true,
         value: line.value
       }));
-      axisRange.get("grid")!.setAll({
-        strokeDasharray: [5, 3, 1, 3],
-        strokeOpacity: 1,
-        strokeWidth: 1,
-        stroke: am5.color(line.color)
-      });
+      if (axisRange.get("grid") != null) {
+        axisRange.get("grid")!.setAll({
+          strokeDasharray: [5, 3, 1, 3],
+          strokeOpacity: 1,
+          strokeWidth: 1,
+          stroke: am5.color(line.color)
+        });
+      }
       if (!isEmptyString(line.icon)) {
         axisRange.get("label")!.setAll({
           html: `

@@ -124,7 +124,6 @@ export default class DStepLineSerie extends Vue {
 
   serie: am5xy.StepLineSeries | null = null;
   tooltip: am5.Tooltip | null = null;
-  bullets: am5.Bullet | null = null;
 
   upAndRunning: boolean = false;
 
@@ -177,7 +176,7 @@ export default class DStepLineSerie extends Vue {
       showTooltipBullet: this.showTooltipBullet
     });
     
-    setStepLineSerieBullets(this.serie!, this.root);
+    setStepLineSerieBullets(this.serie!);
   }
 
   setColor(): void {
@@ -223,15 +222,13 @@ export default class DStepLineSerie extends Vue {
     this.setShowTooltip();
     this.setSnapTooltip();
     this.setConnect();
+    this.setData();
     this.setBullets();
 
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
     }
-    
-    // Set data
-    this.setData();
 
     if (this.defaultHidden) {
       this.serie.hide();

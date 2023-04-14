@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS, YAXISVALIDATED } from "../../literals";
-import { getLineIntersection, removeSerie, textColor } from "../../helpers";
+import { getLineIntersection, removeSerie, setRangeSerieBullets, textColor } from "../../helpers";
 import { ColorSets, GetHashedColor } from "../../colors";
 import { SerieEnum } from "../../enums";
 
@@ -91,6 +91,30 @@ export default class DRangeSerie extends Vue {
 
   @Watch("legendLabelText")
   onLegendLabelTextChange = this.setLegendLabelText;
+
+  @Prop({ required: false, default: true })
+  connect!: boolean;
+
+  @Watch("connect")
+  onConnectChange = this.setConnect;
+
+  @Prop({ required: false, default: false })
+  showBullets!: boolean;
+
+  @Watch("showBullets")
+  onShowBulletsChange = this.setBullets;
+
+  @Prop({ required: false, default: true })
+  showTooltipBullet!: boolean;
+
+  @Watch("showTooltipBullet")
+  onShowTooltipBulletChange = this.setBullets;
+
+  @Prop({ required: false, default: 5 })
+  bulletsRadius!: number;
+
+  @Watch("bulletsRadius")
+  onBulletsRadiusChange = this.setBullets;
 
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;
@@ -196,6 +220,23 @@ export default class DRangeSerie extends Vue {
     }
   }
 
+  setConnect(): void {
+    this.serie!.set("connect", this.connect);
+  }
+
+  setBullets(): void {
+    let { bulletRadius, showBullets, showTooltipBullet, ...userData } = this.serie!.get("userData");
+
+    this.serie!.set("userData", {
+      ...userData,
+      bulletRadius: this.bulletsRadius,
+      showBullets: this.showBullets,
+      showTooltipBullet: this.showTooltipBullet
+    });
+    
+    setRangeSerieBullets(this.serie!);
+  }
+
   setColor(): void {
     switch (this.colorSet) {
       case ColorSets.Hash: {
@@ -282,16 +323,15 @@ export default class DRangeSerie extends Vue {
     this.setName();
     this.setSubNames();
     this.setSnapTooltip();
+    this.setConnect();
+    this.setData();
+    this.setSubDatas();
 
     // Add to legend
     if (this.legend != null) {
       this.legend.data.push(this.serie);
       this.legend.data.pushAll(this.subSeries);
     }
-    
-    // Set data
-    this.setData();
-    this.setSubDatas();
 
     for (let i = 0; i < this.subSeries.length; i++) {
       let j: any = 0;
@@ -326,28 +366,24 @@ export default class DRangeSerie extends Vue {
 
           startTime = Math.round(intersection.x);
         }
-        if (subSerieDataItem!.get("valueY") > serieDataItem!.get("valueY")) {
-          if (!rangeDataItem) {
-            rangeDataItem = this.xAxis.makeDataItem({});
-            let range: any = this.subSeries[i]!.createAxisRange(rangeDataItem);
-            rangeDataItem!.set("value", startTime);
-            range!.fills!.template!.setAll({
-              fill: this.serie!.get("fill"),
-              fillOpacity: this.serie!.fills.template.get("fillOpacity"),
-              visible: true
-            });
-            range!.strokes!.template!.setAll({
-              stroke: this.subSeries[i]!.get("stroke"),
-              strokeWidth: 1
-            });
-            rangeDataItem!.set("closeValueY", subSerieDataItem!.get("valueY"));
-          }
+        if (!rangeDataItem) {
+          rangeDataItem = this.xAxis.makeDataItem({});
+          let range: any = this.subSeries[i]!.createAxisRange(rangeDataItem);
+          rangeDataItem!.set("value", startTime);
+          range!.fills!.template!.setAll({
+            fill: this.serie!.get("fill"),
+            fillOpacity: this.serie!.fills.template.get("fillOpacity"),
+            visible: true
+          });
+          range!.strokes!.template!.setAll({
+            stroke: this.subSeries[i]!.get("stroke"),
+            strokeWidth: 1
+          });
+          rangeDataItem!.set("closeValueY", subSerieDataItem!.get("valueY"));
         }
-        else {
-          if (rangeDataItem != null) {
-            rangeDataItem!.set("endValue", startTime);
-            rangeDataItem = undefined;
-          }
+        if (rangeDataItem != null) {
+          rangeDataItem!.set("endValue", startTime);
+          rangeDataItem = undefined;
         }
         if (j == this.serie!.dataItems.length - 1) {
           if (rangeDataItem != null) {
@@ -380,14 +416,6 @@ export default class DRangeSerie extends Vue {
       this.legend.data.removeValue(this.serie);
       for (let i = 0; i < this.subSeries.length; i++) {
         this.legend.data.removeValue(this.subSeries[i]);
-      }
-    }
-
-    // Remove from cursor
-    if (this.cursor) {
-      this.cursor.set("snapToSeries", removeSerie(this.cursor.get("snapToSeries")!, this.serie));
-      for (let i = 0; i < this.subSeries.length; i++) {
-        this.cursor.set("snapToSeries", removeSerie(this.cursor.get("snapToSeries")!, this.subSeries[i]));
       }
     }
 

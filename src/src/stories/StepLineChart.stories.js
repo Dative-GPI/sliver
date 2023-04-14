@@ -69,7 +69,7 @@ Default.args = {
   data: {
     series: [
       { ...makeLineSerie("Line 1", 1660860000000 + 86400000, 50, 2.16e+7, 5, 25 ) },
-      { ...makeLineSerie("Line 2", 1660860000000 + 86400000, 50, 2.16e+7, 5, 25 ) }
+      { ...makeLineSerie("Line 2", 1660860000000 + 86400000, 25, 1e+7, 5, 25 ) }
     ]
   },
   minHeight: '400px',

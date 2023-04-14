@@ -12,7 +12,7 @@ import * as am5percent from "@amcharts/amcharts5/percent";
 import * as am5radar from "@amcharts/amcharts5/radar";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
-import { setLineSerieBullets, setScatterPlotSerieBullets, setStepLineSerieBullets } from "../../helpers";
+import { setLineSerieBullets, setRangeSerieBullets, setScatterPlotSerieBullets, setStepLineSerieBullets } from "../../helpers";
 import { LayoutEnum, PositionEnum, SerieEnum } from "../../enums";
 import { AMROOT, CHART, LEGEND } from "../../literals";
 import { ChartType } from "../../models";
@@ -130,15 +130,19 @@ export default class DLegend extends Vue {
             if (eventSerie.isHidden()) {
               switch (eventSerie.get("userData").serie) {
                 case SerieEnum.LineSerie: {
-                  setLineSerieBullets(eventSerie, this.root);
+                  setLineSerieBullets(eventSerie);
                   break;
                 }
+                // case SerieEnum.RangeSerie: {
+                //   setRangeSerieBullets(eventSerie);
+                //   break;
+                // }
                 case SerieEnum.ScatterPlotSerie: {
                   setScatterPlotSerieBullets(eventSerie, this.root);
                   break;
                 }
                 case SerieEnum.StepLineSerie: {
-                  setStepLineSerieBullets(eventSerie, this.root);
+                  setStepLineSerieBullets(eventSerie);
                   break;
                 }
               }
@@ -219,15 +223,19 @@ export default class DLegend extends Vue {
                 serie.set("opacity", 0);
                 switch (serie.get("userData").serie) {
                   case SerieEnum.LineSerie: {
-                    setLineSerieBullets(serie, this.root);
+                    setLineSerieBullets(serie);
                     break;
                   }
+                  // case SerieEnum.RangeSerie: {
+                  //   setRangeSerieBullets(serie);
+                  //   break;
+                  // }
                   case SerieEnum.ScatterPlotSerie: {
                     setScatterPlotSerieBullets(serie, this.root);
                     break;
                   }
                   case SerieEnum.StepLineSerie: {
-                    setStepLineSerieBullets(serie, this.root);
+                    setStepLineSerieBullets(serie);
                     break;
                   }
                 }
@@ -263,15 +271,19 @@ export default class DLegend extends Vue {
                 serie.set("opacity", 1);
                 switch (serie.get("userData").serie) {
                   case SerieEnum.LineSerie: {
-                    setLineSerieBullets(serie, this.root);
+                    setLineSerieBullets(serie);
                     break;
                   }
+                  // case SerieEnum.RangeSerie: {
+                  //   setRangeSerieBullets(serie);
+                  //   break;
+                  // }
                   case SerieEnum.ScatterPlotSerie: {
                     setScatterPlotSerieBullets(serie, this.root);
                     break;
                   }
                   case SerieEnum.StepLineSerie: {
-                    setStepLineSerieBullets(serie, this.root);
+                    setStepLineSerieBullets(serie);
                     break;
                   }
                 }

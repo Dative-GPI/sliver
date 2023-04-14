@@ -209,7 +209,7 @@ export default class DLineSerie extends Vue {
       showTooltipBullet: this.showTooltipBullet
     });
     
-    setLineSerieBullets(this.serie!, this.root);
+    setLineSerieBullets(this.serie!);
   }
 
   setHeatRule(): void {
@@ -315,8 +315,8 @@ export default class DLineSerie extends Vue {
     this.setName();
     this.setSnapTooltip();
     this.setConnect();
-    this.setBullets();
     this.setHeatRule();
+    this.setBullets();
 
     // Add to legend
     if (this.legend != null) {
