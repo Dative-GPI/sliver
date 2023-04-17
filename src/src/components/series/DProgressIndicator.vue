@@ -45,6 +45,12 @@ export default class DProgressIndicator extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
+  @Prop({ required: false, default: "" })
+  unit!: string;
+
+  @Watch("unit")
+  onUnitChange = this.setTooltipText;
+
   @Prop({ required: false, default: "{name}: [bold]{value}[/]" })
   tooltipText!: string;
 
@@ -106,7 +112,7 @@ export default class DProgressIndicator extends Vue {
   }
 
   setTooltipText(): void {
-    this.progressIndicator!.set("tooltipText", this.tooltipText);
+    this.progressIndicator!.set("tooltipText", this.tooltipText + this.unit);
   }
 
   setColor(): void {

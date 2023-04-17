@@ -58,6 +58,12 @@ export default class DHistogramSerie extends Vue {
   @Prop({ required: false, default: "valueY" })
   valueYField!: string;
 
+  @Prop({ required: false, default: "" })
+  unit!: string;
+
+  @Watch("unit")
+  onUnitChange = this.setShowTooltip;
+
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
@@ -132,14 +138,14 @@ export default class DHistogramSerie extends Vue {
     else {
       this.tooltip = am5.Tooltip.new(this.root, {
         autoTextColor: false,
-        labelText: this.tooltipText
+        labelText: this.tooltipText + this.unit
       });
       this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
       this.tooltip.get("background")!.set("fillOpacity", 0.50);
       
       this.serie!.columns.template.setAll({
         tooltip: this.tooltip,
-        tooltipText: this.tooltipText,
+        tooltipText: this.tooltipText + this.unit,
         tooltipY: am5.percent(0)
       });
     }

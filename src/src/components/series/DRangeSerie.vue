@@ -62,6 +62,12 @@ export default class DRangeSerie extends Vue {
   @Prop({ required: false, default: "closeValueY" })
   closeValueYField!: string;
 
+  @Prop({ required: false, default: "" })
+  unit!: string;
+
+  @Watch("unit")
+  onUnitChange = this.setShowTooltip;
+
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
@@ -183,7 +189,7 @@ export default class DRangeSerie extends Vue {
     else {
       this.tooltip = am5.Tooltip.new(this.root, {
         autoTextColor: false,
-        labelText: this.tooltipText,
+        labelText: this.tooltipText + this.unit,
         centerY: 25
       });
       this.tooltip.label.set("fill", textColor(this.serie!.get("fill")!.toCSSHex()));
@@ -194,7 +200,7 @@ export default class DRangeSerie extends Vue {
       for (let i = 0; i < this.subSeries.length; i++) {
         this.subTooltips.push(am5.Tooltip.new(this.root, {
           autoTextColor: false,
-          labelText: this.subTooltipText,
+          labelText: this.subTooltipText + this.unit,
           centerY: 25
         }));
         this.tooltip.label.set("fill", textColor(this.subSeries[i]!.get("fill")!.toCSSHex()));

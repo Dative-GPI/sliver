@@ -35,6 +35,12 @@ export default class DClockHand extends Vue {
   @Watch("name")
   onNameChange = this.setName;
 
+  @Prop({ required: false, default: "" })
+  unit!: string;
+
+  @Watch("unit")
+  onUnitChange = this.setHandTooltipText;
+
   @Prop({ required: false, default: 0 })
   colorIndex!: number;
 
@@ -147,7 +153,7 @@ export default class DClockHand extends Vue {
   }
 
   setHandTooltipText(): void {
-    this.clockHand!.hand.set("tooltipText", this.handTooltipText);
+    this.clockHand!.hand.set("tooltipText", this.handTooltipText + this.unit);
   }
 
   setHandTooltipX(): void {

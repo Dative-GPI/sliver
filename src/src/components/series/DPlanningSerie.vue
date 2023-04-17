@@ -64,6 +64,12 @@ export default class DPlanningSerie extends Vue {
   @Prop({ required: false, default: "categoryCodeY" })
   categoryCodeYField!: string;
 
+  @Prop({ required: false, default: "" })
+  unit!: string;
+
+  @Watch("unit")
+  onUnitChange = this.setShowTooltip;
+
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
@@ -186,7 +192,7 @@ export default class DPlanningSerie extends Vue {
       
       this.serie!.columns.template.setAll({
         tooltip: this.tooltip,
-        tooltipText: this.tooltipText,
+        tooltipText: this.tooltipText + this.unit,
         tooltipY: am5.percent(0)
       });
     }

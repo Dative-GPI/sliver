@@ -67,6 +67,12 @@ export default class DScatterPlotSerie extends Vue {
   @Prop({ required: false, default: "valueZ" })
   zField!: string;
 
+  @Prop({ required: false, default: "" })
+  unit!: string;
+
+  @Watch("unit")
+  onUnitChange = this.setBullets;
+
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
@@ -145,7 +151,7 @@ export default class DScatterPlotSerie extends Vue {
       ...userData,
       circleTemplate: am5.Template.new<am5.Circle>({ radius: this.bulletRadius }),
       showTooltip: this.showTooltip,
-      tooltipText: this.tooltipText
+      tooltipText: this.tooltipText + this.unit
     });
     
     setScatterPlotSerieBullets(this.serie!, this.root);

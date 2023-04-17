@@ -73,6 +73,12 @@ export default class DHeatmapSerie extends Vue {
   @Prop({ required: false, default: "valueZ" })
   sizeField!: string;
 
+  @Prop({ required: false, default: "" })
+  unit!: string;
+
+  @Watch("unit")
+  onUnitChange = this.setShowTooltip;
+
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
@@ -143,7 +149,7 @@ export default class DHeatmapSerie extends Vue {
 
   setShowTooltip(): void {
     if (this.showTooltip) {
-      this.serie!.columns.template.set("tooltipText", this.tooltipText);
+      this.serie!.columns.template.set("tooltipText", this.tooltipText + this.unit);
     }
     else {
       this.serie!.columns.template.set("tooltipText", undefined);    

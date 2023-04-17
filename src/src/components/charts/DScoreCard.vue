@@ -1,46 +1,57 @@
 <template>
-  <div style="width: 100%; position: relative"
-    :style="{ minHeight: minHeight ? `${minHeight}px` : undefined, height: solo ? '100%' : undefined }">
-    <div v-for="(ds, dsIndex) in data"
+  <div
+    style="width: 100%; position: relative;"
+    :style="{ minHeight: minHeight ? `${minHeight}px` : undefined, height: solo ? '100%' : undefined }"
+  >
+    <div
+      v-for="(ds, dsIndex) in data"
       :key="dsIndex"
-      :class="{ centered: solo }">
+      :class="{ centered: solo }"
+    >
       <template v-if="series[dsIndex] != null">
-        <div v-for="(dop, dopIndex) in ds.operands"
+        <div
+          v-for="(dop, dopIndex) in ds.operands"
           :key="dopIndex"
           :class="[solo ? '' : 'd-flex flex-nowrap items-center justify-center']"
-          :style="{ height: solo ? undefined : '55px', width: solo ? clientWidth + 'px' : undefined }">
-          <div v-if="!solo"
-            :style="{ 'max-width': `${maxWidth}px` }">
-            <div class="text-h6 text-truncate">{{ dop.label }}</div>
-            <div class="text-truncate text-body-1">{{
-              [format(dop.data[0].timestampX), format(dop.data[0].closeTimestampX)].filter(t => !!t).join(" → ")
-            }}
+          :style="{ height: solo ? undefined : '55px', width: solo ? clientWidth + 'px' : undefined }"
+        >
+          <div
+            v-if="!solo"
+            :style="{ 'max-width': `${maxWidth}px` }"
+          >
+            <div class="text-h6 text-truncate">
+              {{ dop.label }}
+            </div>
+            <div class="text-truncate text-body-1">
+              {{ [format(dop.data[0].timestampX), format(dop.data[0].closeTimestampX)].filter(t => !!t).join(" → ") }}
             </div>
           </div>
           <v-spacer v-if="!solo" />
           <div ref="data">
             <div class="d-flex justify-center align-center">
-              <span class="text-h3"
+              <span
+                class="text-h3"
                 :style="{
                   whiteSpace: 'nowrap', color: color(dop.data[0].valueY, series[dsIndex]),
-                  fontSize: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit || series[dsIndex].operationUnit)}px !important` : undefined,
-                  lineHeight: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit || series[dsIndex].operationUnit)}px !important` : undefined
-                }">
-                {{ formatNumber(dop.data[0].valueY, locale, series[dsIndex].decimalPlaces) }} {{
-                  dop.unit ||
-                    series[dsIndex].operationUnit
-                }}
+                  fontSize: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit)}px !important` : undefined,
+                  lineHeight: solo ? `${soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit)}px !important` : undefined
+                }"
+              >
+                {{ formatNumber(dop.data[0].valueY, locale, series[dsIndex].decimalPlaces) }} {{ dop.unit }}
               </span>
-              <v-icon :size="solo ? soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit || series[dsIndex].operationUnit) * 0.8 : 26"
+              <v-icon
                 style="margin-left: max(1%, 8px)"
-                :color="color(dop.data[0].valueY, series[dsIndex])">
+                :color="color(dop.data[0].valueY, series[dsIndex])"
+                :size="solo ? soloFontSize(dop.data[0].valueY, series[dsIndex].decimalPlaces, dop.unit) * 0.8 : 26"
+              >
                 {{ series[dsIndex].icon }}
               </v-icon>
             </div>
-            <div class="text-truncate text-center text-body-1" :class="{small: clientHeight < 80}"
-              v-if="solo">{{
-  [format(dop.data[0].timestampX), format(dop.data[0].closeTimestampX)].filter(t => !!t).join(" → ")
-              }}
+            <div
+              v-if="solo"
+              class="text-truncate text-center text-body-1" :class="{small: clientHeight < 80}"
+            >
+              {{ [format(dop.data[0].timestampX), format(dop.data[0].closeTimestampX)].filter(t => !!t).join(" → ") }}
             </div>
           </div>
         </div>
