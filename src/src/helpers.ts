@@ -207,7 +207,7 @@ export const setLineSerieBullets = (serie: am5.Series): void => {
     });
     serie.get("tooltip")!.events.off("dataitemchanged");
     serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
-      if (event.newDataItem != null) {
+      if (event.newDataItem != null && event.oldDataItem != null) {
         event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
         serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
         serie.data.push({});
@@ -250,7 +250,7 @@ export const setRangeSerieBullets = (serie: am5.Series): void => {
     });
     serie.get("tooltip")!.events.off("dataitemchanged");
     serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
-      if (event.newDataItem != null) {
+      if (event.newDataItem != null && event.oldDataItem != null) {
         event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
         serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
         serie.data.push({});
@@ -293,7 +293,7 @@ export const setStepLineSerieBullets = (serie: am5.Series): void => {
     });
     serie.get("tooltip")!.events.off("dataitemchanged");
     serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
-      if (event.newDataItem != null) {
+      if (event.newDataItem != null && event.oldDataItem != null) {
         event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
         serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
         serie.data.push({});
