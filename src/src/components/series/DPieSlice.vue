@@ -35,6 +35,12 @@ export default class DPieSlice extends Vue {
   @Prop({ required: false, default: "valueY" })
   valueField!: string;
 
+  @Prop({ required: false, default: "" })
+  unit!: string;
+
+  @Watch("unit")
+  onUnitChange = this.setData;
+
   @Prop({ required: false, default: 0 })
   allSlicesSum!: number;
 
@@ -257,14 +263,16 @@ export default class DPieSlice extends Vue {
             return {
               ...c,
               color: GetHashedColor(this.colorSeed, c[this.categoryField]),
-              index: i
+              index: i,
+              unit: this.unit
             };
           }
           else {
             return {
               ...c,
               color: this.serie!.get("colors")!.getIndex(i % this.serie!.get("colors")!.get("colors")!.length),
-              index: i
+              index: i,
+              unit: this.unit
             };
           }
         })

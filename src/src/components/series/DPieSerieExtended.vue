@@ -43,19 +43,13 @@ export default class DPieSerieExtended extends Vue {
   @Watch("alignLabels")
   onAlignLabelsChange = this.setAlignLabels;
 
-  @Prop({ required: false, default: "mL" })
-  unit!: string;
-
-  @Watch("unit")
-  onUnitChange = this.setShowTooltip;
-
   @Prop({ required: false, default: true })
   showTooltip!: boolean;
 
   @Watch("showTooltip")
   onShowTooltipChange = this.setShowTooltip;
 
-  @Prop({ required: false, default: "{dataItem.dataContext.categoryX}: {valuePercentTotal.formatNumber('0.00')}% - {dataItem.dataContext.valueY}" })
+  @Prop({ required: false, default: "{dataItem.dataContext.categoryX}: {valuePercentTotal.formatNumber('0.00')}% - {dataItem.dataContext.valueY}{dataItem.dataContext.unit}" })
   tooltipText!: string;
 
   @Watch("tooltipText")
@@ -122,7 +116,7 @@ export default class DPieSerieExtended extends Vue {
 
   setShowTooltip(): void {
     if (this.showTooltip) {
-      this.serie!.slices.template.set("tooltipText", this.tooltipText + this.unit);
+      this.serie!.slices.template.set("tooltipText", this.tooltipText);
     }
     else {
       this.serie!.slices.template.set("tooltipText", undefined);    
