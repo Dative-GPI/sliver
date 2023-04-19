@@ -278,7 +278,36 @@ export default class DRangeSerie extends Vue {
   }
 
   getClosedSubData(subData: any[]): any[] {
-    return subData.map((sd, i) => ({ ...sd, [this.closeValueYField]: this.data[i][this.valueYField] }));
+    let i: number = 0, j: number = 0;
+    let closedData: any[] = [];
+    while (j < subData.length && subData[j][this.dateXField] <= this.data[this.data.length - 1][this.dateXField]) {
+      if (this.data[i][this.dateXField] === subData[j][this.dateXField]) {
+        closedData.push({ ...subData[j], [this.closeValueYField]: this.data[i][this.valueYField] });
+        i++;
+        j++;
+        continue;
+      }
+      else if (this.data[i][this.dateXField] < subData[j][this.dateXField]) {
+        closedData.push({ ...this.data[i], [this.closeValueYField]: this.data[i][this.valueYField] });
+        i++;
+        continue;
+      }
+      else if (this.data[i][this.dateXField] > subData[j][this.dateXField]) {
+        if (i > 0) {
+          let slope = (this.data[i][this.valueYField] - this.data[i - 1][this.valueYField]) / (this.data[i][this.dateXField] - this.data[i - 1][this.dateXField]);
+          closedData.push({
+            ...subData[j],
+            [this.closeValueYField]: this.data[i][this.valueYField] - ((this.data[i][this.dateXField] - subData[j][this.dateXField]) * slope)
+          });
+        }
+        j++;
+        continue;
+      }
+    }
+    for (j; j < subData.length; j++) {
+      closedData.push({ ...subData[j], [this.closeValueYField]: subData[j][this.valueYField] });
+    }
+    return closedData;
   }
 
   setSubDatas(): void {
@@ -337,68 +366,6 @@ export default class DRangeSerie extends Vue {
     if (this.legend != null) {
       this.legend.data.push(this.serie);
       this.legend.data.pushAll(this.subSeries);
-    }
-
-    for (let i = 0; i < this.subSeries.length; i++) {
-      let j: any = 0;
-      let baseInterval: any = this.xAxis.get("baseInterval");
-      let baseDuration: any = this.xAxis.baseDuration() / 2;
-      let rangeDataItem: any = null;
-
-      am5.array.each(this.subSeries[i].dataItems, (serieDataItem: any) => {
-        let subSerieDataItem: any = this.serie!.dataItems[j];
-
-        let seriePreviousDataItem: any = null;
-        let subSeriePreviousDataItem: any = null;
-
-        if (j > 0) {
-          seriePreviousDataItem = this.subSeries[i]!.dataItems[j - 1];
-          subSeriePreviousDataItem = this.serie!.dataItems[j - 1];
-        }
-
-        let startTime: any = (am5.time.round(new Date(serieDataItem!.get("valueX")) as any, baseInterval.timeUnit as any, baseInterval.count as any) as any).getTime();
-
-        // intersections
-        if (seriePreviousDataItem != null && subSeriePreviousDataItem != null) {
-          let x0: any = (am5.time.round(new Date(seriePreviousDataItem!.get("valueX")) as any, baseInterval.timeUnit as any, baseInterval.count as any) as any).getTime() + baseDuration;
-          let y01: any = seriePreviousDataItem!.get("valueY");
-          let y02: any = subSeriePreviousDataItem!.get("valueY");
-
-          let x1: any = startTime + baseDuration;
-          let y11: any = serieDataItem!.get("valueY");
-          let y12: any = subSerieDataItem!.get("valueY");
-
-          let intersection: any = getLineIntersection({ x: x0, y: y01 }, { x: x1, y: y11 }, { x: x0, y: y02 }, { x: x1, y: y12 });
-
-          startTime = Math.round(intersection.x);
-        }
-        if (!rangeDataItem) {
-          rangeDataItem = this.xAxis.makeDataItem({});
-          let range: any = this.subSeries[i]!.createAxisRange(rangeDataItem);
-          rangeDataItem!.set("value", startTime);
-          range!.fills!.template!.setAll({
-            fill: this.serie!.get("fill"),
-            fillOpacity: this.serie!.fills.template.get("fillOpacity"),
-            visible: true
-          });
-          range!.strokes!.template!.setAll({
-            stroke: this.subSeries[i]!.get("stroke"),
-            strokeWidth: 1
-          });
-          rangeDataItem!.set("closeValueY", subSerieDataItem!.get("valueY"));
-        }
-        if (rangeDataItem != null) {
-          rangeDataItem!.set("endValue", startTime);
-          rangeDataItem = undefined;
-        }
-        if (j == this.serie!.dataItems.length - 1) {
-          if (rangeDataItem != null) {
-            rangeDataItem!.set("endValue", serieDataItem.get("valueX") + baseDuration);
-            rangeDataItem = undefined;
-          }
-        }
-        j++;
-      });
     }
     
     if (this.defaultHidden) {

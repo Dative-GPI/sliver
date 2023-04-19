@@ -46,13 +46,15 @@ const Template = (args, { argTypes }) => ({
     />`,
 });
 
-const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values) => {
+const makeLineSerie = (name, tZero, vZero, elapsedTime, rangeValue, values, missingValues) => {
   var data = [];
   for (let i = 0; i < values; i++) {
-    data.push({
-      timestampX: tZero,
-      valueY: vZero
-    });
+    if (!missingValues || Math.random() > 0.5) {
+      data.push({
+        timestampX: tZero,
+        valueY: vZero
+      });
+    }
 
     let plusOrMinus = Math.random() < 0.5 ? -1 : 1;
 
@@ -70,9 +72,9 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      makeLineSerie("Reference", 1640815320000, 50, 120000, 5, 50),
-      makeLineSerie("Line 1", 1640815320000, 100, 120000, 5, 50),
-      makeLineSerie("Line 2", 1640815320000, 0, 120000, 5, 50)
+      makeLineSerie("Reference", 1640815320000, 50, 120000, 5, 45, true),
+      makeLineSerie("Line 1", 1640815320000, 100, 120000, 5, 40, false),
+      makeLineSerie("Line 2", 1640815320000, 0, 120000, 5, 50, true)
     ]
   },
   minHeight: '400px',
@@ -102,10 +104,10 @@ Default.args = {
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",
   yAxisRanges: [
-    { startValue: -5,   endValue: 0,  opacity: 0.2, color: "#ff0000", label: "Bad" },
-    { startValue: 0,   endValue: 5,  opacity: 0.2, color: "#00ff00", label: "Bad" },
+    // { startValue: -5,   endValue: 0,  opacity: 0.2, color: "#ff0000", label: "Bad" },
+    // { startValue: 0,   endValue: 5,  opacity: 0.2, color: "#00ff00", label: "Bad" },
   ],
-  yAxisUnit: "mL",
+  yAxisUnit: "",
   serieShowTooltip: true,
   serieTooltipText: "{name}: {dataItem.dataContext.valueY}",
   serieSubTooltipText: "{name}: {dataItem.dataContext.valueY}"

@@ -66,7 +66,11 @@ Default.args = {
   data: {
     series: [
       { ...makeHistogramSerie("Line 1", 1640815320000, 2.16e+7, 0, 5, 50 ) },
-      { ...makeHistogramSerie("Line 2", 1640815320000, 2.16e+7, 50000, 50000, 50 ) }
+      { ...makeHistogramSerie("Line 2", 1640815320000, 2.16e+7, 0, 5, 50 ) },
+      { ...makeHistogramSerie("Line 3", 1640815320000, 2.16e+7, 0, 5, 50 ) },
+      { ...makeHistogramSerie("Line 4", 1640815320000, 2.16e+7, 0, 5, 50 ) },
+      { ...makeHistogramSerie("Line 5", 1640815320000, 2.16e+7, 0, 5, 50 ) },
+      { ...makeHistogramSerie("Line 6", 1640815320000, 2.16e+7, 0, 5, 50 ) }
     ]
   },
   minHeight: '400px',
@@ -93,7 +97,7 @@ Default.args = {
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   xAxisRanges: [
-    { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.2, color: "#ff00ff", label: "Don't know"}
+    // { startDay: 0, startHour: 8, startMinute: 30, endDay: 0, endHour: 18, endMinute: 30, opacity: 0.2, color: "#ff00ff", label: "Don't know"}
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
