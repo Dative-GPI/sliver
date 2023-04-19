@@ -24,8 +24,8 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, LEGENDROOT } from "../../literals";
-import { getLocale, getTimezone } from "../../helpers";
 import { ColorSets, GetColors } from "../../colors";
+import { getLocale } from "../../helpers";
 import { LayoutEnum } from "../../enums";
 import { ChartType } from "../../models";
 
@@ -131,7 +131,6 @@ export default class DIndicatorChart extends Vue {
       }
     });
     this.root.locale = getLocale(this.locale);
-    this.root.timezone = getTimezone(this.timeOffset);
     this.root.autoResize = false;
 
     this.root.numberFormatter.setAll({
@@ -141,7 +140,6 @@ export default class DIndicatorChart extends Vue {
 
     this.legendRoot = am5.Root.new((this.$refs.indicatorlegend as HTMLElement), {});
     this.legendRoot.locale = getLocale(this.locale);
-    this.legendRoot.timezone = getTimezone(this.timeOffset);
     this.legendRoot.autoResize = false;
 
     this.legendRoot.numberFormatter.setAll({
@@ -166,7 +164,7 @@ export default class DIndicatorChart extends Vue {
 
     // Add chart to root
     this.chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {
-      userData: { chartType: ChartType.Indicator },
+      userData: { chartType: ChartType.Indicator, timeOffset: this.timeOffset },
       maxTooltipDistance: 0
     }));
 

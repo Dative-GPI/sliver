@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+import _ from "lodash";
 import { Component, InjectReactive, Vue, Prop, ProvideReactive, Watch } from "vue-property-decorator";
 
 import * as am5 from "@amcharts/amcharts5";
@@ -83,7 +84,7 @@ export default class DDateYAxis extends Vue {
   axis: any = null;
 
   @ProvideReactive(YAXISVALIDATED)
-  serieValidated: () => void = () => { this.setLines(); this.setRanges(); }
+  serieValidated: () => void = _.debounce(() => { this.setLines(); this.setRanges(); }, 500);
 
   tooltip: am5.Tooltip | null = null;
   lineItems: am5.DataItem<am5xy.IDateAxisDataItem>[] = [];
@@ -163,12 +164,14 @@ export default class DDateYAxis extends Vue {
         above: true,
         value: line.value
       }));
-      axisRange.get("grid")!.setAll({
-        strokeDasharray: [5, 3, 1, 3],
-        strokeOpacity: 1,
-        strokeWidth: 1,
-        stroke: am5.color(line.color)
-      });
+      if (axisRange.get("grid") != null) {
+        axisRange.get("grid")!.setAll({
+          strokeDasharray: [5, 3, 1, 3],
+          strokeOpacity: 1,
+          strokeWidth: 1,
+          stroke: am5.color(line.color)
+        });
+      }
       if (!isEmptyString(line.icon)) {
         axisRange.get("label")!.setAll({
           html: `
@@ -198,19 +201,6 @@ export default class DDateYAxis extends Vue {
       return;
     }
 
-    // Get axis boundaries
-    let gs = this.axis!.positionToDate(0);
-    let ge = this.axis!.positionToDate(1);
-
-    gs.setDate(gs.getUTCDate() - gs.getDay() - 8);
-    ge.setDate(ge.getUTCDate() - ge.getDay() + 8);
-
-    // Get first monday of boundaries at midnight
-    let current = new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate(), 0));
-
-    // Get timezone offset
-    let offset = this.root!.timezone!.offsetUTC(new Date(Date.UTC(gs.getFullYear(), gs.getMonth(), gs.getDate()))) * 60 * 1000;
-
     // Map all days ranges
     let mappedRanges = this.ranges
       .filter(r => r.startDay === Days.AllDays)
@@ -223,6 +213,15 @@ export default class DDateYAxis extends Vue {
       )
       .reduce((acc: TimeRange[], val: TimeRange[]): TimeRange[] => acc.concat(val), [])
       .concat(this.ranges.filter(r => r.startDay !== Days.AllDays && r.endDay !== Days.AllDays));
+
+    // Get first monday of boundaries at midnight
+    let gs = this.axis!.positionToDate(0);
+    gs.setDate(gs.getUTCDate() - gs.getDay() - 6);
+    let current = new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate(), 0));
+
+    // Get last sunday of boundaries
+    let ge = this.axis!.positionToDate(1);
+    ge.setDate(ge.getUTCDate() - ge.getDay() + 7);
 
     while (current < ge) {
       for (let range of mappedRanges) {
@@ -243,8 +242,8 @@ export default class DDateYAxis extends Vue {
 
         // Create a range
         let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
-          value: Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate(), start.getUTCHours(), start.getUTCMinutes()) + offset,
-          endValue: Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate(), end.getUTCHours(), end.getUTCMinutes()) + offset
+          value: Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate(), start.getUTCHours(), start.getUTCMinutes()),
+          endValue: Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate(), end.getUTCHours(), end.getUTCMinutes())
         }));
 
         axisRange.get("grid").set("strokeOpacity", 0);

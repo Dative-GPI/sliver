@@ -24,7 +24,7 @@ const makeScoreCardChart = (labels, icon, iconSize, decimalPlaces, minColor, min
   let operands = labels.map(l => ({
     label: l,
     unit: "MWh",
-    data: [{ valueY: Math.random() * (valueMax - valueMin) + valueMin, timestampX: 1672833487703, ...(close ? {closeTimestampX: 1672834487903} : {}) }]
+    data: [{ valueY: Math.random() * (valueMax - valueMin) + valueMin, timestampX: 1672833600000, ...(close ? {closeTimestampX: 1672837200000} : {}) }]
   }));
   return {
     data: [{ operands }],

@@ -16,11 +16,12 @@ import { Component, ProvideReactive, Vue, Prop, Watch } from "vue-property-decor
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
+import { ChartType } from "../../models";
 import { LayoutEnum } from "../../enums";
+import { getLocale } from "../../helpers";
 import { AMROOT, CHART } from "../../literals";
 import { ColorSets, GetColors } from "../../colors";
-import { getLocale, getTimezone } from "../../helpers";
-import { ChartType } from "../../models";
+import { getTimezone } from "../../dates";
 
 @Component({})
 export default class DXYChart extends Vue {
@@ -143,7 +144,7 @@ export default class DXYChart extends Vue {
 
     // Add chart to root
     this.chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {
-      userData: { chartType: ChartType.XY },
+      userData: { chartType: ChartType.XY, timeOffset: this.timeOffset },
       maxTooltipDistance: 0
     }));
 

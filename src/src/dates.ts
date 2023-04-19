@@ -1,14 +1,91 @@
 import { format } from "date-fns";
 import { enUS, enGB, fr, it, es, ru, de } from "date-fns/locale";
 
+import * as am5 from "@amcharts/amcharts5";
+
+export const getTimezone = (timeOffset: string): am5.Timezone  => {
+  let cleaned = timeOffset.replaceAll(" ", "").toLowerCase();
+  switch (cleaned) {
+    case "utc-11:00:00": return am5.Timezone.new("Pacific/Niue");
+    case "utc-10:00:00": return am5.Timezone.new("Pacific/Tahiti");
+    case "utc-09:00:00": return am5.Timezone.new("Pacific/Gambier");
+    case "utc-08:00:00": return am5.Timezone.new("Pacific/Pitcairn");
+    case "utc-07:00:00": return am5.Timezone.new("America/Phoenix");
+    case "utc-06:00:00": return am5.Timezone.new("America/Costa_Rica");
+    case "utc-05:00:00": return am5.Timezone.new("America/Cancun");
+    case "utc-04:00:00": return am5.Timezone.new("America/Caracas");
+    case "utc-03:00:00": return am5.Timezone.new("America/Araguaina");
+    case "utc-02:00:00": return am5.Timezone.new("America/Noronha");
+    case "utc-01:00:00": return am5.Timezone.new("Atlantic/Cape_Verde");
+    case "utc+01:00:00": return am5.Timezone.new("Africa/Tunis");
+    case "utc+02:00:00": return am5.Timezone.new("Africa/Cairo");
+    case "utc+03:00:00": return am5.Timezone.new("Africa/Djibouti");
+    case "utc+04:00:00": return am5.Timezone.new("Asia/Dubai");
+    case "utc+05:00:00": return am5.Timezone.new("Asia/Karachi");
+    case "utc+06:00:00": return am5.Timezone.new("Asia/Dhaka");
+    case "utc+07:00:00": return am5.Timezone.new("Asia/Jakarta");
+    case "utc+08:00:00": return am5.Timezone.new("Asia/Brunei");
+    case "utc+09:00:00": return am5.Timezone.new("Asia/Seoul");
+    case "utc+10:00:00": return am5.Timezone.new("Asia/Vladivostok");
+    case "utc+11:00:00": return am5.Timezone.new("Pacific/Bougainville");
+    case "utc+12:00:00": return am5.Timezone.new("Asia/Kamchatka");
+    case "utc+13:00:00": return am5.Timezone.new("Pacific/Apia");
+    case "utc+14:00:00": return am5.Timezone.new("Pacific/Kiritimati");
+    default: return am5.Timezone.new("UTC");
+  }
+}
+
+export const getUserOffset = (offset: string, milliseconds: boolean = false): number => {
+  let userOffset = 0;
+  let cleaned = offset.replaceAll(" ", "").toLowerCase();
+  switch (cleaned) {
+    case "utc-11:00:00": userOffset = -11; break;
+    case "utc-10:00:00": userOffset = -10; break;
+    case "utc-09:00:00": userOffset = -9; break;
+    case "utc-08:00:00": userOffset = -8; break;
+    case "utc-07:00:00": userOffset = -7; break;
+    case "utc-06:00:00": userOffset = -6; break;
+    case "utc-05:00:00": userOffset = -5; break;
+    case "utc-04:00:00": userOffset = -4; break;
+    case "utc-03:00:00": userOffset = -3; break;
+    case "utc-02:00:00": userOffset = -2; break;
+    case "utc-01:00:00": userOffset = -1; break;
+    case "utc+01:00:00": userOffset = +1; break;
+    case "utc+02:00:00": userOffset = +2; break;
+    case "utc+03:00:00": userOffset = +3; break;
+    case "utc+04:00:00": userOffset = +4; break;
+    case "utc+05:00:00": userOffset = +5; break;
+    case "utc+06:00:00": userOffset = +6; break;
+    case "utc+07:00:00": userOffset = +7; break;
+    case "utc+08:00:00": userOffset = +8; break;
+    case "utc+09:00:00": userOffset = +9; break;
+    case "utc+10:00:00": userOffset = +10; break;
+    case "utc+11:00:00": userOffset = +11; break;
+    case "utc+12:00:00": userOffset = +12; break;
+    case "utc+13:00:00": userOffset = +13; break;
+    case "utc+14:00:00": userOffset = +14; break;
+  }
+  if (milliseconds) {
+    return userOffset * 60 * 60 * 1000;
+  }
+  return userOffset;
+}
+
+export const getMachineOffset = (milliseconds: boolean = false): number => {
+  if (milliseconds) {
+    return -(new Date()).getTimezoneOffset() * 60 * 1000;
+  }
+  return -(new Date()).getTimezoneOffset() / 60;
+}
+
 export const LongTimeFormat =  "EEE dd LLL yyyy HH:mm:ss";
 
 export const DateTools =  {
   formatShortEpoch: (locale: string, offset: string, epoch: number): string => {
-    return InnerDateTools.formatEpoch(locale, ShortTimeFormat(locale), epoch - (getTimeZoneOffsetMinutes(offset) * 60 * 1000));
+    return InnerDateTools.formatEpoch(locale, ShortTimeFormat(locale), epoch + getUserOffset(offset, true));
   },
   formatLongTimeEpoch: (locale: string, offset: string, epoch: number): string => {
-    const result = InnerDateTools.formatEpoch(locale, LongTimeFormat, epoch - (getTimeZoneOffsetMinutes(offset) * 60 * 1000));
+    const result = InnerDateTools.formatEpoch(locale, LongTimeFormat, epoch + getUserOffset(offset, true));
     return capitalizeFirstLetter(result);
   },
 }
@@ -34,38 +111,6 @@ const ShortTimeFormat = (locale: string): string => {
     case "ru-RU": return "dd/MM/yy HH:mm:ss";
     default: return "MM/dd/yy HH:mm:ss";
   }  
-}
-
-const getTimeZoneOffsetMinutes = (offset: string): number => {
-  let cleaned = offset.replaceAll(" ", "").toLowerCase();
-  switch (cleaned) {
-    case "utc-11:00:00": return -11 * 60;
-    case "utc-10:00:00": return -10 * 60;
-    case "utc-09:00:00": return -9 * 60;
-    case "utc-08:00:00": return -8 * 60;
-    case "utc-07:00:00": return -7 * 60;
-    case "utc-06:00:00": return -6 * 60;
-    case "utc-05:00:00": return -5 * 60;
-    case "utc-04:00:00": return -4 * 60;
-    case "utc-03:00:00": return -3 * 60;
-    case "utc-02:00:00": return -2 * 60;
-    case "utc-01:00:00": return -1 * 60;
-    case "utc+01:00:00": return +1 * 60;
-    case "utc+02:00:00": return +2 * 60;
-    case "utc+03:00:00": return +3 * 60;
-    case "utc+04:00:00": return +4 * 60;
-    case "utc+05:00:00": return +5 * 60;
-    case "utc+06:00:00": return +6 * 60;
-    case "utc+07:00:00": return +7 * 60;
-    case "utc+08:00:00": return +8 * 60;
-    case "utc+09:00:00": return +9 * 60;
-    case "utc+10:00:00": return +10 * 60;
-    case "utc+11:00:00": return +11 * 60;
-    case "utc+12:00:00": return +12 * 60;
-    case "utc+13:00:00": return +13 * 60;
-    case "utc+14:00:00": return +14 * 60;
-    default: return 0;
-  }
 }
 
 const getLocale = (locale: string): Locale => {

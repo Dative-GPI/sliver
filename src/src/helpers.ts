@@ -1,6 +1,6 @@
 import * as am5 from "@amcharts/amcharts5";
-import * as am5xy from "@amcharts/amcharts5/xy";
 
+import am5locales_en from "@amcharts/amcharts5/locales/en";
 import am5locales_en_US from "@amcharts/amcharts5/locales/en_US";
 import am5locales_fr_FR from "@amcharts/amcharts5/locales/fr_FR";
 import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
@@ -106,7 +106,9 @@ export const uuidv4 = (): string => {
 
 export const getLocale = (code: string): any => {
   switch (code) {
-    case "en-UK":
+    case "en-UK": {
+      return am5locales_en;
+    }
     case "en-US": {
       return am5locales_en_US;
     }
@@ -128,38 +130,6 @@ export const getLocale = (code: string): any => {
     default: {
       return am5locales_en_US;
     }
-  }
-}
-
-export const getTimezone = (timeOffset: string): am5.Timezone  => {
-  let cleaned = timeOffset.replaceAll(" ", "").toLowerCase();
-  switch (cleaned) {
-    case "utc-11:00:00": return am5.Timezone.new("Pacific/Niue");
-    case "utc-10:00:00": return am5.Timezone.new("Pacific/Tahiti");
-    case "utc-09:00:00": return am5.Timezone.new("Pacific/Gambier");
-    case "utc-08:00:00": return am5.Timezone.new("Pacific/Pitcairn");
-    case "utc-07:00:00": return am5.Timezone.new("America/Phoenix");
-    case "utc-06:00:00": return am5.Timezone.new("America/Costa_Rica");
-    case "utc-05:00:00": return am5.Timezone.new("America/Cancun");
-    case "utc-04:00:00": return am5.Timezone.new("America/Caracas");
-    case "utc-03:00:00": return am5.Timezone.new("America/Araguaina");
-    case "utc-02:00:00": return am5.Timezone.new("America/Noronha");
-    case "utc-01:00:00": return am5.Timezone.new("Atlantic/Cape_Verde");
-    case "utc+01:00:00": return am5.Timezone.new("Africa/Tunis");
-    case "utc+02:00:00": return am5.Timezone.new("Africa/Cairo");
-    case "utc+03:00:00": return am5.Timezone.new("Africa/Djibouti");
-    case "utc+04:00:00": return am5.Timezone.new("Asia/Dubai");
-    case "utc+05:00:00": return am5.Timezone.new("Asia/Karachi");
-    case "utc+06:00:00": return am5.Timezone.new("Asia/Dhaka");
-    case "utc+07:00:00": return am5.Timezone.new("Asia/Jakarta");
-    case "utc+08:00:00": return am5.Timezone.new("Asia/Brunei");
-    case "utc+09:00:00": return am5.Timezone.new("Asia/Seoul");
-    case "utc+10:00:00": return am5.Timezone.new("Asia/Vladivostok");
-    case "utc+11:00:00": return am5.Timezone.new("Pacific/Bougainville");
-    case "utc+12:00:00": return am5.Timezone.new("Asia/Kamchatka");
-    case "utc+13:00:00": return am5.Timezone.new("Pacific/Apia");
-    case "utc+14:00:00": return am5.Timezone.new("Pacific/Kiritimati");
-    default: return am5.Timezone.new("UTC");
   }
 }
 
