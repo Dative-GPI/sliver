@@ -92,12 +92,6 @@ export const textColor = (backgroundHexColor: string): am5.Color => {
   return am5.color("#000000");
 }
 
-export const getLineIntersection = (a1: { x: number, y: number }, a2: { x: number, y: number }, b1: { x: number, y: number }, b2: { x: number, y: number }): { x: number, y: number } => {
-  let x = ((a1.x * a2.y - a2.x * a1.y) * (b1.x - b2.x) - (a1.x - a2.x) * (b1.x * b2.y - b1.y * b2.x)) / ((a1.x - a2.x) * (b1.y - b2.y) - (a1.y - a2.y) * (b1.x - b2.x));
-  let y = ((a1.x * a2.y - a2.x * a1.y) * (b1.y - b2.y) - (a1.y - a2.y) * (b1.x * b2.y - b1.y * b2.x)) / ((a1.x - a2.x) * (b1.y - b2.y) - (a1.y - a2.y) * (b1.x - b2.x));
-  return { x: x, y: y };
-}
-
 export const uuidv4 = (): string => {
   return (([1e7] as any)+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, (c: any) =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
@@ -162,11 +156,14 @@ export const setLineSerieBullets = (serie: am5.Series): void => {
     });
   }
   else if (serie.get("userData").showTooltipBullet && serie.get("tooltip") != null) {
+    serie.get("tooltip")!.events.off("dataitemchanged");
+    serie.get("tooltip")!.events.off("boundschanged");
+
     serie.bullets.push((root, _, dataItem) => {
       if (dataItem == serie.dataItems[serie.dataItems.length - 1]) {
         serie.set("userData", { ...serie.get("userData"), tooltipBullet: am5.Bullet.new(root, {
             sprite: am5.Circle.new(root, {
-              opacity: serie.get("opacity"),
+              opacity: 0,
               radius: serie.get("userData").bulletRadius,
               fill: serie.get("fill")
             })
@@ -175,13 +172,22 @@ export const setLineSerieBullets = (serie: am5.Series): void => {
         return serie.get("userData").tooltipBullet;
       }
     });
-    serie.get("tooltip")!.events.off("dataitemchanged");
+
     serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
       if (event.newDataItem != null && event.oldDataItem != null) {
         event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
         serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
         serie.data.push({});
         serie.data.pop();
+      }
+    });
+
+    serie.get("tooltip")!.events.on("boundschanged", (event) => {
+      if (!event.target.isShowing()) {
+        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 0);
+      }
+      else {
+        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 1);
       }
     });
   }
@@ -205,11 +211,14 @@ export const setRangeSerieBullets = (serie: am5.Series): void => {
     });
   }
   else if (serie.get("userData").showTooltipBullet && serie.get("tooltip") != null) {
+    serie.get("tooltip")!.events.off("dataitemchanged");
+    serie.get("tooltip")!.events.off("boundschanged");
+
     serie.bullets.push((root, _, dataItem) => {
       if (dataItem == serie.dataItems[serie.dataItems.length - 1]) {
         serie.set("userData", { ...serie.get("userData"), tooltipBullet: am5.Bullet.new(root, {
             sprite: am5.Circle.new(root, {
-              opacity: serie.get("opacity"),
+              opacity: 0,
               radius: serie.get("userData").bulletRadius,
               fill: serie.get("fill")
             })
@@ -218,13 +227,22 @@ export const setRangeSerieBullets = (serie: am5.Series): void => {
         return serie.get("userData").tooltipBullet;
       }
     });
-    serie.get("tooltip")!.events.off("dataitemchanged");
+
     serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
       if (event.newDataItem != null && event.oldDataItem != null) {
         event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
         serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
         serie.data.push({});
         serie.data.pop();
+      }
+    });
+
+    serie.get("tooltip")!.events.on("boundschanged", (event) => {
+      if (!event.target.isShowing()) {
+        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 0);
+      }
+      else {
+        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 1);
       }
     });
   }
@@ -248,11 +266,14 @@ export const setStepLineSerieBullets = (serie: am5.Series): void => {
     });
   }
   else if (serie.get("userData").showTooltipBullet && serie.get("tooltip") != null) {
+    serie.get("tooltip")!.events.off("dataitemchanged");
+    serie.get("tooltip")!.events.off("boundschanged");
+
     serie.bullets.push((root, _, dataItem) => {
       if (dataItem == serie.dataItems[serie.dataItems.length - 1]) {
         serie.set("userData", { ...serie.get("userData"), tooltipBullet: am5.Bullet.new(root, {
             sprite: am5.Circle.new(root, {
-              opacity: serie.get("opacity"),
+              opacity: 0,
               radius: serie.get("userData").bulletRadius,
               fill: serie.get("fill")
             })
@@ -261,13 +282,22 @@ export const setStepLineSerieBullets = (serie: am5.Series): void => {
         return serie.get("userData").tooltipBullet;
       }
     });
-    serie.get("tooltip")!.events.off("dataitemchanged");
+
     serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
       if (event.newDataItem != null && event.oldDataItem != null) {
         event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
         serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
         serie.data.push({});
         serie.data.pop();
+      }
+    });
+
+    serie.get("tooltip")!.events.on("boundschanged", (event) => {
+      if (!event.target.isShowing()) {
+        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 0);
+      }
+      else {
+        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 1);
       }
     });
   }

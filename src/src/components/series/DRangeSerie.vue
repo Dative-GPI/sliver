@@ -11,7 +11,7 @@ import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { AMROOT, CHART, CURSOR, LEGEND, XAXIS, XAXISVALIDATED, YAXIS, YAXISVALIDATED } from "../../literals";
-import { getLineIntersection, removeSerie, setRangeSerieBullets, textColor } from "../../helpers";
+import { setRangeSerieBullets, textColor } from "../../helpers";
 import { ColorSets, GetHashedColor } from "../../colors";
 import { SerieEnum } from "../../enums";
 
