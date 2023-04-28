@@ -200,7 +200,7 @@ export default class DDateYAxis extends Vue {
     if (this.ranges == null || this.ranges.length < 1) {
       return;
     }
-
+    
     // Map all days ranges
     let mappedRanges = this.ranges
       .filter(r => r.startDay === Days.AllDays)
@@ -215,35 +215,24 @@ export default class DDateYAxis extends Vue {
       .concat(this.ranges.filter(r => r.startDay !== Days.AllDays && r.endDay !== Days.AllDays));
 
     // Get first monday of boundaries at midnight
-    let gs = this.axis!.positionToDate(0);
-    gs.setDate(gs.getUTCDate() - gs.getDay() - 6);
-    let current = new Date(Date.UTC(gs.getUTCFullYear(), gs.getUTCMonth(), gs.getUTCDate(), 0));
+    let startEpoch = this.axis!.positionToDate(0).getTime() - ((this.axis!.positionToDate(0).getTime() - 345600000) % 604800000);
 
-    // Get last sunday of boundaries
-    let ge = this.axis!.positionToDate(1);
-    ge.setDate(ge.getUTCDate() - ge.getDay() + 7);
+    // Get last monday of boundaries at midnight
+    let endEpoch = this.axis!.positionToDate(1).getTime() + 604800000 - ((this.axis!.positionToDate(1).getTime() + 259200000) % 604800000);
 
-    while (current < ge) {
+    while (startEpoch < endEpoch) {
       for (let range of mappedRanges) {
-        let start = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth(), current.getUTCDate(), 0));
-        start.setUTCDate(start.getUTCDate() + range.startDay);
-        start.setUTCHours(start.getUTCHours() + range.startHour);
-        start.setUTCMinutes(start.getUTCMinutes() + range.startMinute);
+        let start = startEpoch + (range.startDay * 86400000) + (range.startHour * 3600000) + (range.startMinute * 60000);
 
-        let end = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth(), current.getUTCDate(), 0));
+        let end = startEpoch + (range.endDay * 86400000) + (range.endHour * 3600000) + (range.endMinute * 60000);
         if (range.startDay > range.endDay) {
-          end.setUTCDate(end.getUTCDate() + range.endDay + 7);
+          end += 604800000;
         }
-        else {
-          end.setUTCDate(end.getUTCDate() + range.endDay);
-        }
-        end.setUTCHours(end.getUTCHours() + range.endHour);
-        end.setUTCMinutes(end.getUTCMinutes() + range.endMinute);
 
         // Create a range
         let axisRange = this.axis!.createAxisRange(this.axis!.makeDataItem({
-          value: Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate(), start.getUTCHours(), start.getUTCMinutes()),
-          endValue: Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate(), end.getUTCHours(), end.getUTCMinutes())
+          value: start,
+          endValue: end
         }));
 
         axisRange.get("grid").set("strokeOpacity", 0);
@@ -256,7 +245,7 @@ export default class DDateYAxis extends Vue {
           axisRange.get("label").setAll({
             text: range.label,
             inside: true,
-            centerX: 0,
+            centerY: 23,
             fill: am5.color(range.color)
           });
         }
@@ -264,7 +253,7 @@ export default class DDateYAxis extends Vue {
       }
 
       // Iterate
-      current = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth(), current.getUTCDate() + 7, 0));
+      startEpoch += 604800000;
     }
   }
 

@@ -75,17 +75,12 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      makeLineSerie("Level 1", 1680332700000, 225000, 3600000, 10000, 500),
-      // makeLineSerie("Level 2", 1674028800000, 250000, 3600000, 10000, 50),
-      // makeLineSerie("Level 3", 1674028800000, 275000, 3600000, 10000, 50),
-      // makeLineSerie("Level 4", 1674028800000, 275000, 3600000, 10000, 50),
-      // makeLineSerie("Level 5", 1674028800000, 275000, 3600000, 10000, 50),
-      // makeLineSerie("Level 6", 1674028800000, 275000, 3600000, 10000, 50),
+      makeLineSerie("Level 1", 1682294400000 - 86400000, 225000, 864000, 10000, 1900)
     ]
   },
   minHeight: '400px',
   locale: "fr-FR",
-  timeOffset: "UTC +05:00:00",
+  timeOffset: "UTC +02:00:00",
   colorSet: 0,
   colorSeed: "tango",
   chartLayout: 2,
@@ -108,19 +103,16 @@ Default.args = {
   xAxisShowTooltip: true,
   xAxisTooltipDateFormat: "yyyy-MM-dd HH:mm:ss",
   xAxisLines: [
-    { value: 1680339901289, color: "#000000", tooltip: ["Triggered", "Saturday 1st 2023 14:05:01"], icon: "schedule" },
-    // { value: 1674028800000 + 5 * 3600000, color: "#0000FF", tooltip: ["Resolved", "January 26th 2023 16:00"], icon: "block" }
+    { value: 1682632800000, color: "#000000", tooltip: ["Triggered", "Thursday 28th April 2023 00:00:00"], icon: "schedule" },
   ],
   xAxisRanges: [
-    // { startDay: 3, startHour: 6, startMinute: 30, endDay: 3, endHour: 7, endMinute: 30, opacity: 0.15, color: "#0000FF", label: "X"},
-    { startDay: 6, startHour: 6, startMinute: 0, endDay: 6, endHour: 16, endMinute: 0, opacity: 0.15, color: "#5f5f5f", label: "Journée 11h-21h"}
+    { startDay: 4, startHour: 22, startMinute: 0, endDay: 6, endHour: 22, endMinute: 0, opacity: 0.10, color: "#5f5f5f", label: "Week-end"},
+    { startDay: 7, startHour: 7, startMinute: 0, endDay: 7, endHour: 15, endMinute: 0, opacity: 0.10, color: "#005f00", label: ""},
   ],
   yAxisOpposite: false,
   yAxisShowTooltip: true,
   yAxisTooltipNumberFormat: "#,###.###### a",
-  yAxisRanges: [
-    // { startValue: 200000, endValue: 225000, opacity: 0.5, color: "#0000FF", label: "Y" }
-  ],
+  yAxisRanges: [],
   yAxisUnit: "mL",
   serieShowBullets: false,
   serieBulletsRadius: 5,
