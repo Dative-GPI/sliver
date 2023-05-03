@@ -51,6 +51,11 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [{
+      serie: "C",
+      data: [{
+        valueX: 200
+      }]
+    },{
       serie: "B",
       data: [{
         valueX: 100

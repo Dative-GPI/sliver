@@ -70,9 +70,9 @@ export default class DPieChart extends Vue {
     this.root = am5.Root.new((this.$refs.piechart as HTMLElement), {
       tooltipContainerBounds: {
         top: 50,
-        bottom: 50,
-        left: 100,
-        right: 100
+        bottom: 0,
+        left: 50,
+        right: 0
       }
     });
     this.root.locale = getLocale(this.locale);

@@ -124,10 +124,10 @@ export default class DIndicatorChart extends Vue {
     // Create root
     this.root = am5.Root.new((this.$refs.indicatorchart as HTMLElement), {
       tooltipContainerBounds: {
-        top: 150,
-        bottom: 50,
-        left: 150,
-        right: 150
+        top: 50,
+        bottom: 0,
+        left: 50,
+        right: 0
       }
     });
     this.root.locale = getLocale(this.locale);

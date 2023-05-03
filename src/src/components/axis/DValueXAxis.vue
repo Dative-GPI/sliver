@@ -254,7 +254,10 @@ export default class DValueXAxis extends Vue {
   mounted(): void {
     // Add to chart
     this.axis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
-      renderer: am5xy.AxisRendererX.new(this.root, {})
+      renderer: am5xy.AxisRendererX.new(this.root, {}),
+      numberFormatter: am5.NumberFormatter.new(this.root, {
+        numberFormat: "#.# a"
+      })
     }));
 
     // Add to cursor

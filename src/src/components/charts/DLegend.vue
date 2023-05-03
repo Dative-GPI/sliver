@@ -155,31 +155,58 @@ export default class DLegend extends Vue {
       this.legend.itemContainers.template.events.on("dblclick", (event: am5.ISpritePointerEvent) => {
         switch ((this.chart! as any).get("userData").chartType) {
           case ChartType.Radar: {
-            var eventClockHand = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
+            const eventClockHand = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
             eventClockHand.show();
-            for (let xAxis of (this.chart! as am5radar.RadarChart).xAxes) {
-              for (let axisRange of xAxis.axisRanges) {
-                if (axisRange === eventClockHand) {
-                  continue;
-                }
-                if (axisRange.get("bullet") != null) {
-                  if (axisRange.get("bullet")!.get("sprite") != null) {
-                    if (axisRange.get("bullet")!.get("sprite")!.get("userData") != null) {
-                      if (axisRange.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ClockHand) {
-                        axisRange.hide();
+            let allHidden = true;
+            (this.chart! as am5radar.RadarChart).xAxes.each((axis: am5xy.Axis<am5xy.AxisRenderer>) => {
+              axis.axisRanges.each((range: am5.DataItem<am5xy.IAxisDataItem>) => {
+                if (range != eventClockHand && range.get("bullet") != null) {
+                  if (range.get("bullet")!.get("sprite") != null) {
+                    if (range.get("bullet")!.get("sprite")!.get("userData") != null) {
+                      if (range.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ClockHand) {
+                        if (!range.isHidden()) {
+                          allHidden = false;
+                        }
                       }
                     }
                   }
                 }
-              }
-            }
+              });
+            });
+            (this.chart! as am5radar.RadarChart).xAxes.each((axis: am5xy.Axis<am5xy.AxisRenderer>) => {
+              axis.axisRanges.each((range: am5.DataItem<am5xy.IAxisDataItem>) => {
+                if (range != eventClockHand && range.get("bullet") != null) {
+                  if (range.get("bullet")!.get("sprite") != null) {
+                    if (range.get("bullet")!.get("sprite")!.get("userData") != null) {
+                      if (range.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ClockHand) {
+                        if (allHidden) {
+                          range.show();
+                        }
+                        else {
+                          range.hide();
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+            });
             return;
           }
           case ChartType.XY: {
-            var eventSerie = event!.target!.dataItem!.dataContext as am5.Series;
+            const eventSerie = event!.target!.dataItem!.dataContext as am5.Series;
             eventSerie.show();
+            let allHidden = true;
             this.chart!.series.each((serie: am5.Series) => {
               if (serie != eventSerie && !serie.isHidden()) {
+                allHidden = false;
+              }
+            });
+            this.chart!.series.each((serie: am5.Series) => {
+              if (allHidden) {
+                serie.show();
+              }
+              else if (serie != eventSerie && !serie.isHidden()) {
                 serie.hide();
               }
             });

@@ -118,9 +118,9 @@ export default class DLegend extends Vue {
       this.legend.itemContainers.template.events.on("click", (event: am5.ISpritePointerEvent) => {
         switch (this.chart!.get("userData").chartType) {
           case ChartType.Indicator: {
-            var eventClockHand = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
-            if (eventClockHand.isHidden()) {
-              eventClockHand.get("bullet")!.get("sprite")!.show();
+            const eventIndicator = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
+            if (eventIndicator.isHidden()) {
+              eventIndicator.get("bullet")!.get("sprite")!.show();
             }
             return;
           }
@@ -130,24 +130,42 @@ export default class DLegend extends Vue {
       this.legend.itemContainers.template.events.on("dblclick", (event: am5.ISpritePointerEvent) => {
         switch (this.chart!.get("userData").chartType) {
           case ChartType.Indicator: {
-            var eventIndicator = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
+            const eventIndicator = event!.target!.dataItem!.dataContext! as am5.DataItem<am5xy.IValueAxisDataItem>;
             eventIndicator.show();
-            for (let xAxis of this.chart!.xAxes) {
-              for (let axisRange of xAxis.axisRanges) {
-                if (axisRange === eventIndicator) {
-                  continue;
-                }
-                if (axisRange.get("bullet") != null) {
-                  if (axisRange.get("bullet")!.get("sprite") != null) {
-                    if (axisRange.get("bullet")!.get("sprite")!.get("userData") != null) {
-                      if (axisRange.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ProgressIndicator) {
-                        axisRange.hide();
+            let allHidden = true;
+            this.chart!.xAxes.each((axis: am5xy.Axis<am5xy.AxisRenderer>) => {
+              axis.axisRanges.each((range: am5.DataItem<am5xy.IAxisDataItem>) => {
+                if (range != eventIndicator && range.get("bullet") != null) {
+                  if (range.get("bullet")!.get("sprite") != null) {
+                    if (range.get("bullet")!.get("sprite")!.get("userData") != null) {
+                      if (range.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ProgressIndicator) {
+                        if (!range.isHidden()) {
+                          allHidden = false;
+                        }
                       }
                     }
                   }
                 }
-              }
-            }
+              });
+            });
+            this.chart!.xAxes.each((axis: am5xy.Axis<am5xy.AxisRenderer>) => {
+              axis.axisRanges.each((range: am5.DataItem<am5xy.IAxisDataItem>) => {
+                if (range != eventIndicator && range.get("bullet") != null) {
+                  if (range.get("bullet")!.get("sprite") != null) {
+                    if (range.get("bullet")!.get("sprite")!.get("userData") != null) {
+                      if (range.get("bullet")!.get("sprite")!.get("userData")!.serie === SerieEnum.ProgressIndicator) {
+                        if (allHidden) {
+                          range.show();
+                        }
+                        else {
+                          range.hide();
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+            });
             return;
           }
         }
