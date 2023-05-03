@@ -12,7 +12,7 @@
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
-      <template v-slot="{ width, height }">
+      <template v-slot="{ dimensions }">
         <d-legend
           :enabled="legend"
           :layout="legendLayout"
@@ -22,10 +22,7 @@
           :y="legendY"
           :centerY="legendCenterY"
         >
-          <d-pie-serie-extended
-            :width="width"
-            :height="height"
-          >
+          <d-pie-serie-extended :dimensions="dimensions">
             <template v-slot="{ clickedData }">
               <d-pie-slice
                 v-for="(serie, index) in data.series"

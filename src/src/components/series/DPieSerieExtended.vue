@@ -79,17 +79,11 @@ export default class DPieSerieExtended extends Vue {
   @Watch("textType")
   onTextTypeChange = this.setTextType;
 
-  @Prop({ required: false, default: 1200 })
-  width!: number;
+  @Prop({ required: false, default: () => ({ w: 1200, h: 400 }) })
+  dimensions!: { w: number, h: number };
 
-  @Watch("width")
-  onWidthChange = this.onResize;
-
-  @Prop({ required: false, default: 400 })
-  height!: number;
-
-  @Watch("height")
-  onHeightChange = this.onResize;
+  @Watch("dimensions")
+  onDimensionsChange = this.onResize;
 
   tooltip: am5.Tooltip | null = null;
 
@@ -102,11 +96,12 @@ export default class DPieSerieExtended extends Vue {
   }
 
   onResize(): void {
+    console.log(this.dimensions);
     if (["truncate", "wrap"].includes(this.oversizedBehavior)) {
       if (this.serie != null) {
-        const radius = Math.min(this.width, this.height) / 3;
+        const radius = Math.min(this.dimensions.w, this.dimensions.h) / 3;
         this.serie!.set("radius", radius);
-        this.serie!.labels.template.set("maxWidth", (this.width - (2 * radius)) / 2);
+        this.serie!.labels.template.set("maxWidth", (this.dimensions.w - (2 * radius)) / 2);
       }
     }
   }

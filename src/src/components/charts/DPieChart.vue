@@ -7,8 +7,7 @@
   >
     <slot
       v-if="upAndRunning"
-      :width="width"
-      :height="height"
+      :dimensions="dimensions"
     > </slot>
   </div>
 </template>
@@ -57,8 +56,7 @@ export default class DPieChart extends Vue {
   debounceResize: number | null = null;
   upAndRunning: boolean = false;
 
-  width: number = 0;
-  height: number = 0;
+  dimensions: { w: number, h: number } = { w: 0, h:0 };
 
   setLayout(): void {
     switch(this.layout) {
@@ -79,8 +77,9 @@ export default class DPieChart extends Vue {
 
   resize(): void {
     this.root!.resize();
-    this.width = this.root!.width();
-    this.height = this.root!.height();
+    if (this.dimensions.w != this.root!.width() || this.dimensions.h != this.root!.height()) {
+      this.dimensions = { w: this.root!.width(), h: this.root!.height() };
+    }
   }
 
   mounted(): void {
@@ -110,6 +109,7 @@ export default class DPieChart extends Vue {
       timeout = setTimeout(() => {
         this.root!.events.off("frameended", chartReady);
         this.$emit("ready");
+        this.resize();
       }, this.readyTimeout);
     }
     this.root.events.on("frameended", chartReady);
@@ -128,7 +128,6 @@ export default class DPieChart extends Vue {
       this.debounceResize = setTimeout(this.resize, this.resizeDebounce);
     });
     this.resizeObserver.observe(this.$el);
-    this.resize();
 
     this.upAndRunning = true;
   }
