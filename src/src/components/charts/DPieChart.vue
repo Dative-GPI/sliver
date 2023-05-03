@@ -5,7 +5,11 @@
     :style="{ minHeight: minHeight }"
     style="width: 100%; height: 100%;"
   >
-    <slot v-if="upAndRunning"> </slot>
+    <slot
+      v-if="upAndRunning"
+      :width="width"
+      :height="height"
+    > </slot>
   </div>
 </template>
 
@@ -37,6 +41,9 @@ export default class DPieChart extends Vue {
   @Prop({ required: false, default: 1500 })
   readyTimeout!: number;
 
+  @Prop({ required: false, default: 250 })
+  resizeDebounce!: number;
+
   @Prop({ required: false, default: '400px' })
   minHeight!: string;
 
@@ -46,7 +53,12 @@ export default class DPieChart extends Vue {
   @Watch("layout")
   onLayoutChange = this.setLayout;
 
+  resizeObserver: ResizeObserver | null = null;
+  debounceResize: number | null = null;
   upAndRunning: boolean = false;
+
+  width: number = 0;
+  height: number = 0;
 
   setLayout(): void {
     switch(this.layout) {
@@ -65,6 +77,12 @@ export default class DPieChart extends Vue {
     }
   }
 
+  resize(): void {
+    this.root!.resize();
+    this.width = this.root!.width();
+    this.height = this.root!.height();
+  }
+
   mounted(): void {
     // Create root
     this.root = am5.Root.new((this.$refs.piechart as HTMLElement), {
@@ -76,6 +94,7 @@ export default class DPieChart extends Vue {
       }
     });
     this.root.locale = getLocale(this.locale);
+    this.root.autoResize = false;
 
     this.root.numberFormatter.setAll({
       numberFormat: "#,###.### a",
@@ -102,10 +121,25 @@ export default class DPieChart extends Vue {
 
     this.setLayout();
 
+    this.resizeObserver = new ResizeObserver(() => {
+      if (this.debounceResize != null) {
+        clearTimeout(this.debounceResize);
+      }
+      this.debounceResize = setTimeout(this.resize, this.resizeDebounce);
+    });
+    this.resizeObserver.observe(this.$el);
+    this.resize();
+
     this.upAndRunning = true;
   }
 
   destroyed(): void {
+    // Remove resize observer
+    if (this.debounceResize != null) {
+      clearTimeout(this.debounceResize);
+    }
+    this.resizeObserver!.disconnect();
+    
     // Remove chart from root
     this.root!.container.children.removeValue(this.chart!);
     

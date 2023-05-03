@@ -79,11 +79,22 @@ export default class DPieSerieExtended extends Vue {
   @Watch("textType")
   onTextTypeChange = this.setTextType;
 
+  @Prop({ required: false, default: 1200 })
+  width!: number;
+
+  @Watch("width")
+  onWidthChange = this.onResize;
+
+  @Prop({ required: false, default: 400 })
+  height!: number;
+
+  @Watch("height")
+  onHeightChange = this.onResize;
+
   tooltip: am5.Tooltip | null = null;
 
   upAndRunning: boolean = false;
   clickedData: { key: number, id: string } | null = null;
-  latestDimension: number = 0;
 
   onClick(event: ISpritePointerEvent): void {
     let key = this.clickedData ? this.clickedData.key + 1 : 0;
@@ -92,24 +103,10 @@ export default class DPieSerieExtended extends Vue {
 
   onResize(): void {
     if (["truncate", "wrap"].includes(this.oversizedBehavior)) {
-      if (this.serie != null && this.serie!.width() !== this.latestDimension) {
-        this.latestDimension = this.serie!.width();
-        if (this.latestDimension < 400) {
-          this.serie!.set("radius", 30);
-          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 120) / 2);
-        }
-        else if (this.latestDimension < 800) {
-          this.serie!.set("radius", 60);
-          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 180) / 2);
-        }
-        else if (this.latestDimension < 1000) {
-          this.serie!.set("radius", 100);
-          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 260) / 2);
-        }
-        else {
-          this.serie!.set("radius", 120);
-          this.serie!.labels.template.set("maxWidth", (this.latestDimension - 300) / 2);
-        }
+      if (this.serie != null) {
+        const radius = Math.min(this.width, this.height) / 3;
+        this.serie!.set("radius", radius);
+        this.serie!.labels.template.set("maxWidth", (this.width - (2 * radius)) / 2);
       }
     }
   }
@@ -170,17 +167,10 @@ export default class DPieSerieExtended extends Vue {
     this.setText();
     this.setTextType();
 
-    // Handle resize
-    window.addEventListener("resize", this.onResize);
-    this.onResize();
-
     this.upAndRunning = true;
   }
 
   destroyed(): void {
-    // Remove event listener
-    window.removeEventListener("resize", this.onResize);
-
     // Remove from legend
     if (this.legend) {
       this.serie!.dataItems.forEach((dataItem: any) => {
