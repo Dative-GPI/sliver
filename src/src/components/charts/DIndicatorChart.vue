@@ -135,7 +135,7 @@ export default class DIndicatorChart extends Vue {
 
     this.root.numberFormatter.setAll({
       numberFormat: "#,###.### a",
-      smallNumberThreshold: 0.001
+      smallNumberThreshold: 0.01
     });
 
     this.legendRoot = am5.Root.new((this.$refs.indicatorlegend as HTMLElement), {});
@@ -144,7 +144,7 @@ export default class DIndicatorChart extends Vue {
 
     this.legendRoot.numberFormatter.setAll({
       numberFormat: "#,###.### a",
-      smallNumberThreshold: 0.001
+      smallNumberThreshold: 0.01
     });
 
     // Warn the parent when the chart is ready

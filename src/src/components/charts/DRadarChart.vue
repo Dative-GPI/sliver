@@ -140,7 +140,7 @@ export default class DRadarChart extends Vue {
 
     this.root.numberFormatter.setAll({
       numberFormat: "#,###.### a",
-      smallNumberThreshold: 0.001
+      smallNumberThreshold: 0.01
     });
 
     // Warn the parent when the chart is ready
