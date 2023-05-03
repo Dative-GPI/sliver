@@ -96,5 +96,5 @@ Default.args = {
   secondClockHandRadius: 95,
   secondHandTooltipText: "{name}: {value}",
   secondHandTooltipX: 95,
-  secondValue: 0.0000015
+  secondValue: 15
 };

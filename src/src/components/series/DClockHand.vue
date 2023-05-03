@@ -107,6 +107,7 @@ export default class DClockHand extends Vue {
 
   clockHand: am5radar.ClockHand | null = null;
   axisDataItem: any = null;
+  axisRange: any = null;
 
   upAndRunning: boolean = false;
 
@@ -133,6 +134,7 @@ export default class DClockHand extends Vue {
     this.clockHand!.pin.set("fill", this.color);
     this.clockHand!.hand.set("fill", this.color);
     this.axisDataItem!.set("fill", this.color);
+    this.axisRange!.get("tick")!.set("stroke", this.color);
 
     // Add to legend (otherwise the color is not updated)
     if (this.legend != null) {
@@ -180,6 +182,8 @@ export default class DClockHand extends Vue {
         sprite: this.clockHand
       })
     });
+    this.axisRange = this.xAxis.createAxisRange(this.axisDataItem);
+    this.axisRange.get("tick")!.set("strokeWidth", 2);
 
     this.setName();
     this.setColor();
@@ -188,8 +192,6 @@ export default class DClockHand extends Vue {
     this.setClockHandRadius();
     this.setHandTooltipText();
     this.setHandTooltipX();
-
-    this.xAxis.createAxisRange(this.axisDataItem);
     
     this.setValue();
     

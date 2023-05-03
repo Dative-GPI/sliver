@@ -78,5 +78,5 @@ Default.args = {
   legendY: 50,
   legendCenterY: 50,
   otherLabel: "Other",
-  otherThreshold: 8
+  otherThreshold: 2
 };

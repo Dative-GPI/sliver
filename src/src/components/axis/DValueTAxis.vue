@@ -206,7 +206,7 @@ export default class DValueTAxis extends Vue {
         value: range.startValue,
         endValue: range.endValue
       }));
-      axisRange.get("grid").set("strokeOpacity", 0);
+      axisRange.get("tick").set("strokeOpacity", 0);
       axisRange.get("axisFill").setAll({
         visible: true,
         fillOpacity: range.opacity,
@@ -216,7 +216,6 @@ export default class DValueTAxis extends Vue {
         axisRange.get("label").setAll({
           text: range.label,
           inside: true,
-          centerX: 0,
           radius: 10,
           fill: am5.color(range.color)
         });
@@ -239,7 +238,10 @@ export default class DValueTAxis extends Vue {
   
   mounted(): void {
     this.axis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
-      renderer: am5radar.AxisRendererCircular.new(this.root, {})
+      renderer: am5radar.AxisRendererCircular.new(this.root, {}),
+      numberFormatter: am5.NumberFormatter.new(this.root, {
+        numberFormat: "#.# a"
+      })
     }));
 
     this.setMin();

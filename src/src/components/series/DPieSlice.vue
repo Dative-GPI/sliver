@@ -59,7 +59,7 @@ export default class DPieSlice extends Vue {
   @Watch("otherLabel")
   onOtherLabelChange = this.setData;
 
-  @Prop({ required: false, default: 20 })
+  @Prop({ required: false, default: 1 })
   otherThreshold: number | undefined;
 
   @Watch("otherThreshold")

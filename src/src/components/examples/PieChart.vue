@@ -31,6 +31,7 @@
               :clickedData="clickedData"
               :colorSet="colorSet"
               :colorSeed="colorSeed"
+              :otherThreshold="otherThreshold"
             />
           </template>
         </d-pie-serie-extended>
