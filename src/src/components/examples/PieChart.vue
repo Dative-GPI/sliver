@@ -12,32 +12,31 @@
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
-      <template v-slot="{ dimensions }">
-        <d-legend
-          :enabled="legend"
-          :layout="legendLayout"
-          :position="legendPosition"
-          :x="legendX"
-          :centerX="legendCenterX"
-          :y="legendY"
-          :centerY="legendCenterY"
-        >
-          <d-pie-serie-extended :dimensions="dimensions">
-            <template v-slot="{ clickedData }">
-              <d-pie-slice
-                v-for="(serie, index) in data.series"
-                :key="index"
-                :data="serie.data"
-                :hideLabels="serie.hideLabels"
-                :clickedData="clickedData"
-                :colorSet="colorSet"
-                :colorSeed="colorSeed"
-                :otherThreshold="otherThreshold"
-              />
-            </template>
-          </d-pie-serie-extended>
-        </d-legend>
-      </template>
+      <d-legend
+        :enabled="legend"
+        :layout="legendLayout"
+        :position="legendPosition"
+        :x="legendX"
+        :centerX="legendCenterX"
+        :y="legendY"
+        :centerY="legendCenterY"
+      >
+        <d-pie-serie-extended>
+          <template v-slot="{ clickedData }">
+            <d-pie-slice
+              v-for="(serie, index) in data.series"
+              :key="index"
+              :data="serie.data"
+              :hideLabels="serie.hideLabels"
+              :defaultHidden="serie.hideSerie"
+              :clickedData="clickedData"
+              :colorSet="colorSet"
+              :colorSeed="colorSeed"
+              :otherThreshold="otherThreshold"
+            />
+          </template>
+        </d-pie-serie-extended>
+      </d-legend>
     </d-pie-chart>
   </div>
 </template>

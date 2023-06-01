@@ -79,12 +79,6 @@ export default class DPieSerieExtended extends Vue {
   @Watch("textType")
   onTextTypeChange = this.setTextType;
 
-  @Prop({ required: false, default: () => ({ w: 1200, h: 400 }) })
-  dimensions!: { w: number, h: number };
-
-  @Watch("dimensions")
-  onDimensionsChange = this.onResize;
-
   tooltip: am5.Tooltip | null = null;
 
   upAndRunning: boolean = false;
@@ -93,17 +87,6 @@ export default class DPieSerieExtended extends Vue {
   onClick(event: ISpritePointerEvent): void {
     let key = this.clickedData ? this.clickedData.key + 1 : 0;
     this.clickedData = { key, id: (event!.target!.dataItem!.dataContext as any).dataId };
-  }
-
-  onResize(): void {
-    console.log(this.dimensions);
-    if (["truncate", "wrap"].includes(this.oversizedBehavior)) {
-      if (this.serie != null) {
-        const radius = Math.min(this.dimensions.w, this.dimensions.h) / 3;
-        this.serie!.set("radius", radius);
-        this.serie!.labels.template.set("maxWidth", (this.dimensions.w - (2 * radius)) / 2);
-      }
-    }
   }
 
   setShowTooltip(): void {
@@ -144,15 +127,13 @@ export default class DPieSerieExtended extends Vue {
       userData: { serie: SerieEnum.PieSerie }
     }));
 
+    this.serie.labels.template.set("templateField", "labelSettings");
+    this.serie.ticks.template.set("templateField", "tickSettings");
     this.serie.slices.template.setAll({
       templateField: "sliceSettings",
       tooltipX: am5.percent(75),
       tooltipY: am5.percent(75)
     });
-
-    this.serie!.labels.template.set("templateField", "labelSettings");
-    this.serie!.ticks.template.set("templateField", "tickSettings");
-
     this.serie.slices.template.events.on("click", this.onClick);
 
     this.setShowTooltip();

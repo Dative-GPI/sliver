@@ -38,17 +38,69 @@ export const updateCategories = (formers: any[], data: any[], categoryField: str
   }
 
   if (sort) {
-    formers.sort((c1: any, c2: any) => {
-      if (c1[categoryField] < c2[categoryField]) {
-        return -1;
-      }
-      else if (c1[categoryField] > c2[categoryField]) {
-        return 1;
-      }
-      return 0;
-    });
+    formers.sort((a, b) => alphaNumericalOrder(a[categoryField], b[categoryField]));
   }
   return formers;
+}
+
+export const alphaNumericalOrder = (x: string, y: string): number => {
+  if (x == null || y == null) {
+    return 0;
+  }
+  
+  let indexX: number = 0;
+  let indexY: number = 0;
+
+  while (indexX < x.length && indexY < y.length)
+  {
+    let loc1: number = 0;
+    let ch1: string = x[indexX];
+    let space1: string[] = new Array(x.length);
+
+    let loc2: number = 0;
+    let ch2: string = y[indexY];
+    let space2: string[] = new Array(y.length);
+
+    do {
+      space1[loc1++] = ch1;
+      indexX++;
+
+      if (indexX < x.length) {
+          ch1 = x[indexX];
+      }
+      else {
+          break;
+      }
+    } while (!isNaN(parseInt(ch1)) == !isNaN(parseInt(space1[0])));
+
+    do {
+      space2[loc2++] = ch2;
+      indexY++;
+
+      if (indexY < y.length) {
+          ch2 = y[indexY];
+      }
+      else {
+          break;
+      }
+    } while (!isNaN(parseInt(ch2)) == !isNaN(parseInt(space2[0])));
+
+    let str1: string = space1.join('');
+    let str2: string = space2.join('');
+
+    let result: number = 0;
+
+    if (!isNaN(parseInt(space1[0])) && !isNaN(parseInt(space2[0]))) {
+      result = (parseInt(str1) < parseInt(str2)) ? -1 : 1;
+    }
+    else if (str1 !== str2) {
+      result = str1 < str2 ? -1 : 1;
+    }
+    if (result != 0) {
+      return result;
+    }
+  }
+  return x.length - y.length;
 }
 
 export const sortValues = (former: any[]): any[] => {

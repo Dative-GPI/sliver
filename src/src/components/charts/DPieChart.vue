@@ -5,10 +5,7 @@
     :style="{ minHeight: minHeight }"
     style="width: 100%; height: 100%;"
   >
-    <slot
-      v-if="upAndRunning"
-      :dimensions="dimensions"
-    > </slot>
+    <slot v-if="upAndRunning"> </slot>
   </div>
 </template>
 
@@ -56,8 +53,6 @@ export default class DPieChart extends Vue {
   debounceResize: number | null = null;
   upAndRunning: boolean = false;
 
-  dimensions: { w: number, h: number } = { w: 0, h:0 };
-
   setLayout(): void {
     switch(this.layout) {
       case LayoutEnum.Grid: {
@@ -77,9 +72,12 @@ export default class DPieChart extends Vue {
 
   resize(): void {
     this.root!.resize();
-    if (this.dimensions.w != this.root!.width() || this.dimensions.h != this.root!.height()) {
-      this.dimensions = { w: this.root!.width(), h: this.root!.height() };
-    }
+    const radius = Math.min(this.root!.width(), this.root!.height()) / 3;
+
+    this.chart!.series.each((serie: am5percent.PieSeries) => {
+      serie.set("radius", radius);
+      serie.labels.template.set("maxWidth", (this.root!.width() - (2 * radius)) / 2);
+    });
   }
 
   mounted(): void {
