@@ -75,7 +75,7 @@ export const Default = Template.bind({});
 Default.args = {
   data: {
     series: [
-      makeLineSerie("Level 1", 1682294400000 - 86400000, 0.0001, 864000, 0.0001, 1900)
+      makeLineSerie("Level 1", 1685570400000, 0.0001, 864000, 0.0001, 6)
     ]
   },
   minHeight: '400px',
