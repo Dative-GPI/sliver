@@ -36,7 +36,7 @@ export default class DExportData extends Vue {
     let groupByHeaders = this.groupByHeaders();
     let headers: string[] = groupByHeaders.map(h => h.label);
     let rows: any[] = [];
-    
+
     if (this.chartData != null) {
       switch (this.chartData.chartType) {
         case ChartType.XY: {
@@ -174,13 +174,14 @@ export default class DExportData extends Vue {
       });
     }
     else if (this.tableData != null) {
-      rows = this.tableData.rows;
+      rows = this.tableData.rows.map(r => r.values);
     }
 
     let csv = this.processRow(headers);
     for (let i = 0; i < rows.length; i++) {
       csv += this.processRow(rows[i]);
     }
+
     (this.$refs.link as HTMLElement).setAttribute("href", URL.createObjectURL(new Blob([csv], { type: "text/csv;chartset=\"utf-8\";" })));
     (this.$refs.link as HTMLElement).setAttribute("download", `${this.prefix != "" ? this.prefix : "data"}.csv`);
     (this.$refs.link as HTMLElement).click();
