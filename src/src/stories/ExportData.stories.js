@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<d-export-data
         :chartId="chartId"
-        :tableData="tableData"
+        :tableData="tableDataSolo"
     >
         <template v-slot="{ getCsv, canPng, getPng }">
             <div @click="getCsv"> CSV </div>
@@ -70,6 +70,66 @@ Default.args = {
             { entity: "Orion oven EVO 801/4-099243", values: ["Cornetto","22","22.7275"] },
             { entity: "Orion oven EVO 801/4-099243", values: ["Pane lievito naturale","60","46.577529999999996"] },
             { entity: "Orion oven EVO 801/4-099243", values: ["Pane olio","18","22.0395"] }
+        ]
+    },
+    tableDataMulti: {
+        aggregates: false,
+        headers: [
+            { label: "Recipe", dataTable: 2 },
+            { label: "Theoric", dataTable: 1 },
+            { label: "Real", dataTable: 1 }
+        ],
+        rows: [
+            {
+                timestamp: 1686119092000,
+                entity: "Orion oven EVO 801/4-099243",
+                values: ["Ciabatta", "20", "20.6992"]
+            },
+            {
+                timestamp: 1686118959000,
+                entity: "Orion oven EVO 801/4-105043",
+                values: ["Manual", "0", "5.96622"]
+            },
+            {
+                timestamp: 1686118954000,
+                entity: "Orion oven EVO 801/4-099243",
+                values: ["Manual", "0", "3.52405"]
+            },
+            {
+                timestamp: 1686118952000,
+                entity: "Orion oven EVO 801/4-099243",
+                values: ["Manual", "0", "11.7821"]
+            }
+        ]
+    },
+    tableDataSolo: {
+        aggregates: false,
+        headers: [
+            { label: "Recipe", dataTable: 2 },
+            { label: "Theoric", dataTable: 1 },
+            { label: "Real", dataTable: 1 }
+        ],
+        rows: [
+            {
+                timestamp: 1686119092000,
+                entity: "Orion oven EVO 801/4-099243",
+                values: ["Ciabatta", "20", "20.6992"]
+            },
+            {
+                timestamp: 1686118954000,
+                entity: "Orion oven EVO 801/4-099243",
+                values: ["Manual", "0", "3.52405"]
+            },
+            {
+                timestamp: 1686118952000,
+                entity: "Orion oven EVO 801/4-099243",
+                values: ["Manual", "0", "11.7821"]
+            },
+            {
+                timestamp: 1686118713000,
+                entity: "Orion oven EVO 801/4-099243",
+                values: ["Ciabatta", "20", "24.5931"]
+            }
         ]
     }
 };

@@ -32,6 +32,12 @@ export default class DExportData extends Vue {
   @Prop({ required: false, default: "data" })
   prefix!: string;
 
+  @Prop({ required: false, default: "Timestamp" })
+  timestampHeader!: string;
+
+  @Prop({ required: false, default: "Entity" })
+  entityHeader!: string;
+
   getCsv(): void {
     let groupByHeaders = this.groupByHeaders();
     let headers: string[] = groupByHeaders.map(h => h.label);
@@ -174,7 +180,25 @@ export default class DExportData extends Vue {
       });
     }
     else if (this.tableData != null) {
-      rows = this.tableData.rows.map(r => r.values);
+      if (!this.tableData.aggregates) {
+        headers.unshift(this.timestampHeader);
+      }
+      let entities = [...new Set(this.tableData.rows.map(r => r.entity))].length > 1
+      if (entities) {
+        headers.unshift(this.entityHeader);
+      }
+      rows = this.tableData.rows.map(r => {
+        let values = [...r.values];
+        if (this.tableData != null) {
+          if (!this.tableData.aggregates) {
+            values.unshift(DateTools.formatShortEpoch(this.locale, this.timeOffset, r.timestamp));
+          }
+        }
+        if (entities) {
+          values.unshift(r.entity);
+        }
+        return values
+      });
     }
 
     let csv = this.processRow(headers);

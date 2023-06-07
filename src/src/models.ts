@@ -121,6 +121,7 @@ export enum DataTable {
 }
 
 export interface TableData {
+  aggregates: boolean;
   headers: { label: string, dataTable: DataTable }[];
   rows: TableDataRow[];
 }
