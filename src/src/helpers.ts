@@ -193,10 +193,7 @@ export const isEmptyString = (value: string | undefined): boolean => {
 export const setLineSerieBullets = (serie: am5.Series): void => {
   serie.bullets.clear();
 
-  if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
-    return;
-  }
-  else if (serie.get("userData").showBullets) {
+  if (serie.get("userData").showBullets) {
     serie.bullets.push((root) => {
       return am5.Bullet.new(root, {
         sprite: am5.Circle.new(root, {
@@ -205,42 +202,6 @@ export const setLineSerieBullets = (serie: am5.Series): void => {
           fill: serie.get("fill")
         })
       })
-    });
-  }
-  else if (serie.get("userData").showTooltipBullet && serie.get("tooltip") != null) {
-    serie.get("tooltip")!.events.off("dataitemchanged");
-    serie.get("tooltip")!.events.off("boundschanged");
-
-    serie.bullets.push((root, _, dataItem) => {
-      if (dataItem == serie.dataItems[serie.dataItems.length - 1]) {
-        serie.set("userData", { ...serie.get("userData"), tooltipBullet: am5.Bullet.new(root, {
-            sprite: am5.Circle.new(root, {
-              opacity: 0,
-              radius: serie.get("userData").bulletRadius,
-              fill: serie.get("fill")
-            })
-          })
-        });
-        return serie.get("userData").tooltipBullet;
-      }
-    });
-
-    serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
-      if (event.newDataItem != null && event.oldDataItem != null) {
-        event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
-        serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
-        serie.data.push({});
-        serie.data.pop();
-      }
-    });
-
-    serie.get("tooltip")!.events.on("boundschanged", (event) => {
-      if (!event.target.isShowing()) {
-        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 0);
-      }
-      else {
-        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 1);
-      }
     });
   }
 }
@@ -248,10 +209,7 @@ export const setLineSerieBullets = (serie: am5.Series): void => {
 export const setRangeSerieBullets = (serie: am5.Series): void => {
   serie.bullets.clear();
 
-  if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
-    return;
-  }
-  else if (serie.get("userData").showBullets) {
+  if (serie.get("userData").showBullets) {
     serie.bullets.push((root) => {
       return am5.Bullet.new(root, {
         sprite: am5.Circle.new(root, {
@@ -260,42 +218,6 @@ export const setRangeSerieBullets = (serie: am5.Series): void => {
           fill: serie.get("fill")
         })
       })
-    });
-  }
-  else if (serie.get("userData").showTooltipBullet && serie.get("tooltip") != null) {
-    serie.get("tooltip")!.events.off("dataitemchanged");
-    serie.get("tooltip")!.events.off("boundschanged");
-
-    serie.bullets.push((root, _, dataItem) => {
-      if (dataItem == serie.dataItems[serie.dataItems.length - 1]) {
-        serie.set("userData", { ...serie.get("userData"), tooltipBullet: am5.Bullet.new(root, {
-            sprite: am5.Circle.new(root, {
-              opacity: 0,
-              radius: serie.get("userData").bulletRadius,
-              fill: serie.get("fill")
-            })
-          })
-        });
-        return serie.get("userData").tooltipBullet;
-      }
-    });
-
-    serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
-      if (event.newDataItem != null && event.oldDataItem != null) {
-        event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
-        serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
-        serie.data.push({});
-        serie.data.pop();
-      }
-    });
-
-    serie.get("tooltip")!.events.on("boundschanged", (event) => {
-      if (!event.target.isShowing()) {
-        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 0);
-      }
-      else {
-        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 1);
-      }
     });
   }
 }
@@ -303,10 +225,7 @@ export const setRangeSerieBullets = (serie: am5.Series): void => {
 export const setStepLineSerieBullets = (serie: am5.Series): void => {
   serie.bullets.clear();
 
-  if (!serie.get("userData").showBullets && !serie.get("userData").showTooltipBullet) {
-    return;
-  }
-  else if (serie.get("userData").showBullets) {
+  if (serie.get("userData").showBullets) {
     serie.bullets.push((root) => {
       return am5.Bullet.new(root, {
         sprite: am5.Circle.new(root, {
@@ -315,42 +234,6 @@ export const setStepLineSerieBullets = (serie: am5.Series): void => {
           fill: serie.get("fill")
         })
       })
-    });
-  }
-  else if (serie.get("userData").showTooltipBullet && serie.get("tooltip") != null) {
-    serie.get("tooltip")!.events.off("dataitemchanged");
-    serie.get("tooltip")!.events.off("boundschanged");
-
-    serie.bullets.push((root, _, dataItem) => {
-      if (dataItem == serie.dataItems[serie.dataItems.length - 1]) {
-        serie.set("userData", { ...serie.get("userData"), tooltipBullet: am5.Bullet.new(root, {
-            sprite: am5.Circle.new(root, {
-              opacity: 0,
-              radius: serie.get("userData").bulletRadius,
-              fill: serie.get("fill")
-            })
-          })
-        });
-        return serie.get("userData").tooltipBullet;
-      }
-    });
-
-    serie.get("tooltip")!.events.on("dataitemchanged", (event) => {
-      if (event.newDataItem != null && event.oldDataItem != null) {
-        event.newDataItem.bullets = [serie.get("userData").tooltipBullet];
-        serie.get("userData").tooltipBullet.get("sprite").dataItem = event.newDataItem;
-        serie.data.push({});
-        serie.data.pop();
-      }
-    });
-
-    serie.get("tooltip")!.events.on("boundschanged", (event) => {
-      if (!event.target.isShowing()) {
-        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 0);
-      }
-      else {
-        serie.get("userData").tooltipBullet.get("sprite").set("opacity", 1);
-      }
     });
   }
 }

@@ -95,12 +95,6 @@ export default class DStepLineSerie extends Vue {
   @Watch("showBullets")
   onShowBulletsChange = this.setBullets;
 
-  @Prop({ required: false, default: true })
-  showTooltipBullet!: boolean;
-
-  @Watch("showTooltipBullet")
-  onShowTooltipBulletChange = this.setBullets;
-
   @Prop({ required: false, default: 5 })
   bulletsRadius!: number;
 
@@ -173,13 +167,12 @@ export default class DStepLineSerie extends Vue {
   }
 
   setBullets(): void {
-    let { bulletRadius, showBullets, showTooltipBullet, ...userData } = this.serie!.get("userData");
+    let { bulletRadius, showBullets, ...userData } = this.serie!.get("userData");
 
     this.serie!.set("userData", {
       ...userData,
       bulletRadius: this.bulletsRadius,
-      showBullets: this.showBullets,
-      showTooltipBullet: this.showTooltipBullet
+      showBullets: this.showBullets
     });
     
     setStepLineSerieBullets(this.serie!);
