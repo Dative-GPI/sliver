@@ -9,8 +9,14 @@
 import _ from "lodash";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-import { AxisType, ChartData, ChartDataData, ChartDataOperand, ChartDataPlot, ChartDataSerie, ChartType, SerieType, TableData } from "../../models";
+import { AxisType, ChartData, ChartDataData, ChartDataOperand, ChartDataPlot, ChartDataSerie, ChartType, DataTable, SerieType, TableData } from "../../models";
 import { DateTools } from "../../dates";
+
+interface Header {
+  id: string;
+  label: string;
+  type: DataTable;
+}
 
 @Component({})
 export default class DExportData extends Vue {
@@ -39,9 +45,9 @@ export default class DExportData extends Vue {
   entityHeader!: string;
 
   getCsv(): void {
-    let groupByHeaders = this.groupByHeaders();
+    let groupByHeaders = this.getHeaders();
     let headers: string[] = groupByHeaders.map(h => h.label);
-    let rows: any[] = [];
+    let rows: string[][] = [];
 
     if (this.chartData != null) {
       switch (this.chartData.chartType) {
@@ -52,17 +58,9 @@ export default class DExportData extends Vue {
                 serie.operands.forEach((operand: ChartDataOperand) => {
                   headers.push(operand.label);
                   operand.data.forEach((data: ChartDataData) => {
-                    let row: string[] = this.findRow(groupByHeaders, rows, data);
+                    let row = this.findRow(groupByHeaders, rows, data);
                     if (row == null) {
-                      row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
-                        if ((data as any)[h.id] != null) {
-                          if (h.date) {
-                            return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
-                          }
-                          return (data as any)[h.id].toString();
-                        }
-                        return "";
-                      });
+                      row = groupByHeaders.map((h: Header) => this.getData(h, data));
                       rows.push(row);
                     }
                     if (row.length < headers.length) {
@@ -71,13 +69,13 @@ export default class DExportData extends Vue {
                     switch (plot.yAxisType) {
                       case AxisType.Value: {
                         if (data.valueY != null) {
-                          row[row.length - 1] = data.valueY.toString();
+                          row[row.length - 1] = this.formatString(data.valueY);
                         }
                         break;
                       }
                       case AxisType.Category: {
                         if (data.categoryY != null) {
-                          row[row.length - 1] = data.categoryY;
+                          row[row.length - 1] = this.formatString(data.categoryY);
                         }
                         break;
                       }
@@ -101,9 +99,7 @@ export default class DExportData extends Vue {
               slices = slices.concat(slices[0].subs);
             }
             else {
-              rows.push(groupByHeaders.map((h: { id: string, label: string }) => {
-                return (slices[0] as any)[h.id] != null ? (slices[0] as any)[h.id].toString() : "";
-              }));
+              rows.push(groupByHeaders.map((h: Header) => this.formatString(slices[0][h.id])));
             }
             slices.shift();
           }
@@ -113,23 +109,15 @@ export default class DExportData extends Vue {
           this.chartData.plots[0].series[0].operands.forEach((operand: ChartDataOperand) => {
             headers.push(operand.label);
             operand.data.forEach((data: ChartDataData) => {
-              let row: string[] = this.findRow(groupByHeaders, rows, data);
+              let row = this.findRow(groupByHeaders, rows, data);
               if (row == null) {
-                row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
-                  if ((data as any)[h.id] != null) {
-                    if (h.date) {
-                      return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
-                    }
-                    return (data as any)[h.id].toString();
-                  }
-                  return "";
-                });
+                row = groupByHeaders.map((h: Header) => this.getData(h, data));
                 rows.push(row);
               }
               if (row.length < headers.length) {
                 row.push(...Array(headers.length - row.length).fill(""));
               }
-              row[headers.length - 1] = data.valueZ != null ? data.valueZ!.toString() : "";
+              row[headers.length - 1] = this.formatString(data.valueZ);
             });
           });
           break;
@@ -140,30 +128,23 @@ export default class DExportData extends Vue {
           this.chartData.plots[0].series[0].operands.forEach((operand: ChartDataOperand) => {
             headers.push(operand.label);
             operand.data.forEach((data: ChartDataData) => {
-              let row: string[] = this.findRow(groupByHeaders, rows, data);
+              let row = this.findRow(groupByHeaders, rows, data);
               if (row == null) {
-                row = groupByHeaders.map((h: { id: string, label: string, date: boolean }) => {
-                  if ((data as any)[h.id] != null) {
-                    if (h.date) {
-                      return DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]);
-                    }
-                    return (data as any)[h.id].toString();
-                  }
-                  return "";
-                });
+                row = groupByHeaders.map((h: Header) => this.getData(h, data));
                 rows.push(row);
               }
               if (row.length < headers.length) {
                 row.push(...Array(headers.length - row.length).fill(""));
               }
               if (data.valueY != null) {
-                row[headers.length - 1] = data.valueY.toString();
+                row[headers.length - 1] = this.formatString(data.valueY);
               }
             });
           });
           break;
         }
       }
+      
       rows.forEach((row: any) => {
         if (row.length < headers.length) {
           row.push(...Array(headers.length - row.length).fill(""));
@@ -183,39 +164,35 @@ export default class DExportData extends Vue {
       if (!this.tableData.aggregates) {
         headers.unshift(this.timestampHeader);
       }
-      let entities = [...new Set(this.tableData.rows.map(r => r.entity))].length > 1
+      const entities = [...new Set(this.tableData.rows.map(r => r.entity))].length > 1;
       if (entities) {
         headers.unshift(this.entityHeader);
       }
-      rows = this.tableData.rows.map(r => {
-        let values = [...r.values];
-        if (this.tableData != null) {
-          if (!this.tableData.aggregates) {
-            values.unshift(DateTools.formatShortEpoch(this.locale, this.timeOffset, r.timestamp));
-          }
+      rows = this.tableData.rows.map(row => {
+        let values = row.values.map(this.formatString);
+
+        if (!this.tableData!.aggregates) {
+          values.unshift(DateTools.formatShortEpoch(this.locale, this.timeOffset, row.timestamp));
         }
         if (entities) {
-          values.unshift(r.entity);
+          values.unshift(row.entity);
         }
         return values
       });
     }
 
     let csv = this.processRow(headers);
-    for (let i = 0; i < rows.length; i++) {
-      csv += this.processRow(rows[i]);
-    }
+    csv += rows.map(r => this.processRow(r)).join("");
+
+    console.log(csv);
 
     (this.$refs.link as HTMLElement).setAttribute("href", URL.createObjectURL(new Blob([csv], { type: "text/csv;chartset=\"utf-8\";" })));
-    (this.$refs.link as HTMLElement).setAttribute("download", `${this.prefix != "" ? this.prefix : "data"}.csv`);
+    (this.$refs.link as HTMLElement).setAttribute("download", `${this.prefix}.csv`);
     (this.$refs.link as HTMLElement).click();
   }
 
   get canPng(): boolean {
-    if (this.chartData == null) {
-      return false;
-    }
-    if ([ChartType.None, ChartType.ScoreCard, ChartType.Table].includes(this.chartData.chartType)) {
+    if (!this.chartData || [ChartType.None, ChartType.ScoreCard, ChartType.Table].includes(this.chartData.chartType)) {
       return false;
     }
     return true;
@@ -236,48 +213,49 @@ export default class DExportData extends Vue {
     }
   }
 
-  groupByHeaders(): { id: string, label: string, date: boolean }[] {
+  // Return all headers for the CSV file
+  getHeaders(): Header[] {
     if (this.chartData != null) {
       switch (this.chartData.chartType) {
         case ChartType.XY: {
           switch (this.chartData.xAxisType) {
             case AxisType.Date: {
               return [
-                { id: "timestampX", label: "StartTimeX", date: true },
-                { id: "closeTimestampX", label: "EndTimeX", date: true }
+                { id: "timestampX", label: "StartTimeX", type: DataTable.Date },
+                { id: "closeTimestampX", label: "EndTimeX", type: DataTable.Date }
               ];
             }
             case AxisType.Value: {
               return [
-                { id: "selfValueX", label: "ValueX", date: false }
+                { id: "selfValueX", label: "ValueX", type: DataTable.Number }
               ];
             }
             case AxisType.Category: {
               return [
-                { id: "categoryX", label: "CategoryX", date: false }
+                { id: "categoryX", label: "CategoryX", type: DataTable.String }
               ];
             }
           }
         }
         case ChartType.Pie: {
           return [
-            { id: "categoryX", label: "Category", date: false },
-            { id: "valueY", label: "Value", date: false }
+            { id: "categoryX", label: "Category", type: DataTable.String },
+            { id: "valueY", label: "Value", type: DataTable.Number }
           ];
         }
         case ChartType.Heatmap: {
           switch (this.chartData.xAxisType) {
             case AxisType.Date: {
               return [
-                { id: "timestampX", label: "StartTimeX", date: true },
-                { id: "closeTimestampX", label: "EndTimeX", date: true },
-                { id: "categoryY", label: "CategoryY", date: false }
+                { id: "timestampX", label: "StartTimeX", type: DataTable.Date },
+                { id: "closeTimestampX", label: "EndTimeX", type: DataTable.Date },
+                { id: "categoryY", label: "CategoryY", type: DataTable.String }
               ];
             }
             case AxisType.Category: {
               return [
-                { id: "categoryX", label: "CategoryX", date: false },
-                { id: "categoryY", label: "CategoryY", date: false }
+                { id: "categoryX", label: "CategoryX", type: DataTable.String },
+                { id: "categoryY", label: "CategoryY", type: DataTable.String }
               ];
             }
           }
@@ -286,40 +264,69 @@ export default class DExportData extends Vue {
         case ChartType.Radar:
         case ChartType.ScoreCard: {
           return [
-            { id: "timestampX", label: "StartTime", date: true },
-            { id: "closeTimestampX", label: "EndTime", date: true }
+            { id: "timestampX", label: "StartTime", type: DataTable.Date },
+            { id: "closeTimestampX", label: "EndTime", type: DataTable.Date }
           ];
         }
       }
     }
     else if (this.tableData != null) {
-      return this.tableData.headers.map(h => ({ id: h.label, label: h.label, date: false }));
+      return this.tableData.headers.map(h => ({ id: h.label, label: h.label, type: h.dataTable }));
     }
     return [];
   }
 
-  findRow(groupByHeaders: { id: string, label: string, date: boolean }[], rows: any[], data: ChartDataData): any | null {
-    return rows.find((r: any) => !groupByHeaders.some((h, i: number) => {
-      if (h.date) {
-        return r[i] != ((data as any)[h.id] != null ? DateTools.formatShortEpoch(this.locale, this.timeOffset, (data as any)[h.id]) : "");
+  // Return the first row for wich all values correspond to those of the data
+  findRow(headers: Header[], rows: string[][], data: ChartDataData): string[] | undefined {
+    return rows.find(row => !headers.some((header, index) => (row[index] != this.getData(header, data))));
+  }
+
+  // Return the correct formatted value of a data based on header type
+  getData(header: Header, data: any): string {
+    if (data[header.id]) {
+      switch (header.type) {
+        case DataTable.Date: {
+          return DateTools.formatShortEpoch(this.locale, this.timeOffset, data[header.id]);
+        }
+        default: {
+          return this.formatString(data[header.id]);
+        }
       }
-      return r[i] != ((data as any)[h.id] != null ? (data as any)[h.id] : "");
-    }));
+    }
+    return "";
+  }
+
+  formatString(value: string | number | undefined): string {
+    if (value == null) {
+      return "";
+    }
+    if (typeof value == "number") {
+      return value.toLocaleString(this.locale);
+    }
+    let numberRegex = /[+-]?\d+(\.\d+)?/g;
+    if (value.match(numberRegex) != null) {
+      for (let match of value.match(numberRegex)!) {
+        value = value.replace(match, parseFloat(match)!.toLocaleString(this.locale));
+      }
+    }
+    return value;
   }
 
   processRow(row: string[]): string {
-    var line = '';
-    for (let i = 0; i < row.length; i++) {
-      var result = row[i].replace(/"/g, '""');
-      if (result.search(/("|,|\n)/g) >= 0) {
-        result = `"${result}"`;
+    return row.map(r => `"${r.replace(/"/g, '""')}"`).join(this.getSeparator()) + "\n";
+  }
+
+  getSeparator(): string {
+    switch (this.locale) {
+      case "en-GB":
+      case "en-US":
+      case "en-CA": {
+        return ",";
       }
-      if (i > 0) {
-        line += ',';
+      default: {
+        return ";";
       }
-      line += result;
     }
-    return line + '\n';
   }
 }
 </script>

@@ -161,7 +161,7 @@ export default class DScoreCard extends Vue {
         break;
       }
       case HeatRule.Ranges: {
-        const heat = serie.heatRanges.find(r => r.endValue > value && r.startValue < value);
+        const heat = serie.heatRanges.find(r => r.endValue > value && r.startValue <= value);
         if (heat != null) {
           result = Color(heat.color).alpha(heat.opacity).hex();
         }

@@ -9,18 +9,53 @@ const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { DExportData },
   template:
-    `<d-export-data
-        :chartId="chartId"
-        :tableData="tableDataSolo"
-    >
-        <template v-slot="{ getCsv, canPng, getPng }">
-            <div @click="getCsv"> CSV </div>
-        </template>
-    </d-export-data>`,
+    `<div class="d-flex align-center" style="gap: 8px;">
+        <d-export-data
+            style="padding: 8px; border-radius: 4px; border: 2px solid #CCC; cursor: pointer;"
+            :locale="locale"
+            :chartId="chartId"
+            :chartData="chartData"
+        >
+            <template v-slot="{ getCsv, canPng, getPng }">
+                <div @click="getCsv"> Chart data </div>
+            </template>
+        </d-export-data>
+        <d-export-data
+            style="padding: 8px; border-radius: 4px; border: 2px solid #CCC; cursor: pointer;"
+            :locale="locale"
+            :chartId="chartId"
+            :tableData="tableData"
+        >
+            <template v-slot="{ getCsv, canPng, getPng }">
+                <div @click="getCsv"> Table data with aggregates and one entity </div>
+            </template>
+        </d-export-data>
+        <d-export-data
+            style="padding: 8px; border-radius: 4px; border: 2px solid #CCC; cursor: pointer;"
+            :locale="locale"
+            :chartId="chartId"
+            :tableData="tableDataSolo"
+        >
+            <template v-slot="{ getCsv, canPng, getPng }">
+                <div @click="getCsv"> Table data without aggregates and one entity </div>
+            </template>
+        </d-export-data>
+        <d-export-data
+            style="padding: 8px; border-radius: 4px; border: 2px solid #CCC; cursor: pointer;"
+            :locale="locale"
+            :chartId="chartId"
+            :tableData="tableDataMulti"
+        >
+            <template v-slot="{ getCsv, canPng, getPng }">
+                <div @click="getCsv"> Table data without aggregates and several entities </div>
+            </template>
+        </d-export-data>
+    </div>`,
 });
 
 export const Default = Template.bind({});
 Default.args = {
+    locale: "fr-FR",
     chartId: "dcf38f4a-3085-4810-a3c6-a5dd582c89e8",
     chartData: {
         chartType: 6,
@@ -35,18 +70,18 @@ Default.args = {
                         serieType: 15,
                         operands: [
                             {
-                                label: "Level Premier - Temps de cuisson en minutes",
+                                label: "Niveau 1 - Temps de cuisson en minutes",
                                 unit: "",
                                 data: [
-                                    { valueY: 1.4556289999999998, timestampX: 1686028991000, closeTimestampX: 1686040789000, subs: [] }
+                                    { valueY: 1.45563, timestampX: 1686028991000, closeTimestampX: 1686040789000, subs: [] }
                                 ],
                                 subOperands: []
                             },
                             {
-                                label: "Level Deuxieme - Temps de cuisson en minutes",
+                                label: "Niveau 2 - Temps de cuisson en minutes",
                                 unit: "",
                                 data: [
-                                    { valueY: 1.2015280000000002, timestampX: 1686028808000, closeTimestampX: 1686030210000, subs: [] }
+                                    { valueY: 1.20150, timestampX: 1686028808000, closeTimestampX: 1686030210000, subs: [] }
                                 ],
                                 subOperands: []
                             }
@@ -113,22 +148,22 @@ Default.args = {
             {
                 timestamp: 1686119092000,
                 entity: "Orion oven EVO 801/4-099243",
-                values: ["Ciabatta", "20", "20.6992"]
+                values: ["Ciabatta", "20000", "10520.6992"]
             },
             {
                 timestamp: 1686118954000,
                 entity: "Orion oven EVO 801/4-099243",
-                values: ["Manual", "0", "3.52405"]
+                values: ["Manual", "100", "5893.52405"]
             },
             {
                 timestamp: 1686118952000,
                 entity: "Orion oven EVO 801/4-099243",
-                values: ["Manual", "0", "11.7821"]
+                values: ["Manual", "1000", "1111.7821"]
             },
             {
                 timestamp: 1686118713000,
                 entity: "Orion oven EVO 801/4-099243",
-                values: ["Ciabatta", "20", "24.5931"]
+                values: ["Ciabatta", "20", "1024.5931"]
             }
         ]
     }

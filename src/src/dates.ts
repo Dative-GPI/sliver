@@ -103,13 +103,28 @@ const InnerDateTools = {
 
 const ShortTimeFormat = (locale: string): string => {
   switch (locale) {
-    case "fr-FR": return "dd/MM/yy HH:mm:ss";
-    case "es-ES": return "dd/MM/yy HH:mm:ss";
-    case "it-IT": return "dd/MM/yy HH:mm:ss";
-    case "en-GB": return "dd/MM/yy HH:mm:ss";
-    case "de-DE": return "dd/MM/yy HH:mm:ss";
-    case "ru-RU": return "dd/MM/yy HH:mm:ss";
-    default: return "MM/dd/yy HH:mm:ss";
+    case "en-US": {
+      return "MM/dd/yy HH:mm:ss";
+    }
+    case "dz-BT":
+    case "hu-HU":
+    case "ja-JP":
+    case "ko-KP":
+    case "ko-KR":
+    case "mn-MN":
+    case "lt-LT":
+    case "zh-Hans-CN":
+    case "zh-Hans-HK":
+    case "zh-Hans-MO":
+    case "zh-Hans-SG":
+    case "zh-Hant-HK":
+    case "zh-Hant-MO":
+    case "zh-Hant-TW": {
+      return "yy/MM/dd HH:mm:ss";
+    }
+    default: {
+      return "dd/MM/yy HH:mm:ss";
+    }
   }  
 }
 
