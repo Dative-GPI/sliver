@@ -94,16 +94,16 @@ Default.args = {
     tableData: {
         aggregates:true,
         headers:[
-            { label: "Recipe", dataTable: 2 },
-            { label: "Theoric (Sum)", dataTable: 1 },
-            { label: "Real (Sum)", dataTable: 1 }
+            { label: "Recette", dataTable: 2 },
+            { label: "Théorique (Sum)", dataTable: 1 },
+            { label: "Réel (Sum)", dataTable: 1 }
         ],
         rows:[
-            { entity: "Orion oven EVO 801/4-099243", values: ["Manual","0","280.9780300000001"] },
+            { entity: "Orion oven EVO 801/4-099243", values: ["Manual","0","1280.98"] },
             { entity: "Orion oven EVO 801/4-099243", values: ["Pizza alla pala","12","9.82872"] },
-            { entity: "Orion oven EVO 801/4-099243", values: ["Ciabatta","100","106.58339999999998"] },
+            { entity: "Orion oven EVO 801/4-099243", values: ["Ciabatta","100","106.59"] },
             { entity: "Orion oven EVO 801/4-099243", values: ["Cornetto","22","22.7275"] },
-            { entity: "Orion oven EVO 801/4-099243", values: ["Pane lievito naturale","60","46.577529999999996"] },
+            { entity: "Orion oven EVO 801/4-099243", values: ["Pane lievito naturale","60","46.58"] },
             { entity: "Orion oven EVO 801/4-099243", values: ["Pane olio","18","22.0395"] }
         ]
     },

@@ -181,10 +181,8 @@ export default class DExportData extends Vue {
       });
     }
 
-    let csv = this.processRow(headers);
-    csv += rows.map(r => this.processRow(r)).join("");
-
-    console.log(csv);
+    // Because Excel is too fucking dense to understand charset="utf-8" while it just fucking works in LibreOffice, OpenOffice, AssHatOffice...
+    let csv = "\uFEFF" + this.processRow(headers) + rows.map(r => this.processRow(r)).join("");
 
     (this.$refs.link as HTMLElement).setAttribute("href", URL.createObjectURL(new Blob([csv], { type: "text/csv;chartset=\"utf-8\";" })));
     (this.$refs.link as HTMLElement).setAttribute("download", `${this.prefix}.csv`);
