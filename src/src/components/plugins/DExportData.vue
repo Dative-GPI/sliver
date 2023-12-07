@@ -299,12 +299,14 @@ export default class DExportData extends Vue {
       return "";
     }
     if (typeof value == "number") {
-      return value.toLocaleString(this.locale);
+      // Excel's a cunt, considers that a non-breakable space is not a proper separator
+      return value.toLocaleString(this.locale).replace(" ", " ");
     }
     let numberRegex = /[+-]?\d+(\.\d+)?/g;
     if (value.match(numberRegex) != null) {
       for (let match of value.match(numberRegex)!) {
-        value = value.replace(match, parseFloat(match)!.toLocaleString(this.locale));
+        // Excel's a cunt, considers that a non-breakable space is not a proper separator
+        value = value.replace(match, parseFloat(match)!.toLocaleString(this.locale).replace(" ", " "));
       }
     }
     return value;

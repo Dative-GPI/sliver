@@ -104,7 +104,7 @@ Default.args = {
             { entity: "Orion oven EVO 801/4-099243", values: ["Ciabatta","100","106.59"] },
             { entity: "Orion oven EVO 801/4-099243", values: ["Cornetto","22","22.7275"] },
             { entity: "Orion oven EVO 801/4-099243", values: ["Pane lievito naturale","60","46.58"] },
-            { entity: "Orion oven EVO 801/4-099243", values: ["Pane olio","18","22.0395"] }
+            { entity: "Orion oven EVO 801/4-099243", values: ["Pane olio","18","1522.0395"] }
         ]
     },
     tableDataMulti: {
