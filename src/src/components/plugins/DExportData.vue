@@ -302,9 +302,9 @@ export default class DExportData extends Vue {
       // Excel's a cunt, considers that a non-breakable space is not a proper separator
       return value.toLocaleString(this.locale).replace(" ", " ");
     }
-    let numberRegex = /[+-]?\d+(\.\d+)?/g;
+    const numberRegex = /[+-]?\d+(\.\d+)?/g;
     if (value.match(numberRegex) != null) {
-      for (let match of value.match(numberRegex)!) {
+      for (const match of value.match(numberRegex)!) {
         // Excel's a cunt, considers that a non-breakable space is not a proper separator
         value = value.replace(match, parseFloat(match)!.toLocaleString(this.locale).replace(" ", " "));
       }

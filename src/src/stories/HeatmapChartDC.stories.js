@@ -35,6 +35,8 @@ const Template = (args, { argTypes }) => ({
       :heatRule="heatRule"
       :minColor="minColor"
       :maxColor="maxColor"
+      :minValue="minValue"
+      :maxValue="maxValue"
       :heatRanges="heatRanges"
     />`,
 });
@@ -48,7 +50,7 @@ const makeHeatmapSerie = (name, tZero, elapsedTime, categoriesY, rangeValue, val
         closeTimestampX: tZero + elapsedTime,
         categoryY: categoriesY[j],
         categoryCodeY: name + "-" + categoriesY[j],
-        valueZ: Math.floor(Math.random() * rangeValue)
+        valueZ: Math.floor(Math.random() * rangeValue) - 100
       });
     }
 
@@ -92,6 +94,8 @@ Default.args = {
   heatRule: 1,
   minColor: "#00ffff",
   maxColor: "#ff0000",
+  minValue: "",
+  maxValue: 200,
   heatRanges: [
     { startValue: 0, endValue: 200, color: "#ff0000", opacity: 1, label: "Low" },
     { startValue: 200, endValue: 400, color: "#0000ff", opacity: 1, label: "Medium" },

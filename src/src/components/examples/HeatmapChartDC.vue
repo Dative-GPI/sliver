@@ -47,6 +47,8 @@
                 :heatRule="heatRule"
                 :minColor="minColor"
                 :maxColor="maxColor"
+                :minValue="minValue"
+                :maxValue="maxValue"
                 :heatRanges="heatRanges"
               />
             </d-category-y-axis>
@@ -147,6 +149,12 @@ export default class HeatmapChart extends Vue {
 
   @Prop({ required: true })
   maxColor!: string;
+
+  @Prop({ required: true })
+  minValue!: number;
+
+  @Prop({ required: true })
+  maxValue!: number;
 
   @Prop({ required: true })
   heatRanges!: ValueRange[] | undefined;

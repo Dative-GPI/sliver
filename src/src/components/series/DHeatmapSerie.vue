@@ -143,6 +143,16 @@ export default class DHeatmapSerie extends Vue {
 
   upAndRunning: boolean = false;
 
+  getNumber(value: any): number | undefined {
+    if (typeof(value) === "number") {
+      return value;
+    }
+    if (isNaN(parseFloat(value))) {
+      return undefined;
+    }
+    return parseFloat(value);
+  }
+
   setName(): void {
     this.serie!.set("name", this.name);
   }
@@ -167,27 +177,29 @@ export default class DHeatmapSerie extends Vue {
       case HeatRule.Gradient: {
         let startColor = am5.color(this.minColor);
         let endColor = am5.color(this.maxColor);
-
         this.serie!.set("heatRules", [{
           target: this.serie!.columns.template,
-          customFunction: (sprite: any, min, max, value) => {
-            if (value >= max) {
-              sprite.set("fill", am5.color(this.maxColor));
-              return;
-            }
-            if (value <= min) {
-              sprite.set("fill", am5.color(this.minColor));
-              return;
-            }
-            let r = startColor.r + (value / (max + min)) * (endColor.r - startColor.r);
-            let g = startColor.g + (value / (max + min)) * (endColor.g - startColor.g);
-            let b = startColor.b + (value / (max + min)) * (endColor.b - startColor.b);
-            sprite.set("fill", am5.Color.fromRGB(r, g, b));
-          },
+          customFunction: (this.getNumber(this.minValue) != null || this.getNumber(this.maxValue) != null) ?
+              (sprite: any, min, max, value) => {
+              min = this.getNumber(this.minValue) != null ? this.getNumber(this.minValue)! : min;
+              max = this.getNumber(this.maxValue) != null ? this.getNumber(this.maxValue)! : max;
+              if (value >= max) {
+                sprite.set("fill", am5.color(this.maxColor));
+                return;
+              }
+              if (value <= min) {
+                sprite.set("fill", am5.color(this.minColor));
+                return;
+              }
+              let r = startColor.r +  ((value - min) / (max - min)) * (endColor.r - startColor.r);
+              let g = startColor.g +  ((value - min) / (max - min)) * (endColor.g - startColor.g);
+              let b = startColor.b +  ((value - min) / (max - min)) * (endColor.b - startColor.b);
+              sprite.set("fill", am5.Color.fromRGB(r, g, b));
+            } : undefined,
           min: am5.color(this.minColor),
           max: am5.color(this.maxColor),
-          minValue: this.minValue,
-          maxValue: this.maxValue,
+          minValue: this.getNumber(this.minValue),
+          maxValue: this.getNumber(this.maxValue),
           dataField: "value",
           key: "fill"
         }]);
@@ -242,14 +254,14 @@ export default class DHeatmapSerie extends Vue {
 
   setLegend(): void {
     if ([HeatRule.Gradient].includes(this.heatRule) && this.legend != null) {
-      if (this.minValue != null) {
-        this.legend!.set("startValue", this.minValue);
+      if (this.getNumber(this.minValue) != null) {
+        this.legend!.set("startValue", this.getNumber(this.minValue));
       }
       else if (this.legend!.get("startValue") == null || this.legend!.get("startValue")! > this.serie!.getPrivate("valueLow")!) {
         this.legend!.set("startValue", this.serie!.getPrivate("valueLow")!);
       }
-      if (this.maxValue != null) {
-        this.legend!.set("endValue", this.maxValue);
+      if (this.getNumber(this.maxValue) != null) {
+        this.legend!.set("endValue", this.getNumber(this.maxValue));
       }
       else if (this.legend!.get("endValue") == null || this.legend!.get("endValue")! < this.serie!.getPrivate("valueHigh")!) {
         this.legend!.set("endValue", this.serie!.getPrivate("valueHigh")!);
