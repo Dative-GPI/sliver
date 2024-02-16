@@ -212,6 +212,29 @@ export default class DLegend extends Vue {
             });
             return;
           }
+          case ChartType.Pie: {
+            const eventSerie = event!.target!.dataItem!.dataContext as am5.DataItem<any>;
+            eventSerie.show();
+            let allHidden = true;
+            this.chart!.series.each((serie: am5.Series) => {
+              for (const dataItem of serie.dataItems) {
+                if (dataItem != eventSerie && !dataItem.isHidden()) {
+                  allHidden = false;
+                }
+              }
+             });
+            this.chart!.series.each((serie: am5.Series) => {
+              for (const dataItem of serie.dataItems) {
+                if (allHidden) {
+                  dataItem.show();
+                }
+                else if (dataItem != eventSerie && !dataItem.isHidden()) {
+                  dataItem.hide();
+                }
+              }
+            });
+            return;
+          }
         }
       });
 
