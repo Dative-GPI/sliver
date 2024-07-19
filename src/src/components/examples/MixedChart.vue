@@ -1,13 +1,13 @@
 <template>
   <div>
     <spinner
-      :min-height="minHeight"
+      :height="height"
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-xy-chart
-      :min-height="minHeight"
       :layout="chartLayout"
       :locale="locale"
+      :height="height"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -92,7 +92,7 @@ export default class LineChart extends Vue {
   dataBis!: any;
 
   @Prop({ required: true })
-  minHeight!: string;
+  height!: string;
 
   @Prop({ required: true })
   locale!: string;

@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<histogram-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -73,7 +73,7 @@ Default.args = {
       { ...makeHistogramSerie("Line 6", 1640815320000, 2.16e+7, 0, 5, 50 ) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "hector",

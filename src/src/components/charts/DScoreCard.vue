@@ -1,7 +1,6 @@
 <template>
   <div
-    style="width: 100%; position: relative;"
-    :style="{ minHeight: minHeight ? `${minHeight}px` : undefined, height: solo ? '100%' : undefined }"
+    :style="{ height: height, width: '100%', position: 'relative' }"
   >
     <div
       v-for="(ds, dsIndex) in data"
@@ -80,8 +79,8 @@ export default class DScoreCard extends Vue {
   @Prop({ required: false, default: "UTC" })
   timeOffset!: string;
 
-  @Prop({ required: false, default: '400px' })
-  minHeight!: string;
+  @Prop({ required: false, default: '100vh' })
+  height!: string;
 
   @Prop({ required: false, default: 50 })
   resizeDebounce!: number;

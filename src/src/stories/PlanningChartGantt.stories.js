@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<planning-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -73,7 +73,7 @@ Default.args = {
       { ...makePlanningSerie("Warming", 1577836800000, 0, ["Line [1]", "Line 2"], 10 ) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "gamma",

@@ -1,15 +1,15 @@
 <template>
   <div>
     <spinner
-      :min-height="minHeight"
+      :height="height"
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-xy-chart
       :chartId="Math.random().toString()"
-      :min-height="minHeight"
       :locale="locale"
       :colorSet="colorSet"
       :layout="chartLayout"
+      :height="height"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -81,7 +81,7 @@ export default class ScatterPlotChart extends Vue {
   data!: any;
 
   @Prop({ required: true })
-  minHeight!: string;
+  height!: string;
 
   @Prop({ required: true })
   locale!: string;

@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<top-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -74,7 +74,7 @@ Default.args = {
       { ...makeColumnSerie("Line 1", ["Donald Duck", "Riri Duck", "Fifi Duck", "Loulou Duck", "Balthazar Picsou", "Della Duck", "Gontran Bonheur", "Daisy Duck", "Archibald Gripsou", "Geo Trouvetou", "Rapetou", "Fantomiald", "Miss Tick", "Miss Frappe", "Matilda Picsou", "Hortense Picsou", "Gustave Bonheur", "Daphnée Duck"], 100 ) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "tango delta",

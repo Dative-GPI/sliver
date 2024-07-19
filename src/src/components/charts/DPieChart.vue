@@ -2,8 +2,7 @@
   <div
     ref="piechart"
     :id="chartId"
-    :style="{ minHeight: minHeight }"
-    style="width: 100%; height: 100%;"
+    :style="{ width: '100%', height: height }"
   >
     <slot v-if="upAndRunning"> </slot>
   </div>
@@ -40,8 +39,8 @@ export default class DPieChart extends Vue {
   @Prop({ required: false, default: 250 })
   resizeDebounce!: number;
 
-  @Prop({ required: false, default: '400px' })
-  minHeight!: string;
+  @Prop({ required: false, default: '100vh' })
+  height!: string;
 
   @Prop({ required: false, default: LayoutEnum.Vertical })
   layout!: LayoutEnum;

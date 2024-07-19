@@ -1,8 +1,8 @@
 <template>
   <d-score-card
     :locale="locale"
-    :minHeight="minHeight"
     :series="series"
+    :height="height"
     :data="data"
   />
 </template>
@@ -13,7 +13,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 @Component({})
 export default class ScoreCard extends Vue {
   @Prop({ required: true })
-  minHeight!: string;
+  height!: string;
 
   @Prop({ required: true })
   locale!: string;

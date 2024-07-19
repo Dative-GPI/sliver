@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<stacked-bars-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -70,7 +70,7 @@ Default.args = {
       { ...makeColumnSerie("Pineapple", ["First farm", "Second farm", "Third farm"], 50 ) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "kilo",

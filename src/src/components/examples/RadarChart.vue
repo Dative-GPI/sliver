@@ -1,15 +1,15 @@
 <template>
   <div>
     <spinner
-      :min-height="minHeight"
+      :height="height"
       :style="{ display: ready ? 'none': 'flex' }"
     />
     <d-radar-chart
       :chartId="Math.random().toString()"
-      :min-height="minHeight"
       :locale="locale"
       :colorSet="colorSet"
       :layout="chartLayout"
+      :height="height"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -71,7 +71,7 @@ import Spinner from "./Spinner.vue";
 @Component({ components: { Spinner } })
 export default class RadarChart extends Vue {
   @Prop({ required: true })
-  minHeight!: string;
+  height!: string;
 
   @Prop({ required: true })
   locale!: string;

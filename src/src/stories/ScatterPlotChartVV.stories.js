@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<scatter-plot-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -70,7 +70,7 @@ Default.args = {
       { ...makeScatterPlotSerie("Second furnace", 10, 20, 10 ) },
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   chartLayout: 2,
   colorSet: 5,

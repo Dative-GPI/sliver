@@ -10,7 +10,7 @@ const Template = (args, { argTypes }) => ({
   components: { RadarChart },
   template:
     `<radar-chart
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -68,7 +68,7 @@ Default.args = {
     { startValue: 160, endValue: 200, opacity: 0.5, color: "#64ff8c", label: "Good" }
   ],
   unit: "mA",
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "gauffrier",

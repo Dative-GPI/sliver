@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<step-line-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -72,7 +72,7 @@ Default.args = {
       { ...makeLineSerie("Line 2", 1660860000000 + 86400000, 25, 1e+7, 5, 25 ) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "soyouz",

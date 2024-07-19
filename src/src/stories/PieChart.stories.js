@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<pie-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -75,7 +75,7 @@ Default.args = {
       { ...makePieSerie("Categories", ["Société Egyptienne d'Elevage de Boeufs"], 5, false) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "alphonse",

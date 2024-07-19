@@ -1,15 +1,15 @@
 <template>
   <div>
     <spinner
-      :min-height="minHeight"
-      :style="{ display: ready ? 'none': 'flex' }"
+      :height="height"
+      :style="{ display: ready ? 'none': 'flex', height: 'calc(100vh-20px)' }"
     />
     <d-xy-chart
       :chartId="Math.random().toString()"
-      :min-height="minHeight"
       :locale="locale"
       :colorSet="colorSet"
       :layout="chartLayout"
+      :height="height"
       :style="{ display: ready ? 'flex': 'none' }"
       @ready="ready = true"
     >
@@ -77,7 +77,7 @@ export default class PlanningChart extends Vue {
   data!: any;
 
   @Prop({ required: true })
-  minHeight!: string;
+  height!: string;
 
   @Prop({ required: true })
   locale!: string;

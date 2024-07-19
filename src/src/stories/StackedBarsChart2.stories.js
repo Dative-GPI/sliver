@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<stacked-bars-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -68,7 +68,7 @@ Default.args = {
       { ...makeColumnSerie("Mission failures", ["Ant-man", "Captain America", "Iron Man", "Black panther", "Captain Marvel", "Spider-Man", "Black widow", "Hulk", "Thor", "Hawkeye", "Scarlet witch", "Vision", "Doctor strange"], 2 ) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "proxima",

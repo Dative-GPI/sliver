@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<line-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :timeOffset="timeOffset"
       :colorSet="colorSet"
@@ -78,7 +78,7 @@ Default.args = {
       makeLineSerie("Level 1", 1685570400000, 0.0001, 864000, 0.0001, 6)
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   timeOffset: "UTC +02:00:00",
   colorSet: 0,

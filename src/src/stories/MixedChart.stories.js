@@ -13,7 +13,7 @@ const Template = (args, { argTypes }) => ({
       :data="data"
       :dataBis="dataBis"
       :dataTiers="dataTiers"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :chartLayout="chartLayout"
       :legend="legend"
@@ -141,7 +141,7 @@ Default.args = {
       { ...makeEventSerie("Alertes", 1640815320000, 240000, ["Warning", "Error", "Information"], 25 ) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   chartLayout: 2,
   legend: true,

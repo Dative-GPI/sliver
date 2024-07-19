@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<indicator-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -67,7 +67,7 @@ Default.args = {
       }]
     }]
   },
-  minHeight: '200px',
+  height: '200px',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "tango",

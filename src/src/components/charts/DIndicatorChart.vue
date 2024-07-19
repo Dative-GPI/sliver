@@ -3,14 +3,14 @@
     <div
       ref="indicatorchart"
       :id="chartId"
-      :style="{ minHeight: '150px' }"
+      :style="{ height: '150px' }"
       style="width: 100%;"
     >
       <slot v-if="upAndRunning"> </slot>
     </div>
     <div
       ref="indicatorlegend"
-      :style="{ minHeight: `calc(${minHeight} - 150px)` }"
+      :style="{ height: `calc(${height} - 150px)` }"
       style="width: 100%;"
     />
   </div>
@@ -55,8 +55,8 @@ export default class DIndicatorChart extends Vue {
   @Prop({ required: false, default: 250 })
   resizeDebounce!: number;
 
-  @Prop({ required: false, default: '400px' })
-  minHeight!: string;
+  @Prop({ required: false, default: '100vh' })
+  height!: string;
 
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;

@@ -12,7 +12,7 @@ const Template = (args, { argTypes }) => ({
     `<range-chart
       :serie="data.series[0]"
       :subSeries="data.series.slice(1)"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -77,7 +77,7 @@ Default.args = {
       makeLineSerie("Line 2", 1640815320000, 0, 120000, 5, 50, true)
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "delta",

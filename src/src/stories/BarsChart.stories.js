@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<bars-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :colorSet="colorSet"
       :colorSeed="colorSeed"
@@ -69,7 +69,7 @@ Default.args = {
       { ...makeColumnSerie("Line 3", ["Grapefruit", "Pomelo", "Lime", "Lemon"], 350000, 0 ) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   colorSet: 5,
   colorSeed: "foxtrot",

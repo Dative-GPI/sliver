@@ -1,5 +1,5 @@
 <template>
-  <div class="spinner" :style="{ minHeight: minHeight }">
+  <div class="spinner" :style="{ height: height }">
     <div class="loader" />
   </div>
 </template>
@@ -9,15 +9,14 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({})
 export default class Spinner extends Vue {
-  @Prop({ required: false, default: 400 })
-  minHeight!: number;
+  @Prop({ required: false, default: '100vh' })
+  height!: string;
 }
 </script>
 
 <style scoped>
 .spinner {
   display: flex;
-  height: 100% !important;
   width: 100% !important;
   justify-content: center;
   align-items: center;

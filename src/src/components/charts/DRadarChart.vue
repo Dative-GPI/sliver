@@ -2,8 +2,7 @@
   <div
     ref="radarchart"
     :id="chartId"
-    :style="{ minHeight: minHeight }"
-    style="width: 100%; height: 100%;"
+    :style="{ width: '100%', height: height }"
   >
     <slot v-if="upAndRunning"> </slot>
   </div>
@@ -38,8 +37,8 @@ export default class DRadarChart extends Vue {
   @Prop({ required: false, default: 1500 })
   readyTimeout!: number;
 
-  @Prop({ required: false, default: '400px' })
-  minHeight!: string;
+  @Prop({ required: false, default: '100vh' })
+  height!: string;
 
   @Prop({ required: false, default: ColorSets.Default })
   colorSet!: ColorSets;

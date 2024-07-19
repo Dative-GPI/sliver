@@ -11,7 +11,7 @@ const Template = (args, { argTypes }) => ({
   template:
     `<heatmap-chart
       :data="data"
-      :minHeight="minHeight"
+      :height="height"
       :locale="locale"
       :chartLayout="chartLayout"
       :legend="legend"
@@ -74,7 +74,7 @@ Default.args = {
       { ...makeHeatmapSerie("Occupancy", ["Monday", "Tuesday", "Wednesday"], ["Dawn", "Morning", "Afternoon", "Evening", "Night"], 100 ) }
     ]
   },
-  minHeight: '400px',
+  height: '100vh',
   locale: "fr-FR",
   chartLayout: 2,
   legend: true,
