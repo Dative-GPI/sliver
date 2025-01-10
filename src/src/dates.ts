@@ -71,21 +71,22 @@ export const getUserOffset = (offset: string, milliseconds: boolean = false): nu
   return userOffset;
 }
 
-export const getMachineOffset = (milliseconds: boolean = false): number => {
+export const getMachineOffset = (epoch: number, milliseconds: boolean = false): number => {
+  // get the machine's timezone offset at the request date (To handle summer & winter time)
   if (milliseconds) {
-    return -(new Date()).getTimezoneOffset() * 60 * 1000;
+    return -(new Date(epoch)).getTimezoneOffset() * 60 * 1000;
   }
-  return -(new Date()).getTimezoneOffset() / 60;
+  return -(new Date(epoch)).getTimezoneOffset() / 60;
 }
 
 export const LongTimeFormat =  "EEE dd LLL yyyy HH:mm:ss";
 
 export const DateTools =  {
   formatShortEpoch: (locale: string, offset: string, epoch: number): string => {
-    return InnerDateTools.formatEpoch(locale, ShortTimeFormat(locale), epoch + getUserOffset(offset, true));
+    return InnerDateTools.formatEpoch(locale, ShortTimeFormat(locale), epoch + getUserOffset(offset, true) - getMachineOffset(epoch));
   },
   formatLongTimeEpoch: (locale: string, offset: string, epoch: number): string => {
-    const result = InnerDateTools.formatEpoch(locale, LongTimeFormat, epoch + getUserOffset(offset, true));
+    const result = InnerDateTools.formatEpoch(locale, LongTimeFormat, epoch + getUserOffset(offset, true) - getMachineOffset(epoch));
     return capitalizeFirstLetter(result);
   },
 }
